@@ -20,13 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(pswo&-%b_g3n@po#o$*4s)g!xy)z15u)gdns_+ug2qgb4t@r)'
+# moved to local_settings.py
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG moved to local_settings.py
 
-ALLOWED_HOSTS = []
-
+# allowed_hosts moved to local_settings.py
 
 # Application definition
 
@@ -72,13 +71,7 @@ WSGI_APPLICATION = 'cfbets.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# moved to local_settings.py
 
 
 # Password validation
@@ -102,19 +95,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
+# moved to local_settings.py
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# import local_settings.py
+try:
+    from local_settings import *
+except ImportError:
+    pass
