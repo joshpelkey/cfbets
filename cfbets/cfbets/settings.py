@@ -108,6 +108,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
+LOGIN_REDIRECT_URL = '/mybets'
+
 # import local_settings.py
 try:
     from local_settings import *
