@@ -45,12 +45,12 @@
             <li class="active"><a href="/">Home</a></li>
 
 	    {% if user.is_authenticated %}
-            <li><a href="/allbets">All Bets</a></li>
-            <li><a href="/reporting">Reporting</a></li>
+            <li><a href="#">All Bets</a></li>
+            <li><a href="#">Reporting</a></li>
 	    {% endif %}
 
 	    {% if user.is_staff %}
-            <li><a href="/adminbets">Admin</a></li>
+            <li><a href="#">Admin</a></li>
  	    {% endif %}
 	  </ul>
 
@@ -76,7 +76,8 @@
     <div class="jumbotron">
       <div class="container">
         <h1>cfbets</h1>
-        <p>Base content goes here. Change it.</p>
+        <p>I'll bet you $5 that this webapp is going to be super sweet. Go ahead, try it.
+        <p><a class="btn btn-success btn-lg" href="/login" role="button">Login &raquo;</a></p>
       </div>
     </div>
 
