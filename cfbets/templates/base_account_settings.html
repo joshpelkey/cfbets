@@ -1,107 +1,51 @@
-{% load staticfiles %}
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="college football betting app">
-    <meta name="author" content="Josh Pelkey">
-    <link rel="icon" href="{% static 'assets/images/favicon.ico' %}">
+{% extends 'base.html' %}
 
-    <title>cfbets</title>
+{% block title %}Login{% endblock %}
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+{% block base_content %}
 
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="{% static 'assets/css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="{% static 'assets/css/jumbotron.css' %}" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">cfbets</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
-
-	    {% if user.is_authenticated %}
-            <li><a href="#">All Bets</a></li>
-            <li><a href="#">Reporting</a></li>
-	    {% endif %}
-
-	    {% if user.is_staff %}
-            <li><a href="#">Admin</a></li>
- 	    {% endif %}
-	  </ul>
-
-          <ul class="nav navbar-nav navbar-right">
-	    {% if user.is_authenticated %}
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{ user.get_full_name }} <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Account Settings</a></li>
-                <li><a href="/logout">Logout</a></li>
-              </ul>
-	    {% else %}
-	      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-	      <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-	    {% endif %}
-          </ul>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </nav>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    {% block base_content %}
-    <div class="jumbotron">
-      <div class="container">
-        <h1>cfbets</h1>
-        <p>I'll bet you $5 that this webapp is going to be super sweet. Go ahead, try it.
-        <p><a class="btn btn-success btn-lg" href="/login" role="button">Login &raquo;</a></p>
-      </div>
-    </div>
-
-    <!-- End base_content block -->
-    {% endblock %}
-
-      <hr>
-
+  <div class="container">
+    <h2>Account Settings</h2>
     <div class="container">
-      <footer>
-        <p>&copy; 2016 cfbets.</p>
-      </footer>
+      <div class="row">
+      <div class="col-md-9 col-lg-9">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{ user.get_full_name }}</h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class=" col-md-9 col-lg-9 "> 
+                  <table class="table">
+                    <tbody>
+                      <tr>
+                        <td>Email:</td>
+                        <td>{{ user.email }}</td>
+                      </tr>
+                      <tr>
+                        <td>Date joined:</td>
+                        <td>{{ user.date_joined }}</td>
+                      </tr>
+                      <tr>
+                        <td>Last login:</td>
+                        <td>{{ user.last_login }}</td>
+                      </tr>
+                      <tr>
+                        <td>Bet stats:</td>
+                        <td>xyz</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <a href="#" class="btn btn-primary">Reset Password</a>
+                </div>
+              </div>
+            </div>
+            <div class="panel-footer">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src=" {% static 'assets/js/vendor/jquery.min.js' %}"><\/script>')</script>
-    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="{% static 'assets/js/ie10-viewport-bug-workaround.js' %}"></script>
-
-  </body>
-</html>
+{% endblock %}

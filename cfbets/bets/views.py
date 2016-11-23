@@ -7,4 +7,4 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/login/')
 def my_bets(request):
-	return render(request, 'bets/base_mybets.html')
+	return render(request, 'bets/base_my_bets.html')

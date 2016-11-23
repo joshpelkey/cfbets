@@ -24,9 +24,10 @@ urlpatterns = [
     url(r'^$', welcome),
     url(r'^login/$', auth_views.login, {'template_name': 'base_login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
-    url(r'^mybets/', views.my_bets),
-    url(r'^allbets/', TemplateView.as_view(template_name='bets/base_allbets.html')),
+    url(r'^my_bets/', views.my_bets),
+    url(r'^all_bets/', TemplateView.as_view(template_name='bets/base_all_bets.html')),
     url(r'^reporting/', TemplateView.as_view(template_name='bets/base_reporting.html')), 
-    url(r'^adminbets/', TemplateView.as_view(template_name='bets/base_adminbets.html')),
+    url(r'^account_settings/', TemplateView.as_view(template_name='base_account_settings.html')), 
+    url(r'^admin_bets/', TemplateView.as_view(template_name='bets/base_admin_bets.html')),
     url(r'^admin/', admin.site.urls),
 ]

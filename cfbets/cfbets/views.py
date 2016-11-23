@@ -4,6 +4,6 @@ from django.http import HttpResponseRedirect
 
 def welcome(request):
 	if request.user.is_authenticated():
-		return HttpResponseRedirect('/mybets')
+		return HttpResponseRedirect('/my_bets')
 	else:
 		return render(request, 'base_welcome.html')
