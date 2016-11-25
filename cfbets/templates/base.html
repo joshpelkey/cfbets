@@ -50,7 +50,8 @@
 	    {% endif %}
 
 	    {% if user.is_staff %}
-            <li><a href="/admin_bets">Admin</a></li>
+            <li><a href="/admin_bets">Admin Bets</a></li>
+            <li><a href="/admin">Admin Site</a></li>
  	    {% endif %}
 	  </ul>
 
@@ -63,7 +64,7 @@
                 <li><a href="/logout">Logout</a></li>
               </ul>
 	    {% else %}
-	      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+	      <li><a href="/sign_up"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 	      <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 	    {% endif %}
           </ul>

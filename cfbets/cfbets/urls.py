@@ -17,13 +17,14 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import TemplateView
-from cfbets.views import welcome
+from cfbets.views import welcome, sign_up
 from bets import views
 
 urlpatterns = [
     url(r'^$', welcome),
     url(r'^login/$', auth_views.login, {'template_name': 'base_login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
+    url(r'^sign_up/$', sign_up),
     url(r'^my_bets/', views.my_bets),
     url(r'^all_bets/', TemplateView.as_view(template_name='bets/base_all_bets.html')),
     url(r'^reporting/', TemplateView.as_view(template_name='bets/base_reporting.html')), 
