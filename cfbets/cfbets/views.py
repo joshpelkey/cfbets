@@ -15,7 +15,7 @@ def sign_up(request):
         	form = SignUpForm(request.POST)
 		# check the group id
 		group_id = request.POST.get('group_id')
-		if group_id != 'cl3ms0n':
+		if group_id != '' and group_id != 'cl3ms0n':
 			form.add_error('group_id', 'Not a valid group id.')
 
         	elif form.is_valid():
