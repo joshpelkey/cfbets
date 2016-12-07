@@ -44,13 +44,13 @@
           <ul class="nav navbar-nav">
 
 	    {% if user.is_authenticated %}
-            <li class="active"><a href="/my_bets">My Bets</a></li>
-            <li><a href="/open_bets">Open Bets</a></li>
-            <li><a href="/all_bets">All Bets</a></li>
+            <li class="{% if nbar == 'my_bets' %}active{% endif %}"><a href="/my_bets">My Bets</a></li>
+            <li class="{% if nbar == 'open_bets' %}active{% endif %}"><a href="/open_bets">Open Bets</a></li>
+            <li class="{% if nbar == 'all_bets' %}active{% endif %}"><a href="/all_bets">All Bets</a></li>
 	    {% endif %}
 
 	    {% if user.is_staff %}
-            <li><a href="/admin_bets">Admin Bets</a></li>
+            <li class="{% if nbar == 'admin_bets' %}active{% endif %}"><a href="/admin_bets">Admin Bets</a></li>
             <li><a href="/admin">Admin Site</a></li>
  	    {% endif %}
 	  </ul>
