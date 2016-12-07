@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from cfbets.forms import SignUpForm
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 def welcome(request):
 	if request.user.is_authenticated():
@@ -31,3 +32,7 @@ def sign_up(request):
         	form = SignUpForm()
 
 	return render(request, 'base_sign_up.html', { 'form': form })
+
+@login_required(login_url='/login/')
+def account_settings(request):
+	return render(request, 'base_account_settings.html')

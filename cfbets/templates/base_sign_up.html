@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Sign Up{% endblock %}
 
 {% block base_content %}
 
@@ -11,7 +11,7 @@
 	  <h2>Sign Up</h2>
 	<form class="form-horizontal" method="post">{% csrf_token %}
 	    <fieldset>
-	    <p>All fields are required.</p>
+	    <p>All fields are required. Already signed up? <a href="/login">Log in.</a></p>
 		<legend>{{ title }}</legend>
 		{% for field in form %}
 		    {% if field.errors %}

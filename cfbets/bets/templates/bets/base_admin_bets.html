@@ -4,12 +4,7 @@
 
     <div class="container">
         <h1>Admin Bets</h1>
-	{% if user.is_authenticated %}
-		<p> Hi, {{ user.get_full_name }}. You're logged in. </p>
-	{% else %}
-		<p> You're not logged in. You should <a href='/login'>log in</a>.</p>	
-	{% endif %}
-
+	  <p> Hi, {{ user.get_full_name }}. You're logged in. </p>
     </div>
 
 {% endblock %}
