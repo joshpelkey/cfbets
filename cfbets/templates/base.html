@@ -44,6 +44,12 @@
           <a href="#" data-toggle="dropdown" class="dropdown-toggle" id="profile"> {{ user.get_full_name }} <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="/account_settings" title="Account Settings">Account Settings</a></li>
+	    {% if user.is_staff %}
+	    <li role="separator" class="divider"></li>
+            <li><a href="/admin_bets">Admin Bets</a></li>
+            <li><a href="/admin">Admin Site</a></li>
+	    <li role="separator" class="divider"></li>
+ 	    {% endif %}
             <li><a href="/logout" title="Logout">Logout </a></li>
           </ul>
         </li>
@@ -63,11 +69,6 @@
 	    <li class="{% if nbar == 'my_bets' %}active{% endif %}"><a href="/my_bets">My Bets</a></li>
             <li class="{% if nbar == 'open_bets' %}active{% endif %}"><a href="/open_bets">Open Bets</a></li>
             <li class="{% if nbar == 'all_bets' %}active{% endif %}"><a href="/all_bets">All Bets</a></li>
-
-	    {% if user.is_staff %}
-            <li class="{% if nbar == 'admin_bets' %}active{% endif %}"><a href="/admin_bets">Admin Bets</a></li>
-            <li><a href="/admin">Admin Site</a></li>
- 	    {% endif %}
       </ul>
      {% else %}
       <ul class="nav navbar-nav navbar-right">
