@@ -36,7 +36,7 @@
     <div class="navbar-header navbar-right pull-right">
       <ul class="nav pull-left">
 	{% if user.is_authenticated %}
-	  <button type="button" class="btn btn-default navbar-btn" style="margin-right: 15px;">Place Bets</button>	
+	  <button type="button" class="btn btn-default navbar-btn" style="margin-right: 15px;" data-toggle="modal" data-target="#place_bets">Place Bets</button>	
 	{% endif %}
 
 	{% if user.is_authenticated %}
@@ -78,6 +78,25 @@
     </div>
   </div>
 </nav>
+
+<!-- Place Bets Modal -->
+<div class="modal fade" id="place_bets" tabindex="-1" role="dialog" aria-labelledby="PlaceBets">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="PlaceBets">Place Bets</h4>
+      </div>
+      <div class="modal-body">
+        Place bets form to go here.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Submit Bets</button>
+      </div>
+    </div>
+  </div>
+</div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     {% block base_content %}
