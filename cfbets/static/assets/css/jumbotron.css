@@ -3,3 +3,13 @@ body {
   padding-top: 50px;
   padding-bottom: 20px;
 }
+
+a#profile {
+	color: #9d9d9d;
+	margin-top: 5px; 
+	background-color: transparent;
+}
+
+a#profile:hover {
+	color: #fff;
+}

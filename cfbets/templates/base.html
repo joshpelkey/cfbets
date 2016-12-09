@@ -28,49 +28,55 @@
   </head>
 
   <body>
+    <nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header navbar-left pull-left">
+      <a href="/" class="navbar-brand">cfbets</a>
+    </div>
+    <div class="navbar-header navbar-right pull-right">
+      <ul class="nav pull-left">
+	{% if user.is_authenticated %}
+	  <button type="button" class="btn btn-default navbar-btn" style="margin-right: 15px;">Place Bets</button>	
+	{% endif %}
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">cfbets</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-
-	    {% if user.is_authenticated %}
-            <li class="{% if nbar == 'my_bets' %}active{% endif %}"><a href="/my_bets">My Bets</a></li>
+	{% if user.is_authenticated %}
+        <li class="dropdown pull-right">
+          <a href="#" data-toggle="dropdown" class="dropdown-toggle" id="profile"> {{ user.get_full_name }} <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/account_settings" title="Account Settings">Account Settings</a></li>
+            <li><a href="/logout" title="Logout">Logout </a></li>
+          </ul>
+        </li>
+	{% endif %}
+      </ul>
+      <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="visible-xs-block clearfix"></div>
+    <div class="collapse navbar-collapse">
+     {% if user.is_authenticated %}
+      <ul class="nav navbar-nav navbar-left">
+	    <li class="{% if nbar == 'my_bets' %}active{% endif %}"><a href="/my_bets">My Bets</a></li>
             <li class="{% if nbar == 'open_bets' %}active{% endif %}"><a href="/open_bets">Open Bets</a></li>
             <li class="{% if nbar == 'all_bets' %}active{% endif %}"><a href="/all_bets">All Bets</a></li>
-	    {% endif %}
 
 	    {% if user.is_staff %}
             <li class="{% if nbar == 'admin_bets' %}active{% endif %}"><a href="/admin_bets">Admin Bets</a></li>
             <li><a href="/admin">Admin Site</a></li>
  	    {% endif %}
-	  </ul>
-
-          <ul class="nav navbar-nav navbar-right">
-	    {% if user.is_authenticated %}
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{ user.get_full_name }} <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="/account_settings">Account Settings</a></li>
-                <li><a href="/logout">Logout</a></li>
-              </ul>
-	    {% else %}
-	      <li><a href="/sign_up"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-	      <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-	    {% endif %}
-          </ul>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </nav>
+      </ul>
+     {% else %}
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/sign_up"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+     {% endif %}
+    </div>
+  </div>
+</nav>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     {% block base_content %}
