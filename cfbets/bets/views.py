@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
 from bets.forms import PlaceBetsForm
 
 # Create your views here.
@@ -39,7 +40,8 @@ def place_bets_form_process(request, next_url):
         	form = PlaceBetsForm(request.POST)
 		if form.is_valid():
 			# do something with this form eventually
-			response = {'message': 'Bet placed succesfully!', 'url': next_url}
+			response = {'url': next_url}
+			messages.success(request, 'Bet submitted succesfully (to nothing until I get that data model).')
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
 			# form isn't valid, return to ajax call with error and form with errors

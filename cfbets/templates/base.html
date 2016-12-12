@@ -83,6 +83,16 @@
   </div>
 </nav>
 
+	<!-- messages from django message context -->
+	{% for message in messages %}
+		<div class="alert {{ message.tags }} alert-dismissible" id="messages" role="alert">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		  <span aria-hidden="true">&times;</span>
+		</button>
+		{{ message }}
+		</div>
+	{% endfor %}
+
     <!-- Main jumbotron for a primary marketing message or call to action -->
     {% block base_content %}
     <div class="jumbotron">
@@ -140,6 +150,9 @@
     <script type='text/javascript'>
     $(document).ready(function() {
         $('#id_bet_expiration_date').datetimepicker(); 
+		$("#messages").fadeTo(3500, 500).slideUp(500, function(){
+			$("#messages").slideUp(500);
+		});
 
 	$('#place-bets-form').on('submit', function(event) {
 		event.preventDefault();
