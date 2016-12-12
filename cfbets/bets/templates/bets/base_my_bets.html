@@ -5,38 +5,6 @@
     <div class="container">
         <h1>My Bets</h1>
 	  <p> Hi, {{ user.get_full_name }}. You're logged in. </p>
-<!--
-	<form class="form-horizontal" method="post" action="">{% csrf_token %}
-	    <fieldset>
-		{% for field in form %}
-		    {% if field.errors %}
-			<div class="control-group error">
-			    <label class="control-label">{{ field.label }}</label> 
-			    <div class="controls">{{ field }}
-				<p class="help-inline text-danger">
-				    {% for error in  field.errors %}<strong>{{ error }}</strong>{% endfor %}
-				</p>
-			    </div>
-			</div>
-		    {% else %}
-			<div class="control-group">
-			    <label class="control-label">{{ field.label }}</label> 
-			    <div class="controls">{{ field }}
-				{% if field.help_text %}
-				    <p class="help-inline"><small>{{ field.help_text }}</small></p>
-				{% endif %}
-			    </div>
-			</div>
-		    {% endif %}
-		{% endfor %}
-	    </fieldset>
-	    <br/>
-	    <div class="form-actions">
-		<button type="submit" class="btn btn-primary" >Sign Up</button>
-	    </div>
-
-	    </form>
--->
     </div>
 {% endblock %}
 

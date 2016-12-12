@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from bets.forms import PlaceBetsForm
@@ -15,17 +14,7 @@ def bets(request):
 
 @login_required(login_url='/login/')
 def my_bets(request):
-	if request.method == 'POST':
-        	form = PlaceBetsForm(request.POST)
-		if form.is_valid():
-			# do something
-			return HttpResponseRedirect('/account_settings')
-		else:
-			return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets', 'form': form})
-	else:
-		form = PlaceBetsForm()
-
-	return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets', 'form': form})
+	return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets'})
 
 @login_required(login_url='/login/')
 def open_bets(request):
