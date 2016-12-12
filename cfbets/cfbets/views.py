@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 def welcome(request):
 	if request.user.is_authenticated():
-		return HttpResponseRedirect('/my_bets')
+		return HttpResponseRedirect('/bets/my_bets')
 	else:
 		return render(request, 'base_welcome.html')
 

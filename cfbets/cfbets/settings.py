@@ -62,6 +62,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+		'bets.context_processors.place_bets_form_context_processor',
             ],
         },
     },
@@ -108,7 +109,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-LOGIN_REDIRECT_URL = '/my_bets'
+LOGIN_REDIRECT_URL = '/bets/my_bets'
 
 # import local_settings.py
 try:

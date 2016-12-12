@@ -20,6 +20,10 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'assets/css/jumbotron.css' %}" rel="stylesheet">
 
+    <!-- datetime picker css -->
+    <link rel="stylesheet" media="all" type="text/css" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <link href="{% static 'assets/css/jquery-ui-timepicker-addon.css' %}" rel="stylesheet">
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -46,7 +50,7 @@
             <li><a href="/account_settings" title="Account Settings">Account Settings</a></li>
 	    {% if user.is_staff %}
 	    <li role="separator" class="divider"></li>
-            <li><a href="/admin_bets">Admin Bets</a></li>
+            <li><a href="/bets/admin_bets">Admin Bets</a></li>
             <li><a href="/admin">Admin Site</a></li>
 	    <li role="separator" class="divider"></li>
  	    {% endif %}
@@ -66,9 +70,9 @@
     <div class="collapse navbar-collapse">
      {% if user.is_authenticated %}
       <ul class="nav navbar-nav navbar-left">
-	    <li class="{% if nbar == 'my_bets' %}active{% endif %}"><a href="/my_bets">My Bets</a></li>
-            <li class="{% if nbar == 'open_bets' %}active{% endif %}"><a href="/open_bets">Open Bets</a></li>
-            <li class="{% if nbar == 'all_bets' %}active{% endif %}"><a href="/all_bets">All Bets</a></li>
+	    <li class="{% if nbar == 'my_bets' %}active{% endif %}"><a href="/bets/my_bets">My Bets</a></li>
+            <li class="{% if nbar == 'open_bets' %}active{% endif %}"><a href="/bets/open_bets">Open Bets</a></li>
+            <li class="{% if nbar == 'all_bets' %}active{% endif %}"><a href="/bets/all_bets">All Bets</a></li>
       </ul>
      {% else %}
       <ul class="nav navbar-nav navbar-right">
@@ -78,25 +82,6 @@
     </div>
   </div>
 </nav>
-
-<!-- Place Bets Modal -->
-<div class="modal fade" id="place_bets" tabindex="-1" role="dialog" aria-labelledby="PlaceBets">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="PlaceBets">Place Bets</h4>
-      </div>
-      <div class="modal-body">
-        Place bets form to go here.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Submit Bets</button>
-      </div>
-    </div>
-  </div>
-</div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     {% block base_content %}
@@ -109,6 +94,25 @@
 
     <!-- End base_content block -->
     {% endblock %}
+
+	<div class="modal fade" id="place_bets" tabindex="-1" role="dialog" aria-labelledby="PlaceBets">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h4 class="modal-title" id="PlaceBets">Place Bets</h4>
+	      </div>
+	      <div class="modal-body">
+               {% include "bets/place_bets.html" %}
+	      </div>
+	      <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		<button type="submit" class="btn btn-primary" form="place-bets-form">Submit Bets</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 
       <hr>
 
@@ -124,10 +128,40 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src=" {% static 'assets/js/vendor/jquery.min.js' %}"><\/script>')</script>
+    <script>window.jQuery || document.write('<script src=" {% static 'assets/js/jquery.min.js' %}"><\/script>')</script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-ui.min.js' %}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="{% static 'assets/js/ie10-viewport-bug-workaround.js' %}"></script>
+    <!-- datetime picker js -->
+    <script src="{% static 'assets/js/jquery-ui-timepicker-addon.js' %}"></script>
 
+    <!-- datetime picker for the place bets form and ajax for that form -->
+    <script type='text/javascript'>
+    $(document).ready(function() {
+        $('#id_bet_expiration_date').datetimepicker(); 
+
+	$('#place-bets-form').on('submit', function(event) {
+		event.preventDefault();
+		$.ajax({ 
+		    type: "POST",
+		    url: this.action, 
+		    data: $(this).serialize(),
+		    context: this,
+
+		    success: function(data, status) {
+			window.location.href = data.url;
+		    },
+
+		    error: function(xhr, status, error) {
+			$("#place-bets-form").html(xhr.responseText);
+        		$('#id_bet_expiration_date').datetimepicker(); 
+		    }
+		});
+		return false;
+	    });
+        });
+    </script>
+	
   </body>
 </html>
