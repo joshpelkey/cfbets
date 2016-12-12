@@ -1,29 +1,6 @@
 <!-- Place Bets Modal -->
 <form class="form-horizontal" id="place-bets-form" method="post" action='{{ place_bets_form_url }}'>{% csrf_token %}
 	    <fieldset>
-		{% if form %}
-		{% for field in form %}
-		    {% if field.errors %}
-			<div class="control-group error">
-			    <label class="control-label">{{ field.label }}</label> 
-			    <div class="controls">{{ field }}
-				<p class="help-inline text-danger">
-				    {% for error in  field.errors %}<strong>{{ error }}</strong>{% endfor %}
-				</p>
-			    </div>
-			</div>
-		    {% else %}
-			<div class="control-group">
-			    <label class="control-label">{{ field.label }}</label> 
-			    <div class="controls">{{ field }}
-				{% if field.help_text %}
-				    <p class="help-inline"><small>{{ field.help_text }}</small></p>
-				{% endif %}
-			    </div>
-			</div>
-		    {% endif %}
-		{% endfor %}
-		{% else %}
 		{% for field in place_bets_form %}
 		    {% if field.errors %}
 			<div class="control-group error">
@@ -45,7 +22,5 @@
 			</div>
 		    {% endif %}
 		{% endfor %}
-
-		{% endif %}
 	    </fieldset>
 </form>

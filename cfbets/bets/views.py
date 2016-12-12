@@ -43,7 +43,7 @@ def place_bets_form_process(request, next_url):
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
 			# form isn't valid, return to ajax call with error and form with errors
-			return render(request, 'bets/place_bets.html', {'form': form}, status=400)
+			return render(request, 'bets/place_bets.html', {'place_bets_form': form}, status=400)
 
 	return HttpResponseRedirect('/bets/my_bets')
 	
