@@ -40,7 +40,7 @@
     <div class="navbar-header navbar-right pull-right">
       <ul class="nav pull-left">
 	{% if user.is_authenticated %}
-	  <button type="button" class="btn btn-default navbar-btn" style="margin-right: 15px;" data-toggle="modal" data-target="#place_bets">Place Bets</button>	
+	  <button type="button" class="btn btn-default navbar-btn" style="margin-right: 15px;" data-toggle="modal" data-target="#place_bets">Place Bet</button>	
 	{% endif %}
 
 	{% if user.is_authenticated %}
@@ -100,14 +100,14 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<h4 class="modal-title" id="PlaceBets">Place Bets</h4>
+		<h4 class="modal-title" id="PlaceBets">Place Bet</h4>
 	      </div>
 	      <div class="modal-body">
                {% include "bets/place_bets.html" %}
 	      </div>
 	      <div class="modal-footer">
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		<button type="submit" class="btn btn-primary" form="place-bets-form">Submit Bets</button>
+		<button type="submit" class="btn btn-primary" form="place-bets-form">Submit Bet</button>
 	      </div>
 	    </div>
 	  </div>
