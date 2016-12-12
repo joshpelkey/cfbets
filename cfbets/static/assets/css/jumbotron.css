@@ -13,3 +13,22 @@ a#profile {
 a#profile:hover {
 	color: #fff;
 }
+
+form#place-bets-form input {
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+
+form#place-bets-form input#id_bet {
+    width: 90%;
+}
+
+form#place-bets-form input#id_qty_allowed {
+    width: 100px;
+}
+
+form#place-bets-form input#id_bet_amount {
+    width: 100px;
+}
