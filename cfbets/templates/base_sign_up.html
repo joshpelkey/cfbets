@@ -4,44 +4,81 @@
 
 {% block base_content %}
 
-  <div class="container">
-  {% if user.is_authenticated %}
-    <h3>You're already logged in as {{ user.get_full_name }}.</h3>
-  {% else %}
-	  <h2>Sign Up</h2>
-	<form class="form-horizontal" method="post">{% csrf_token %}
-	    <fieldset>
-	    <p>All fields are required. Already signed up? <a href="/login">Log in.</a></p>
-		<legend>{{ title }}</legend>
-		{% for field in form %}
-		    {% if field.errors %}
-			<div class="control-group error">
-			    <label class="control-label">{{ field.label }}</label> 
-			    <div class="controls">{{ field }}
-				<p class="help-inline text-danger">
-				    {% for error in  field.errors %}<strong>{{ error }}</strong>{% endfor %}
-				</p>
-			    </div>
-			</div>
-		    {% else %}
-			<div class="control-group">
-			    <label class="control-label">{{ field.label }}</label> 
-			    <div class="controls">{{ field }}
-				{% if field.help_text %}
-				    <p class="help-inline"><small>{{ field.help_text }}</small></p>
-				{% endif %}
-			    </div>
-			</div>
-		    {% endif %}
-		{% endfor %}
-	    </fieldset>
-	    <br/>
-	    <div class="form-actions">
-		<button type="submit" class="btn btn-primary" >Sign Up</button>
-	    </div>
-	</form>
+<div class="container" style="max-width: 750px;margin:auto;">
+		{% if user.is_authenticated %}
+			<h3>You're already logged in as {{ user.get_full_name }}.</h3>
+		{% else %}
+			<h2>Sign Up</h2>
 
-  {% endif %}
-  </div>
+			<form class="form-horizontal" method="post">{% csrf_token %}
+			<p>All fields are required. Already signed up? <a href="/login">Log in.</a></p>
 
+			<hr>
+
+			{% if form.errors %}
+				<div class="alert alert-danger">Please fix the errors below. 
+					<ul>
+					{% for field in form %}
+					{% if field.errors %}
+						<li>{{ field.label }}</li>
+					{% endif %}
+					{% endfor %}
+				</div>
+			{% endif %}
+
+			<div class="clearfix">
+				<div class="col-md-4 form-group">
+					{{ form.first_name.label_tag }}
+					<div class="controls"> {{ form.first_name }} 
+						<p class="help-inline text-danger"> <strong>{{ form.first_name.errors.as_text }}</strong></p>
+					</div>
+				</div>
+				<div class="col-md-4 col-md-offset-1 form-group">
+					{{ form.last_name.label_tag }}
+					<div class="controls"> {{ form.last_name }} 
+						<p class="help-inline text-danger"> <strong>{{ form.last_name.errors.as_text }}</strong></p>
+					</div>
+				</div>
+			</div>
+
+			<div class="clearfix">
+				<div class="col-md-4 form-group">
+					{{ form.username.label_tag }}
+					<div class="controls"> {{ form.username }} 
+						<p class="help-inline"><small>{{ form.username.help_text }}</small></p>
+						<p class="help-inline text-danger"> <strong>{{ form.username.errors.as_text }}</strong></p>
+					</div>
+				</div>
+				<div class="col-md-4 col-md-offset-1 form-group">
+					{{ form.group_id.label_tag }}
+					<div class="controls"> {{ form.group_id }} 
+						<p class="help-inline"><small>{{ form.group_id.help_text }}</small></p>
+						<p class="help-inline text-danger"> <strong>{{ form.group_id.errors.as_text }}</strong></p>
+					</div>
+				</div>
+			</div>
+
+			<div class="clearfix">
+				<div class="col-md-4 form-group">
+					{{ form.password1.label_tag }}
+					<div class="controls"> {{ form.password1 }} 
+						<p class="help-inline text-danger"> <strong>{{ form.password1.errors.as_text }}</strong></p>
+					</div>
+				</div>
+				<div class="col-md-4 col-md-offset-1 form-group">
+					{{ form.password2.label_tag }}
+					<div class="controls"> {{ form.password2 }} 
+						<p class="help-inline text-danger"> <strong>{{ form.password2.errors.as_text }}</strong></p>
+					</div>
+				</div>
+			</div>
+
+			<br/>
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary" >Sign Up</button>
+			</div>
+
+		</form>
+	{% endif %}
+</div>
 {% endblock %}
