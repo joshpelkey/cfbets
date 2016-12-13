@@ -45,16 +45,40 @@
 
 						{% if user.is_authenticated %}
 							<li class="dropdown pull-right">
-								<a href="#" data-toggle="dropdown" class="dropdown-toggle" id="profile"> {{ user.get_full_name }} <span class="caret"></span></a>
+								<a href="#" data-toggle="dropdown" class="dropdown-toggle" id="profile"> 
+									<span class="glyphicon glyphicon-user"></span>
+            						<b class="caret"></b>
+          						</a>
 								<ul class="dropdown-menu">
-									<li><a href="/account_settings" title="Account Settings">Account Settings</a></li>
+									<li>
+										<div class="navbar-login">
+											<div class="row">
+												<div class="col-lg-4">
+													<p class="text-center">
+														<span class="glyphicon glyphicon-user icon-size"></span>
+													</p>
+												</div>
+												<div class="col-lg-8">
+													<p class="text-left"><strong>{{ user.get_full_name }}</strong></p>
+													<p class="text-left small">{{ user.email }}</p>
+													<p class="text-left">
+														<a href="/account_settings" class="btn btn-primary btn-block btn-sm">Your Account</a>
+													</p>
+												</div>
+											</div>
+										</div>
+									</li>
+									<li class="divider navbar-login-session-bg"></li>
 									{% if user.is_staff %}
-										<li role="separator" class="divider"></li>
-										<li><a href="/bets/admin_bets">Admin Bets</a></li>
-										<li><a href="/admin">Admin Site</a></li>
-										<li role="separator" class="divider"></li>
+										<li><a href="/bets/admin_bets">Admin Bets <span class="glyphicon glyphicon-thumbs-up pull-right"></span></a></li>
+									<li class="divider"></li>
+									<li><a href="/admin">Admin Site <span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
+									<li class="divider"></li>
 									{% endif %}
-									<li><a href="/logout" title="Logout">Logout </a></li>
+									<!-- notifications
+										<li><a href="#">Messages <span class="badge pull-right"> 42 </span></a></li>
+									-->
+									<li><a href="/logout">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
 								</ul>
 							</li>
 						{% endif %}
@@ -66,6 +90,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
+
 				</div>
 
 				<div class="visible-xs-block clearfix"></div>
@@ -80,6 +105,7 @@
 						<ul class="nav navbar-nav navbar-right">
 							<li><a href="/sign_up"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
 							<li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+						</ul>
 					{% endif %}
 				</div>
 
