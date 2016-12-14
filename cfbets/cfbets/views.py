@@ -34,5 +34,5 @@ def sign_up(request):
 	return render(request, 'base_sign_up.html', { 'form': form })
 
 @login_required(login_url='/login/')
-def account_settings(request):
-	return render(request, 'base_account_settings.html')
+def profile(request):
+	return render(request, 'base_profile.html')

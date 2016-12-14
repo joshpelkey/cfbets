@@ -5,7 +5,7 @@
 {% block base_content %}
 
 <div class="container">
-	<h2>Account Settings</h2>
+	<h2>Your Profile</h2>
 
 	<!-- Nav tabs -->
 	<ul class="nav nav-tabs">
@@ -16,7 +16,7 @@
 
 	<div class="tab-content">
 		<div id="user-profile" class="tab-pane fade in active">
-			<h3>Your Profile</h3>
+			<br/>
 			<form class="form-horizontal" method="post">{% csrf_token %}
 				<div class="control-group">
 					<label class="control-label">First Name</label>
@@ -43,12 +43,12 @@
   		</div>
 
 		<div id="user-messages" class="tab-pane fade">
-			<h3>Your Messages</h3>
+			<br/>
 			<p>Nothing to see here, yet.</p>
 		</div>
 
 		<div id="user-stats" class="tab-pane fade">
-			<h3>Your Stats</h3>
+			<br/>
 			<p>Nothing to see here, yet.</p>
 		</div>
 	</div>
