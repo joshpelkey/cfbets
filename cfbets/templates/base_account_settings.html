@@ -4,48 +4,54 @@
 
 {% block base_content %}
 
-  <div class="container">
-    <h2>Account Settings</h2>
-    <div class="container">
-      <div class="row">
-      <div class="col-md-9 col-lg-9">
-          <div class="panel panel-info">
-            <div class="panel-heading">
-              <h3 class="panel-title">{{ user.get_full_name }}</h3>
-            </div>
-            <div class="panel-body">
-              <div class="row">
-                <div class=" col-md-9 col-lg-9 "> 
-                  <table class="table">
-                    <tbody>
-                      <tr>
-                        <td>Email:</td>
-                        <td>{{ user.email }}</td>
-                      </tr>
-                      <tr>
-                        <td>Date joined:</td>
-                        <td>{{ user.date_joined }}</td>
-                      </tr>
-                      <tr>
-                        <td>Last login:</td>
-                        <td>{{ user.last_login }}</td>
-                      </tr>
-                      <tr>
-                        <td>Bet stats:</td>
-                        <td>xyz</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <!-- <a href="#" class="btn btn-primary">Reset Password</a> -->
-                </div>
-              </div>
-            </div>
-            <div class="panel-footer">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="container">
+	<h2>Account Settings</h2>
+
+	<!-- Nav tabs -->
+	<ul class="nav nav-tabs">
+	  <li class="active"><a data-toggle="tab" href="#user-profile">Profile</a></li>
+	  <li><a data-toggle="tab" href="#user-messages">Messages</a></li>
+	  <li><a data-toggle="tab" href="#user-stats">Stats</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="user-profile" class="tab-pane fade in active">
+			<h3>Your Profile</h3>
+			<form class="form-horizontal" method="post">{% csrf_token %}
+				<div class="control-group">
+					<label class="control-label">First Name</label>
+					<div class="controls">
+						<input id="first-name" name="first_name" type="text" placeholder="{{ user.first_name }}" value="{{user.first_name}}" class="input-xlarge" disabled> 
+							<p class="help-block"></p>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Last Name</label>
+					<div class="controls">
+						<input id="first-name" name="last_name" type="text" placeholder="{{ user.last_name }}" value="{{ user.last_name }}" class="input-xlarge" disabled> 
+							<p class="help-block"></p>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">Email</label>
+					<div class="controls">
+						<input id="first-name" name="last_name" type="text" placeholder="{{ user.email }}" value="{{ user.email }}" class="input-xlarge" disabled> 
+							<p class="help-block"></p>
+					</div>
+				</div>
+			</form>
+  		</div>
+
+		<div id="user-messages" class="tab-pane fade">
+			<h3>Your Messages</h3>
+			<p>Nothing to see here, yet.</p>
+		</div>
+
+		<div id="user-stats" class="tab-pane fade">
+			<h3>Your Stats</h3>
+			<p>Nothing to see here, yet.</p>
+		</div>
+	</div>
+</div>
 
 {% endblock %}
