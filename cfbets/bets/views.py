@@ -5,7 +5,9 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
+from django.utils import timezone
 from bets.forms import PlaceBetsForm
+from bets.models import ProposedBet
 
 # Create your views here.
 
@@ -29,8 +31,13 @@ def place_bets_form_process(request, next_url):
         	form = PlaceBetsForm(request.POST)
 		if form.is_valid():
 			# do something with this form eventually
+			
+			# gather form entries and save to DB
+			new_bet = ProposedBet(user=request.user.pk, prop_text=form.bet, prop_wager=form.bet_amount, max_wagers=form.qty_allowed, remaining_wagers=form.qty_allowed, end_date=form.bet_expiration_date, created_on=timezone.now(), modified_on=timezone.now())
+			new_bet.save()
+			
 			response = {'url': next_url}
-			messages.success(request, 'Bet submitted succesfully (to nothing until I get that data model).')
+			messages.success(request, 'Bet submitted succesfully.')
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
 			# form isn't valid, return to ajax call with error and form with errors
