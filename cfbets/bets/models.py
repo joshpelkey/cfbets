@@ -26,6 +26,8 @@ class ProposedBet (models.Model):
 
 	class Meta:
 		ordering = ['-created_on']
+		verbose_name = 'Proposed Bet'
+        verbose_name_plural = 'Proposed Bets'
 
 	def __str__(self):
 		return "{id: %d, user: '%s', prop: '%s'}" % (self.id, self.user.get_full_name(), self.prop_text)
@@ -39,6 +41,10 @@ class AcceptedBet (models.Model):
 	created_on = models.DateTimeField(auto_now_add=True)
 	modified_on = models.DateTimeField(auto_now=True)
 
+	class Meta:
+		verbose_name = 'Accepted Bet'
+        verbose_name_plural = 'Accpeted Bets'
+
 	def __str__(self):
 		return "{id: %d, user: '%s', prop_id: %d}" % (self.id, self.accepted_user.get_full_name(), self.accepted_prop.id)
 
@@ -51,6 +57,10 @@ class UserProfile (models.Model):
 	last_payment = models.DateTimeField(null=True, blank=True)
 	created_on = models.DateTimeField(auto_now_add=True)
 	modified_on = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		verbose_name = 'User Profile'
+        verbose_name_plural = 'User Profiles'
 
 	def __str__(self):
 		return "%s Profile" % (self.user.get_full_name())
@@ -80,3 +90,7 @@ class UserProfileAudit (models.Model):
 	original_overall_winnings = models.IntegerField()
 	new_overall_winnings = models.IntegerField()
 	created_on = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		verbose_name = 'User Profile Audit'
+        verbose_name_plural = 'User Profile Audits'
