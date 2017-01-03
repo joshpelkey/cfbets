@@ -28,16 +28,27 @@ def all_bets(request):
 
 def place_bets_form_process(request, next_url):
 	if request.method == 'POST':
-        	form = PlaceBetsForm(request.POST)
+		form = PlaceBetsForm(request.POST)
+
 		if form.is_valid():
-			# do something with this form eventually
-			
 			# gather form entries and save to DB
-			new_bet = ProposedBet(user=request.user.pk, prop_text=form.bet, prop_wager=form.bet_amount, max_wagers=form.qty_allowed, remaining_wagers=form.qty_allowed, end_date=form.bet_expiration_date, created_on=timezone.now(), modified_on=timezone.now())
+			new_bet = ProposedBet(user=request.user, \
+									prop_text = form.cleaned_data['bet'], \
+									prop_wager = form.cleaned_data['bet_amount'], \
+									max_wagers = form.cleaned_data['qty_allowed'], \
+									remaining_wagers = form.cleaned_data['qty_allowed'], \
+									end_date = form.cleaned_data['bet_expiration_date'], \
+									created_on = timezone.now(), \
+									modified_on = timezone.now())
+			# save to the db
 			new_bet.save()
 			
+			# save the url to know where to redirect
 			response = {'url': next_url}
+
+			# send a message over that the bet is complete
 			messages.success(request, 'Bet submitted succesfully.')
+
 			return HttpResponse(json.dumps(response), content_type='application/json')
 		else:
 			# form isn't valid, return to ajax call with error and form with errors
