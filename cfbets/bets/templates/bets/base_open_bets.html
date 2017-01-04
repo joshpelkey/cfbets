@@ -4,7 +4,37 @@
 
     <div class="container">
         <h1>Open Bets</h1>
-	  <p> Hi, {{ user.get_full_name }}. You're logged in. </p>
+		<div class="container">
+			{% if open_bets %}
+				<p>These are all the open bets from other users. Accept these bets with reckless abandon.<p>
+				<table class="table table-striped table-bordered">
+					<thead>
+					  <tr>
+						<th>User</th>
+						<th>Prop Bet</th>
+						<th>Wager</th>
+						<th>Max Bets</th>
+						<th>Remaining Bets</th>
+						<th>End Date</th>
+					  </tr>
+					</thead>
+					<tbody>
+					{% for bet in open_bets %}
+						<tr>
+							<td>{{ bet.user.get_full_name }}</td>
+							<td>{{ bet.prop_text }}</td>
+							<td>${{ bet.prop_wager }}</td>
+							<td>{{ bet.max_wagers }}</td>
+							<td>{{ bet.remaining_wagers }}</td>
+							<td>{{ bet.end_date }}</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+			<p>There aren't any open bets to accept. This makes me sad. Email the group to get to work.</p>
+			{% endif %}
+		</div>
     </div>
 
 {% endblock %}

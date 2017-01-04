@@ -7,7 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.utils import timezone
 from bets.forms import PlaceBetsForm
-from bets.models import ProposedBet
+from bets.models import ProposedBet, AcceptedBet
 
 # Create your views here.
 
@@ -20,17 +20,32 @@ def my_bets(request):
 	current_user = request.user
 
 	# get all their proposed bets that have remaining bets and have end dates past now
-	open_prop_bets = ProposedBet.objects.filter(user=current_user, remaining_wagers__gt=0, end_date__gt=timezone.now())
+	your_open_bets = ProposedBet.objects.filter(user=current_user, remaining_wagers__gt=0, end_date__gt=timezone.now())
 
-	return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets', 'open_prop_bets': open_prop_bets})
+	# your active bets, i.e. those bets you have open that other users have accepted
+	your_active_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__isnull=True)
+
+	return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets', 'your_open_bets': your_open_bets, 'your_active_bets': your_active_bets})
 
 @login_required(login_url='/login/')
 def open_bets(request):
-	return render(request, 'bets/base_open_bets.html', {'nbar': 'open_bets'})
+	# get the current user
+	current_user = request.user
+
+	# get all open prop bets from other users
+	open_bets = ProposedBet.objects.filter(remaining_wagers__gt=0, end_date__gt=timezone.now()).exclude(user=current_user)
+
+	return render(request, 'bets/base_open_bets.html', {'nbar': 'open_bets', 'open_bets': open_bets})
 
 @login_required(login_url='/login/')
 def all_bets(request):
-	return render(request, 'bets/base_all_bets.html', {'nbar': 'all_bets'})
+	# get all active accepted bets
+	all_active_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=True)
+
+	# get all accepted bets, ever
+	all_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False)
+
+	return render(request, 'bets/base_all_bets.html', {'nbar': 'all_bets', 'all_active_bets': all_active_bets, 'all_accepted_bets': all_accepted_bets})
 
 def place_bets_form_process(request, next_url):
 	if request.method == 'POST':
