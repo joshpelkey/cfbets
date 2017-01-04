@@ -25,7 +25,7 @@ class ProposedBet (models.Model):
 	modified_on = models.DateTimeField(auto_now=True)
 
 	class Meta:
-		ordering = ['-created_on']
+		ordering = ['end_date']
 		verbose_name = 'Proposed Bet'
         verbose_name_plural = 'Proposed Bets'
 

@@ -4,7 +4,36 @@
 
     <div class="container">
         <h1>My Bets</h1>
-	  <p> Hi, {{ user.get_full_name }}. You're logged in. </p>
+
+		<div class="container">
+			<h3>Your Open Bets</h3>
+				<table class="table">
+					<thead>
+					  <tr>
+						<th>Prop Bet</th>
+						<th>Wager</th>
+						<th>Max Bets</th>
+						<th>Remaining Bets</th>
+						<th>End Date</th>
+					  </tr>
+					</thead>
+					<tbody>
+					{% for bet in open_prop_bets %}
+						<tr>
+							<td>{{ bet.prop_text }}</td>
+							<td>${{ bet.prop_wager }}</td>
+							<td>{{ bet.max_wagers }}</td>
+							<td>{{ bet.remaining_wagers }}</td>
+							<td>{{ bet.end_date }}</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+		</div>
+		<div class="container">
+			<h3>Your Active Bets</h3>
+			<p>You don't have any active bets. How about accepting some <a href="/bets/open_bets">open bets?</a></p>
+		</div>
     </div>
 {% endblock %}
 

@@ -16,7 +16,13 @@ def bets(request):
 
 @login_required(login_url='/login/')
 def my_bets(request):
-	return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets'})
+	# get the current user
+	current_user = request.user
+
+	# get all their proposed bets that have remaining bets and have end dates past now
+	open_prop_bets = ProposedBet.objects.filter(user=current_user, remaining_wagers__gt=0, end_date__gt=timezone.now())
+
+	return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets', 'open_prop_bets': open_prop_bets})
 
 @login_required(login_url='/login/')
 def open_bets(request):
