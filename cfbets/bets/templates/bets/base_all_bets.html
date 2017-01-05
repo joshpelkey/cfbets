@@ -7,7 +7,7 @@
 		<div class="container">
 			<h3>Active Bets</h3>
 			{% if all_active_bets %}
-				<p>Currently active bets. These don't have a winner marked yet.</p>
+				<p>Currently active bets across all users. These don't have a winner marked yet.</p>
 				<table class="table table-striped table-bordered">
 					<thead>
 					  <tr>
@@ -53,12 +53,11 @@
 							<td>{{ bet.accepted_user.get_full_name }}</td>
 							<td>{{ bet.accepted_prop.prop_text }}</td>
 							<td>${{ bet.accepted_prop.prop_wager }}</td>
-							<!-- cant figure out how to compare enum correctly -->
-							{% if bets.accepted_prop.won_bet|add:"0" == 1 %}
+							{% if bet.accepted_prop.get_won_bet_display == "Win" %}
 								<td>{{ bet.accepted_prop.user.get_full_name }}</td>
-							{% elif bets.accepted_prop.won_bet|add:"0" == -1 %}
+							{% elif bet.accepted_prop.get_won_bet_display == "Loss" %}
 								<td>{{ bet.accepted_user.get_full_name }}</td>
-							{% elif not bets.accepted_prop.won_bet %}
+							{% elif bet.accepted_prop.get_won_bet_display == "Tie" %}
 								<td>push</td>
 							{% else %}
 								<td></td>
