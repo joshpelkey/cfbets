@@ -47,6 +47,7 @@ def all_bets(request):
 
 	return render(request, 'bets/base_all_bets.html', {'nbar': 'all_bets', 'all_active_bets': all_active_bets, 'all_accepted_bets': all_accepted_bets})
 
+@login_required(login_url='/login/')
 def place_bets_form_process(request, next_url):
 	if request.method == 'POST':
 		form = PlaceBetsForm(request.POST)
@@ -77,6 +78,49 @@ def place_bets_form_process(request, next_url):
 
 	return HttpResponseRedirect('/bets/my_bets')
 	
+
+@login_required(login_url='/login/')
+def remove_prop_bet(request):
+	if request.method == 'GET' and 'id' in request.GET:
+		# get the prop id from the get request
+		bet_id = request.GET['id']
+
+		# make sure it's an int
+		try:
+			int(bet_id)
+			is_int = True
+
+		except ValueError:
+			is_int = False
+
+		if is_int:
+
+			# figure out if this user can modify this bet id
+			try:
+				prop_bet = ProposedBet.objects.get(id=bet_id)	
+			except ProposedBet.DoesNotExist:
+				prop_bet = None
+
+			if prop_bet and request.user == prop_bet.user:
+				# ok this user owns this prop, let them 'delete' it by setting remaining bets to zero
+				prop_bet.remaining_wagers = 0
+				prop_bet.save(update_fields=['remaining_wagers'])
+				
+				# send a message over that the bet is removed
+				messages.success(request, 'Bet removed succesfully.')
+
+			else:
+				# send a message over that there was an error
+				messages.error(request, 'You don\'t have permission to modify this bet.')
+
+		else:
+			# send a message over that there was an error
+			messages.error(request, 'Bet ID must be an integer.')
+	else:	
+		# send a message over that there was an error
+		messages.error(request, 'Something went wrong. Try again.')
+
+	return HttpResponseRedirect('/bets/my_bets')
 
 @staff_member_required(login_url='/')
 def admin_bets(request):
