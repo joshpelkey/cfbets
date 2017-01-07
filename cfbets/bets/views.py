@@ -122,6 +122,57 @@ def remove_prop_bet(request):
 
 	return HttpResponseRedirect('/bets/my_bets')
 
+@login_required(login_url='/login/')
+def accept_prop_bet(request):
+	if request.method == 'GET' and 'id' in request.GET:
+		# get the prop id from the get request
+		bet_id = request.GET['id']
+
+		# make sure it's an int
+		try:
+			int(bet_id)
+			is_int = True
+
+		except ValueError:
+			is_int = False
+
+		if is_int:
+			# make sure bet exists
+			try:
+				prop_bet = ProposedBet.objects.get(id=bet_id)	
+			except ProposedBet.DoesNotExist:
+				prop_bet = None
+
+			# make sure bet is someone elses and it has bets left and it isn't expired	
+			if prop_bet \
+				and request.user != prop_bet.user \
+				and prop_bet.remaining_wagers > 0 \
+				and prop_bet.end_date > timezone.now():
+				
+				# decrement remaining wagers
+				prop_bet.remaining_wagers = prop_bet.remaining_wagers - 1
+				prop_bet.save(update_fields=['remaining_wagers'])
+				
+				# create an accepted bet
+				accepted_bet = AcceptedBet (accepted_prop=prop_bet, accepted_user=request.user)
+				accepted_bet.save()
+
+				# send a message over that the bet is accepted
+				messages.success(request, 'Bet accepted succesfully.')
+
+			else:
+				# send a message over that there was an error
+				messages.error(request, 'You don\'t have permission to modify this bet.')
+
+		else:
+			# send a message over that there was an error
+			messages.error(request, 'Bet ID must be an integer.')
+	else:	
+		# send a message over that there was an error
+		messages.error(request, 'Something went wrong. Try again.')
+
+	return HttpResponseRedirect('/bets/open_bets')
+
 @staff_member_required(login_url='/')
 def admin_bets(request):
 	return render(request, 'bets/base_admin_bets.html', {'nbar': 'admin_bets'})
