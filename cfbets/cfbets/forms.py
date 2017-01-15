@@ -1,6 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth.models import User
+from bets.models import UserProfile
 
 class SignUpForm(UserCreationForm):
     # declare the fields you will show
@@ -25,3 +27,13 @@ class SignUpForm(UserCreationForm):
     	if commit:
         	user.save()
 	return user
+
+class UserForm(forms.ModelForm):
+	class Meta:
+		model = User
+		fields = ["first_name", "last_name", "email"]
+
+class UserProfileForm(forms.ModelForm):
+	class Meta:
+		model = UserProfile
+		fields = ["get_prop_bet_emails", "get_accepted_bet_emails"]

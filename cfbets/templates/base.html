@@ -62,6 +62,24 @@
 												<div class="col-lg-8">
 													<p class="text-left"><strong>{{ user.get_full_name }}</strong></p>
 													<p class="text-left small">{{ user.email }}</p>
+													<p class="text-left small">Current Balance: <strong> 
+																						{% if user.userprofile.current_balance < 0 %}
+																							<font color="red">-${{ user.userprofile.current_balance|stringformat:"+d"|slice:"1:" }}</font>
+																						{% elif user.userprofile.current_balance > 0 %}
+																							<font color="green">${{ user.userprofile.current_balance }}</font>
+																						{% else %}
+																							${{ user.userprofile.current_balance }}
+																						{% endif %}	
+																						</strong></p>
+													<p class="text-left small">Overall Winnings: <strong>
+																						{% if user.userprofile.overall_winnings < 0 %}
+																							<font color="red">-${{ user.userprofile.overall_winnings|stringformat:"+d"|slice:"1:" }}</font>
+																						{% elif user.userprofile.overall_winnings > 0 %}
+																							<font color="green">${{ user.userprofile.overall_winnings }}</font>
+																						{% else %}
+																							${{ user.userprofile.overall_winnings }}
+																						{% endif %}	
+																						</strong></p>
 													<p class="text-left">
 														<a href="/profile" class="btn btn-primary btn-block btn-sm">Your Profile</a>
 													</p>
