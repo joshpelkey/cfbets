@@ -1,10 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib import messages
 from django.http import HttpResponseRedirect
-from cfbets.forms import SignUpForm, UserForm, UserProfileForm
+from cfbets.forms import SignUpForm, UserProfileForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from bets.models import ProposedBet, AcceptedBet
+from bets.models import ProposedBet, AcceptedBet, UserProfile
+from django.contrib.auth.models import User
 
 def welcome(request):
 	if request.user.is_authenticated():
@@ -37,25 +39,29 @@ def sign_up(request):
 @login_required(login_url='/login/')
 def profile(request):
 	# get the current user
-	current_user = request.user
+	current_user = User.objects.get(id=request.user.id)
+
+	# get the current user profile
+	current_user_profile = UserProfile.objects.get(user=current_user)
 
 	# all the form stuff
 	if request.method == 'POST':
-		user_form = UserForm(request.POST)
 		user_profile_form = UserProfileForm(request.POST)
-		if user_form.is_valid() and user_profile_form.is_valid():
-			# need to save for current user NOT create a new one...
-			user_form.save()
-			profile = user_profile_form.save(commit = False)
-			profile.user = current_user
-			profile.save()
+		if user_profile_form.is_valid():
+			# save data for current user / user profile
+			current_user.first_name = user_profile_form.cleaned_data['first_name']
+			current_user.last_name = user_profile_form.cleaned_data['last_name']
+			current_user_profile.get_prop_bet_emails = user_profile_form.cleaned_data['get_prop_bet_emails']
+			current_user_profile.get_accepted_bet_emails = user_profile_form.cleaned_data['get_accepted_bet_emails']
+			current_user.save(update_fields=['first_name', 'last_name'])
+			current_user_profile.save(update_fields=['get_prop_bet_emails', 'get_accepted_bet_emails'])
+
 			messages.success(request, 'Profile saved successfully.')
 			return HttpResponseRedirect("/profile")
 	else:
-		user_form = UserForm()
-		user_profile_form = UserProfileForm()
-
-	# all the status stuff
+		user_profile_form = UserProfileForm(initial={'first_name': current_user.first_name, 'last_name': current_user.last_name, 'email': current_user.email, \
+														'get_prop_bet_emails': current_user_profile.get_prop_bet_emails, \
+														'get_accepted_bet_emails': current_user_profile.get_accepted_bet_emails})
 
 	# get win/tie/loss stats
 	all_prop_bets = ProposedBet.objects.filter(user=current_user)
@@ -63,4 +69,4 @@ def profile(request):
 	total_tie_bets = all_prop_bets.filter(won_bet__exact=0).count()
 	total_loss_bets = all_prop_bets.filter(won_bet__exact=-1).count()
 
-	return render(request, 'base_profile.html', {'user_form': user_form, 'user_profile_form': user_profile_form, 'total_won_bets': total_won_bets, 'total_tie_bets': total_tie_bets, 'total_loss_bets': total_loss_bets})
+	return render(request, 'base_profile.html', {'user_profile_form': user_profile_form, 'total_won_bets': total_won_bets, 'total_tie_bets': total_tie_bets, 'total_loss_bets': total_loss_bets})

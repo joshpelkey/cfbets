@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from django.forms import ModelForm
 from django.contrib.auth.models import User
 from bets.models import UserProfile
 
@@ -28,12 +27,9 @@ class SignUpForm(UserCreationForm):
         	user.save()
 	return user
 
-class UserForm(forms.ModelForm):
-	class Meta:
-		model = User
-		fields = ["first_name", "last_name", "email"]
-
-class UserProfileForm(forms.ModelForm):
-	class Meta:
-		model = UserProfile
-		fields = ["get_prop_bet_emails", "get_accepted_bet_emails"]
+class UserProfileForm(forms.Form):
+	first_name = forms.CharField(label = "First Name", max_length=255)
+	last_name = forms.CharField(label = "Last Name", max_length=255)
+	email = forms.EmailField(label="Email", disabled=True, required=False)
+	get_prop_bet_emails = forms.BooleanField(required=False)
+	get_accepted_bet_emails = forms.BooleanField(required=False)
