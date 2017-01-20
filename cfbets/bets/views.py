@@ -177,4 +177,17 @@ def accept_prop_bet(request):
 
 @staff_member_required(login_url='/')
 def admin_bets(request):
-	return render(request, 'bets/base_admin_bets.html', {'nbar': 'admin_bets'})
+	# get all accepted bets that don't have a winner, but time is up
+	expired_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=True, accepted_prop__end_date__lt=timezone.now())
+	expired_prop_bets = ProposedBet.objects.filter(acceptedbet__in=expired_accepted_bets).distinct()
+
+	# get other prop bets w/o winner, but time isn't up
+	open_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=True, accepted_prop__end_date__gt=timezone.now())
+	open_prop_bets = ProposedBet.objects.filter(acceptedbet__in=open_accepted_bets).distinct()
+
+	# get all closed prop bets, those with a winner
+	closed_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False)
+	closed_prop_bets = ProposedBet.objects.filter(acceptedbet__in=closed_accepted_bets).distinct()
+
+
+	return render(request, 'bets/base_admin_bets.html', {'nbar': 'admin_bets', 'expired_prop_bets': expired_prop_bets, 'open_prop_bets': open_prop_bets, 'closed_prop_bets': closed_prop_bets})
