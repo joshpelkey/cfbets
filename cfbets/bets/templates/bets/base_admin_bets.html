@@ -13,10 +13,8 @@
 						  <tr>
 							<th>Proposer</th>
 							<th>Prop Bet</th>
-							<th>Wager</th>
-							<th>Max Bets</th>
-							<th>Bets Remain</th>
 							<th>End Date</th>
+							<th>Win / Loss</th>
 						  </tr>
 						</thead>
 						<tbody>
@@ -24,10 +22,11 @@
 							<tr>
 								<td>{{ bet.user.get_full_name }}</td>
 								<td>{{ bet.prop_text }}</td>
-								<td>${{ bet.prop_wager }}</td>
-								<td>{{ bet.max_wagers }}</td>
-								<td>{{ bet.remaining_wagers }}</td>
 								<td>{{ bet.end_date|date:"M d Y H:i" }}</td>
+								<td style="text-align: center; vertical-align: middle">
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=win" class="btn btn-primary btn-xs grid-button open-SetPropBet">Win</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=loss" class="btn btn-danger btn-xs grid-button open-SetPropBet">Loss</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=push" class="btn btn-default btn-xs grid-button open-SetPropBet">Push</a>
 							</tr>
 						{% endfor %}
 						</tbody>
@@ -45,10 +44,8 @@
 						  <tr>
 							<th>Proposer</th>
 							<th>Prop Bet</th>
-							<th>Wager</th>
-							<th>Max Bets</th>
-							<th>Bets Remain</th>
 							<th>End Date</th>
+							<th>Win / Loss</th>
 						  </tr>
 						</thead>
 						<tbody>
@@ -56,10 +53,12 @@
 							<tr>
 								<td>{{ bet.user.get_full_name }}</td>
 								<td>{{ bet.prop_text }}</td>
-								<td>${{ bet.prop_wager }}</td>
-								<td>{{ bet.max_wagers }}</td>
-								<td>{{ bet.remaining_wagers }}</td>
 								<td>{{ bet.end_date|date:"M d Y H:i" }}</td>
+								<td style="text-align: center; vertical-align: middle">
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=win" class="btn btn-primary btn-xs grid-button open-SetPropBet">Win</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=loss" class="btn btn-danger btn-xs grid-button open-SetPropBet">Loss</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=push" class="btn btn-default btn-xs grid-button open-SetPropBet">Push</a>
+								</td>
 							</tr>
 						{% endfor %}
 						</tbody>
@@ -77,10 +76,7 @@
 						  <tr>
 							<th>Proposer</th>
 							<th>Prop Bet</th>
-							<th>Wager</th>
-							<th>Max Bets</th>
-							<th>Bets Remain</th>
-							<th>Win/Loss</th>
+							<th>Win / Loss</th>
 						  </tr>
 						</thead>
 						<tbody>
@@ -88,9 +84,6 @@
 							<tr>
 								<td>{{ bet.user.get_full_name }}</td>
 								<td>{{ bet.prop_text }}</td>
-								<td>${{ bet.prop_wager }}</td>
-								<td>{{ bet.max_wagers }}</td>
-								<td>{{ bet.remaining_wagers }}</td>
 							{% if bet.get_won_bet_display == "Win" %}
 								<td>Win</td>
 							{% elif bet.get_won_bet_display == "Loss" %}
@@ -100,6 +93,8 @@
 							{% else %}
 								<td></td>
 							{% endif %}
+								<td style="text-align: center; vertical-align: middle">
+									<a href="#" data-href="/bets/undo_prop_bet?id={{ bet.id }}" data-target="#undoPropBet" data-toggle="modal" data-id1="{{ bet.prop_text }}" data-id2="{{ bet.user.get_full_name }}" title="Undo prop bet" class="btn btn-warning btn-xs open-UndoPropBet">undo</a></td>
 							</tr>
 						{% endfor %}
 						</tbody>
@@ -108,7 +103,40 @@
 					<p>No bets to mark.</p>
 				{% endif %}
 
-
     </div>
 
+	<!-- Undo Prop Bet modal -->
+	<div class="modal fade" id="undoPropBet" tabindex="-1" role="dialog" aria-labelledby="UndoPropBet">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="UndoPropBet">Undo Prop Bet?</h4>
+				</div>
+				<div class="modal-body">
+					<p>Undo <i>(aka remove win/loss status)</i> from  the following bet:</p>
+					<p><strong><span id="betUser"></span> proposed "<span id="betId"></span>"</strong></p>
+					<p><small>Note: This will also update winnings amounts for users with any accepted bets on this prop.</small></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<a class="btn btn-warning">Undo</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block morejs %}
+	$('#undoPropBet').on('show.bs.modal', function (e) {
+		// get the bet text and place it in the modal
+		var betText = $(e.relatedTarget).attr('data-id1');
+		var betUser = $(e.relatedTarget).attr('data-id2');
+		$("#betId").html(betText);
+		$("#betUser").html(betUser);
+
+		// get the href link with bet id and place it in the href
+		$(this).find('.btn-warning').attr('href', $(e.relatedTarget).data('href'));
+	});
 {% endblock %}

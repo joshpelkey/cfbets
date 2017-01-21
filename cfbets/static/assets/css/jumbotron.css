@@ -57,3 +57,8 @@ form#place-bets-form input#id_bet_amount {
 {
     font-size: 87px;
 }
+
+.grid-button
+{
+	margin: 5px;
+}
