@@ -8,7 +8,6 @@ from django.contrib import messages
 from django.utils import timezone
 from bets.forms import PlaceBetsForm
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
-from django.db.models import F
 
 # Create your views here.
 
