@@ -20,7 +20,7 @@ def my_bets(request):
 	current_user = request.user
 
 	# get all their proposed bets that have remaining bets and have end dates past now
-	your_open_bets = ProposedBet.objects.filter(user=current_user, remaining_wagers__gt=0, end_date__gt=timezone.now())
+	your_open_bets = ProposedBet.objects.filter(user=current_user, remaining_wagers__gt=0, end_date__gt=timezone.now(), won_bet__isnull=True)
 
 	# your active bets, i.e. those bets you have accepted and your bets that other users have accepted
 	your_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__isnull=True)
@@ -35,7 +35,7 @@ def open_bets(request):
 	current_user = request.user
 
 	# get all open prop bets from other users
-	open_bets = ProposedBet.objects.filter(remaining_wagers__gt=0, end_date__gt=timezone.now()).exclude(user=current_user)
+	open_bets = ProposedBet.objects.filter(remaining_wagers__gt=0, end_date__gt=timezone.now(), won_bet__isnull=True).exclude(user=current_user)
 
 	return render(request, 'bets/base_open_bets.html', {'nbar': 'open_bets', 'open_bets': open_bets})
 
