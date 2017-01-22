@@ -24,9 +24,9 @@
 								<td>{{ bet.prop_text }}</td>
 								<td>{{ bet.end_date|date:"M d Y H:i" }}</td>
 								<td style="text-align: center; vertical-align: middle">
-									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=win" class="btn btn-primary btn-xs grid-button open-SetPropBet">Win</a>
-									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=loss" class="btn btn-danger btn-xs grid-button open-SetPropBet">Loss</a>
-									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=push" class="btn btn-default btn-xs grid-button open-SetPropBet">Push</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=Win" class="btn btn-primary btn-xs grid-button open-SetPropBet">Win</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=Loss" class="btn btn-danger btn-xs grid-button open-SetPropBet">Loss</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=Tie" class="btn btn-default btn-xs grid-button open-SetPropBet">Push</a>
 							</tr>
 						{% endfor %}
 						</tbody>
@@ -55,9 +55,9 @@
 								<td>{{ bet.prop_text }}</td>
 								<td>{{ bet.end_date|date:"M d Y H:i" }}</td>
 								<td style="text-align: center; vertical-align: middle">
-									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=win" class="btn btn-primary btn-xs grid-button open-SetPropBet">Win</a>
-									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=loss" class="btn btn-danger btn-xs grid-button open-SetPropBet">Loss</a>
-									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=push" class="btn btn-default btn-xs grid-button open-SetPropBet">Push</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=Win" class="btn btn-primary btn-xs grid-button open-SetPropBet">Win</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=Loss" class="btn btn-danger btn-xs grid-button open-SetPropBet">Loss</a>
+									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=Tie" class="btn btn-default btn-xs grid-button open-SetPropBet">Push</a>
 								</td>
 							</tr>
 						{% endfor %}

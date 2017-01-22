@@ -26,5 +26,7 @@ urlpatterns = [
     url(r'^process_place_bets/(?P<next_url>.*$)', views.place_bets_form_process, name='place_bets_form_process'),
     url(r'^remove_prop_bet/', views.remove_prop_bet),
     url(r'^accept_prop_bet/', views.accept_prop_bet),
+    url(r'^set_prop_bet/', views.set_prop_bet),
+    url(r'^undo_prop_bet/', views.undo_prop_bet),
     url(r'^admin_bets/', views.admin_bets),
 ]
