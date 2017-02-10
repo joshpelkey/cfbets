@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'mailer',
     'bets',
 ]
+
+EMAIL_BACKEND = 'mailer.backend.DbBackend'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

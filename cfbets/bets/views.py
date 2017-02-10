@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.utils import timezone
 from bets.forms import PlaceBetsForm
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
@@ -162,6 +163,17 @@ def accept_prop_bet(request):
 				# send a message over that the bet is accepted
 				messages.success(request, 'Bet accepted succesfully.')
 
+				# send an email to the propser, if they have their setting enabled
+				user_profile = UserProfile.objects.get(user=prop_bet.user)
+				if user_profile.get_accepted_bet_emails:
+					email_message = 'Accepted Bet:\n' \
+									+ '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text + \
+									'\n\nAccepted By:\n' \
+									+ request.user.get_full_name() + \
+									'\n\njoshpelkey.homelinux.com:8081/bets/my_bets/'
+					send_list = []
+					send_list.append(prop_bet.user.email)
+					send_mail('cfbets: Bet Accepted', email_message, 'yojdork@gmail.com', send_list, fail_silently=True,)
 			else:
 				# send a message over that there was an error
 				messages.error(request, 'You don\'t have permission to modify this bet.')
