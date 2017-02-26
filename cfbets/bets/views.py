@@ -7,6 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 from bets.forms import PlaceBetsForm
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
 
@@ -186,6 +187,32 @@ def accept_prop_bet(request):
 		messages.error(request, 'Something went wrong. Try again.')
 
 	return HttpResponseRedirect('/bets/open_bets')
+
+@csrf_exempt
+@login_required(login_url='/login/')
+def check_duplicate_bet(request):
+	if request.method == 'POST':
+		# get the id in the post
+		prop_id = request.POST.get('id')
+		response_data = {}
+		# check and see if this user has already accepted this bet at least once
+		prop_bet = ProposedBet.objects.get(id=prop_id) 
+		accepted_bets = AcceptedBet.objects.filter(accepted_prop=prop_bet, accepted_user=request.user)
+		if accepted_bets:
+			response_data['is_duplicate'] = 'True'
+		else:
+			response_data['is_duplicate'] = 'False'
+
+		return HttpResponse (
+			json.dumps(response_data),
+			content_type="application/json"
+		)
+			
+	else:
+		return HttpResponse (
+			json.dumps({"nothing to see": "this should not happen"}),
+			content_type="application/json"
+		)
 
 @staff_member_required(login_url='/')
 def admin_bets(request):
