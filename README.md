@@ -10,8 +10,9 @@ College football betting web app, built with django/bootstrap/jquery
  - Receieve email when your prop bet accepted
  - User profile settings and stats
  - View current balance (reset after settling up) and overall winnings
+
  
- ## Admin Features:
+## Admin Features:
  - Set win/loss/tie for open or expired prop bets (only those that have at least one accepted bet)
  - Undo win/loss/tie from completed bet
  - Regular django admin site stuff
