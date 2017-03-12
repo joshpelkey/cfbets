@@ -26,6 +26,9 @@ class Command(BaseCommand):
 										' ($' + str(prop_bet.prop_wager) + \
 										'): ' + prop_bet.prop_text + '\n'
 
+					# put the site url in there
+					email_message += '\njoshpelkey.homelinux.com:8081/bets/open_bets/'
+
 					# send out the email
 					send_list = []
 					send_list.append(loop_user.user.email)
