@@ -67,6 +67,7 @@ form#place-bets-form input#id_bet_amount {
   padding: 0px;
 }
 .navbar-brand>img {
+  height: 100%;
   padding: 5px 15px 5px 15px;
   width: auto;
 }
