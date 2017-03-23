@@ -42,6 +42,7 @@ class AcceptedBet (models.Model):
 	modified_on = models.DateTimeField(auto_now=True)
 
 	class Meta:
+		ordering = ['accepted_prop__end_date']
 		verbose_name = 'Accepted Bet'
         verbose_name_plural = 'Accpeted Bets'
 
