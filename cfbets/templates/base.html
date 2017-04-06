@@ -196,6 +196,14 @@
 						$("#messages").slideUp(500);
 				});
 
+				$('#place_bets').on('show.bs.modal', function () {
+					var d = new Date();
+					var curr_date = d.getDate() + 7;
+					var curr_month = d.getMonth() + 1;
+					var curr_year = d.getFullYear();
+					$('#id_bet_expiration_date').val(curr_month + "/" + curr_date + "/" + curr_year + " 12:00");
+				});
+
 				$('#place-bets-form').on('submit', function(event) {
 					event.preventDefault();
 					$.ajax({ 
