@@ -108,7 +108,7 @@ def remove_prop_bet(request):
 			if prop_bet and request.user == prop_bet.user:
 				# ok this user owns this prop, let them 'delete' it by setting remaining bets to zero
 				prop_bet.remaining_wagers = 0
-				prop_bet.save(update_fields=['remaining_wagers'])
+				prop_bet.save(update_fields=['remaining_wagers', 'modified_on'])
 				
 				# send a message over that the bet is removed
 				messages.success(request, 'Bet removed succesfully.')
@@ -155,7 +155,7 @@ def accept_prop_bet(request):
 				
 				# decrement remaining wagers
 				prop_bet.remaining_wagers = prop_bet.remaining_wagers - 1
-				prop_bet.save(update_fields=['remaining_wagers'])
+				prop_bet.save(update_fields=['remaining_wagers', 'modified_on'])
 				
 				# create an accepted bet
 				accepted_bet = AcceptedBet (accepted_prop=prop_bet, accepted_user=request.user)
@@ -260,7 +260,7 @@ def set_prop_bet(request):
 			if prop_bet and prop_bet.won_bet is None:
 				# mark the prop with the appropriate winner
 				prop_bet.won_bet = win_loss_choices[status]
-				prop_bet.save(update_fields=['won_bet'])
+				prop_bet.save(update_fields=['won_bet', 'modified_on'])
 
 				# update winnings for the winner and loser, including the audit table
 				# get all accepted bets and loop them
@@ -403,7 +403,7 @@ def undo_prop_bet(request):
 
 				# set won_bet back to none
 				prop_bet.won_bet = None
-				prop_bet.save(update_fields=['won_bet'])
+				prop_bet.save(update_fields=['won_bet', 'modified_on'])
 
 				# save some info
 				current_admin_user = request.user
