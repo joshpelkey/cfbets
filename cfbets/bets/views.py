@@ -226,7 +226,7 @@ def admin_bets(request):
 
 	# get all closed prop bets, those with a winner
 	closed_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False)
-	closed_prop_bets = ProposedBet.objects.filter(acceptedbet__in=closed_accepted_bets).distinct()
+	closed_prop_bets = ProposedBet.objects.filter(acceptedbet__in=closed_accepted_bets).distinct().order_by('-modified_on')
 
 
 	return render(request, 'bets/base_admin_bets.html', {'nbar': 'admin_bets', 'expired_prop_bets': expired_prop_bets, 'open_prop_bets': open_prop_bets, 'closed_prop_bets': closed_prop_bets})
