@@ -29,7 +29,7 @@ class ProposedBet (models.Model):
 		verbose_name = 'Proposed Bet'
         verbose_name_plural = 'Proposed Bets'
 
-	def __str__(self):
+	def __unicode__(self):
 		return "{id: %d, user: '%s', prop: '%s', wager: '%d'}" % (self.id, self.user.get_full_name(), self.prop_text, self.prop_wager)
 		
 
@@ -46,7 +46,7 @@ class AcceptedBet (models.Model):
 		verbose_name = 'Accepted Bet'
         verbose_name_plural = 'Accpeted Bets'
 
-	def __str__(self):
+	def __unicode__(self):
 		return "{id: %d, proposer: '%s', proposee: '%s', prop_bet: '%s', wager: '%d'}" % (self.id, self.accepted_prop.user.get_full_name(), self.accepted_user.get_full_name(), self.accepted_prop.prop_text, self.accepted_prop.prop_wager)
 
 # User Profile table holds some user info specific to this betting app
