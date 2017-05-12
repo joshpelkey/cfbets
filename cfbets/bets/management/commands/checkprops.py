@@ -27,7 +27,7 @@ class Command(BaseCommand):
 										'): ' + prop_bet.prop_text + '\n'
 
 					# put the site url in there
-					email_message += '\njoshpelkey.homelinux.com:8081/bets/open_bets/'
+					email_message += '\nhttps://joshpelkey.homelinux.com:8081/bets/open_bets/'
 
 					# send out the email
 					send_list = []

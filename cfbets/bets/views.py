@@ -171,7 +171,7 @@ def accept_prop_bet(request):
 									+ '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text + \
 									'\n\nAccepted By:\n' \
 									+ request.user.get_full_name() + \
-									'\n\njoshpelkey.homelinux.com:8081/bets/my_bets/'
+									'\n\nhttps://joshpelkey.homelinux.com:8081/bets/my_bets/'
 					send_list = []
 					send_list.append(prop_bet.user.email)
 					send_mail('cfbets: Bet Accepted', email_message, 'yojdork@gmail.com', send_list, fail_silently=True,)
