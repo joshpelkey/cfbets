@@ -21,6 +21,8 @@
 		<link href="{% static 'assets/css/jumbotron.css' %}" rel="stylesheet">
 		<!-- datatables css cdn -->
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.4/dt-1.10.15/fh-3.1.2/r-2.1.1/datatables.min.css"/>
+		<!-- highcharts -->
+		<script src="http://code.highcharts.com/highcharts.js"></script>
 
 
 
@@ -120,6 +122,7 @@
 				<div class="collapse navbar-collapse">
 					{% if user.is_authenticated %}
 						<ul class="nav navbar-nav navbar-left">
+							<li class="{% if nbar == 'stats' %}active{% endif %}"><a href="/bets/stats">Stats</a></li>
 							<li class="{% if nbar == 'my_bets' %}active{% endif %}"><a href="/bets/my_bets">My Bets</a></li>
 							<li class="{% if nbar == 'open_bets' %}active{% endif %}"><a href="/bets/open_bets">Open Bets</a></li>
 							<li class="{% if nbar == 'all_bets' %}active{% endif %}"><a href="/bets/all_bets">All Bets</a></li>
