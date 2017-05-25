@@ -3,63 +3,94 @@
 {% block base_content %}
 
 <div class="container">
-	<h3>Your Stats</h3>
+	<h3><a href="/bets/your_stats"><small>Your Stats</small></a> || Global Stats</h3>
 	<hr>
 	<div class="container">
-		<div class="row">
-			<div class="col-md-4">
-				<div class="panel panel-default">
+	 <div class="row">
+			<div class="col-xs-6 col-md-3">
+				
+				<div class="panel status panel-primary">
 					<div class="panel-heading">
-						<h3>Cash Money</h3>
+						<h1 class="panel-title text-center">$25,000</h1>
 					</div>
-					<div class="panel-body" id="yourWinnings" style="width:100%; height:300px;">
-						<div id="lifetime-winnings">
-							<span class="label label-primary" style="font-size:12px;">Lifetime Winnings:</span></p>
-							<hr style="margin-bottom:1px;">
-							<div id="winnings-amount" style="font-size:60px; text-align:center;">$25</div>
-						</div>
-						<div id="current-balance" style="padding-top:10px;">
-							<span class="label label-default" style="font-size:12px;">Current Balance:</span>
-							<hr style="margin-bottom:1px;">
-							<div id="winnings-top" style="font-size:60px; text-align:center;">$0</div>
-						</div>
+					<div class="panel-body text-center">                        
+						<strong>total amount bet</strong>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-8">
-				<div class="panel panel-default">
+
+			</div>          
+			<div class="col-xs-6 col-md-3">
+			  
+				<div class="panel status panel-default">
 					<div class="panel-heading">
-						<h3>Win / Loss by Week</h3>
+						<h1 class="panel-title text-center">$170</h1>
 					</div>
-					<div class="panel-body" id="yourWinLossByWeek" style="width:100%; height:300px;">
+					<div class="panel-body text-center">                        
+						<strong>total amount won</strong>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xs-6 col-md-3">
+			   
+				<div class="panel status panel-success">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">20,453</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>total bets propsed</strong>
+					</div>
+				</div>
+
+			 
+			</div>
+			<div class="col-xs-6 col-md-3">
+			  
+				<div class="panel status panel-info">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">18,034</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>total bets accepted</strong>
 					</div>
 				</div>
 			</div>
 		</div>
+
 		<div class="row">
-			<div class="col-md-4">
+			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3>Who You Bet</h3>
+						<h3>Total Bets by Week</h3>
 					</div>
-					<div class="panel-body" id="whoYouBet" style="width:100%; height:300px;"></div>
-				</div>
-			</div>
-			<div class="col-md-8">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3>Number of Bets by Week</h3>
-					</div>
-					<div class="panel-body" id="yourBetsByWeek" style="width:100%; height:300px;">
+					<div class="panel-body" id="totalBetsByWeek" style="width:100%; height:300px;">
 					</div>
 				</div>
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-md-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3>Total Betting Report</h3>
+					</div>
+					<div class="panel-body" id="totalBettingReport" style="width:100%;">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3>Bettingest Couple</h3>
+					</div>
+					<div class="panel-body" id="bettingestCoupleReport" style="width:100%;">
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
-
-	<h3>Global Stats</h3>
-	<hr>
-
 </div>
 
 {% endblock %}
@@ -69,7 +100,7 @@
 /////////////////////////////////
 // win loss by week chart
 /////////////////////////////////
-Highcharts.chart('yourWinLossByWeek', {
+Highcharts.chart('totalBetsByWeek', {
 
     title: {
         text: 'Solar Employment Growth by Sector, 2010-2016'
@@ -164,59 +195,5 @@ Highcharts.chart('yourBetsByWeek', {
 
 });
 
-
-/////////////////////////////////
-// who you bet
-/////////////////////////////////
-Highcharts.chart('whoYouBet', {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: 0,
-        plotShadow: false
-    },
-    title: {
-        text: 'Browser<br>shares<br>2015',
-        align: 'center',
-        verticalAlign: 'middle',
-        y: 40
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    },
-    plotOptions: {
-        pie: {
-            dataLabels: {
-                enabled: true,
-                distance: -50,
-                style: {
-                    fontWeight: 'bold',
-                    color: 'white'
-                }
-            },
-            startAngle: -90,
-            endAngle: 90,
-            center: ['50%', '75%']
-        }
-    },
-    series: [{
-        type: 'pie',
-        name: 'Browser share',
-        innerSize: '50%',
-        data: [
-            ['Firefox',   10.38],
-            ['IE',       56.33],
-            ['Chrome', 24.03],
-            ['Safari',    4.77],
-            ['Opera',     0.91],
-            {
-                name: 'Proprietary or Undetectable',
-                y: 0.2,
-                dataLabels: {
-                    enabled: false
-                }
-            }
-        ]
-    }]
-});
 
 {% endblock %}

@@ -17,11 +17,18 @@ def bets(request):
 	return HttpResponseRedirect('/bets/my_bets');
 
 @login_required(login_url='/login/')
-def stats(request):
+def your_stats(request):
 	# get the current user
 	current_user = request.user
 
-	return render(request, 'bets/base_stats.html', {'nbar': 'stats'})
+	return render(request, 'bets/base_your_stats.html', {'nbar': 'stats'})
+
+@login_required(login_url='/login/')
+def global_stats(request):
+	# get the current user
+	current_user = request.user
+
+	return render(request, 'bets/base_global_stats.html', {'nbar': 'stats'})
 
 @login_required(login_url='/login/')
 def my_bets(request):
