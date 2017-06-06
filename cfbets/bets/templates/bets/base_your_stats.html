@@ -11,7 +11,13 @@
 				
 				<div class="panel status panel-primary">
 					<div class="panel-heading">
-						<h1 class="panel-title text-center">$250</h1>
+						<h1 class="panel-title text-center">
+							{% if user.userprofile.current_balance < 0 %}
+								-${{ user.userprofile.current_balance|stringformat:"+d"|slice:"1:" }}
+							{% else %}
+								${{ user.userprofile.current_balance }}
+							{% endif %}
+						</h1>
 					</div>
 					<div class="panel-body text-center">                        
 						<strong>lifetime winnings</strong>
@@ -23,7 +29,13 @@
 			  
 				<div class="panel status panel-info">
 					<div class="panel-heading">
-						<h1 class="panel-title text-center">-$70</h1>
+						<h1 class="panel-title text-center">
+							{% if user.userprofile.current_balance < 0 %}
+								-${{ user.userprofile.overall_winnings|stringformat:"+d"|slice:"1:" }}
+							{% else %}
+								${{ user.userprofile.overall_winnings }}
+							{% endif %}
+						</h1>
 					</div>
 					<div class="panel-body text-center">                        
 						<strong>current balance</strong>
@@ -51,7 +63,7 @@
 						<h1 class="panel-title text-center">45%</h1>
 					</div>
 					<div class="panel-body text-center">                        
-						<strong>win/loss ratio</strong>
+						<strong>win percentage</strong>
 					</div>
 				</div>
 			</div>
@@ -77,7 +89,7 @@
 						<h1 class="panel-title text-center">450</h1>
 					</div>
 					<div class="panel-body text-center">                        
-						<strong>accepted props</strong>
+						<strong>bets where you proposed</strong>
 					</div>
 				</div>
 
@@ -89,7 +101,7 @@
 						<h1 class="panel-title text-center">34%</h1>
 					</div>
 					<div class="panel-body text-center">                        
-						<strong>%won proposed</strong>
+						<strong>%won when you proposed</strong>
 					</div>
 				</div>
 
@@ -101,7 +113,7 @@
 						<h1 class="panel-title text-center">65</h1>
 					</div>
 					<div class="panel-body text-center">                        
-						<strong>bets you accepted</strong>
+						<strong>bets where you accepted</strong>
 					</div>
 				</div>
 
@@ -114,7 +126,7 @@
 						<h1 class="panel-title text-center">45%</h1>
 					</div>
 					<div class="panel-body text-center">                        
-						<strong>%won accepted</strong>
+						<strong>%won when you accepted</strong>
 					</div>
 				</div>
 			</div>
