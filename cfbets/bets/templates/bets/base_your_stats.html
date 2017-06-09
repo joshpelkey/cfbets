@@ -3,7 +3,7 @@
 {% block base_content %}
 
 <div class="container">
-	<h3>Your Stats || <a href="/bets/global_stats/"><small>Global Stats</small></a></h3>
+	<h3>Your Stats<small><span class="glyphicon glyphicon-option-vertical"></span><a href="/bets/global_stats/"><u>Global Stats</u></small></a></h3>
 	<hr>
 	<div class="container">
 	 <div class="row">
@@ -47,7 +47,7 @@
 			   
 				<div class="panel status panel-default">
 					<div class="panel-heading">
-						<h1 class="panel-title text-center" style="font-size:25px;">42-32-12</h1>
+						<h1 class="panel-title text-center" style="font-size:25px;">{{ win_loss_tie.wins }}-{{ win_loss_tie.losses }}-{{ win_loss_tie.ties }}</h1>
 					</div>
 					<div class="panel-body text-center">                        
 						<strong>win-loss-tie</strong>
@@ -60,7 +60,7 @@
 			  
 				<div class="panel status panel-success">
 					<div class="panel-heading">
-						<h1 class="panel-title text-center">45%</h1>
+						<h1 class="panel-title text-center">{{ win_loss_tie.win_percentage }}%</h1>
 					</div>
 					<div class="panel-body text-center">                        
 						<strong>win percentage</strong>
@@ -86,7 +86,7 @@
 				
 				<div class="panel status panel-success">
 					<div class="panel-heading">
-						<h1 class="panel-title text-center">450</h1>
+						<h1 class="panel-title text-center">{{ total_proposed.total_proposed }}</h1>
 					</div>
 					<div class="panel-body text-center">                        
 						<strong>bets where you proposed</strong>
@@ -98,7 +98,7 @@
 			  
 				<div class="panel status panel-default">
 					<div class="panel-heading">
-						<h1 class="panel-title text-center">34%</h1>
+						<h1 class="panel-title text-center">{{ total_proposed.win_percentage }}%</h1>
 					</div>
 					<div class="panel-body text-center">                        
 						<strong>%won when you proposed</strong>
@@ -110,7 +110,7 @@
 			   
 				<div class="panel status panel-info">
 					<div class="panel-heading">
-						<h1 class="panel-title text-center">65</h1>
+						<h1 class="panel-title text-center">{{ total_accepted.total_accepted }}</h1>
 					</div>
 					<div class="panel-body text-center">                        
 						<strong>bets where you accepted</strong>
@@ -123,7 +123,7 @@
 			  
 				<div class="panel status panel-default">
 					<div class="panel-heading">
-						<h1 class="panel-title text-center">45%</h1>
+						<h1 class="panel-title text-center">{{ total_accepted.win_percentage }}%</h1>
 					</div>
 					<div class="panel-body text-center">                        
 						<strong>%won when you accepted</strong>
@@ -136,9 +136,33 @@
 			<div class="col-md-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
-						<h3>Your Betting Report</h3>
+						<h3>Bet Against Report</h3>
 					</div>
 					<div class="panel-body" id="totalBettingReport" style="width:100%;">
+                        <table class="table table-striped table-bordered table-condensed" id="betAgainstReport">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Total Bets</th>
+                            <th>You Won</th>
+                            <th>You Lost</th>
+                            <th>You Tied</th>
+                            <th>Balance</th>
+                        </tr>
+                        </thead>
+
+                        {% for entry in bet_against_report %}
+                        <tr>
+                            <th>{{ entry.name }}</th>
+                            <th>{{ entry.total_bets }}</th>
+                            <th>{{ entry.total_won }}</th>
+                            <th>{{ entry.total_lost }}</th>
+                            <th>{{ entry.total_tie }}</th>
+                            <th>{{ entry.balance }}</th>
+                        </tr>
+                        {% endfor %}
+                        </table>
+
 					</div>
 				</div>
 			</div>
@@ -150,6 +174,12 @@
 {% endblock %}
 
 {% block morejs %}
+
+    $('#betAgainstReport').dataTable( {
+            "order": [[1, 'desc']],
+            "pageLength": 25
+    } );
+
 
 /////////////////////////////////
 // win loss by week chart
@@ -206,28 +236,22 @@ Highcharts.chart('totalBetsByWeek', {
 Highcharts.chart('yourBetsByWeek', {
 
     title: {
-        text: 'Solar Employment Growth by Sector, 2010-2016'
+        text: 'Total Bets; Last 16 weeks'
     },
 
     subtitle: {
-        text: 'Source: thesolarfoundation.com'
+        text: 'more stuff here'
     },
 
     yAxis: {
         title: {
-            text: 'Number of Employees'
+            text: 'Number of Bets'
         }
     },
     legend: {
         layout: 'vertical',
         align: 'right',
         verticalAlign: 'middle'
-    },
-
-    plotOptions: {
-        series: {
-            pointStart: 2010
-        }
     },
 
     series: [{

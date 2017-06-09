@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from common.utils import *
 from bets.forms import PlaceBetsForm
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
 
@@ -21,14 +22,35 @@ def your_stats(request):
 	# get the current user
 	current_user = request.user
 
-	return render(request, 'bets/base_your_stats.html', {'nbar': 'stats'})
+	# get win, loss, tie stats
+	total_wins = get_total_wins(current_user)
+	total_losses = get_total_losses(current_user)
+	total_ties = get_total_ties(current_user)
+	win_percentage = get_win_percentage(current_user)
+
+	# throw it in a dictionary
+	win_loss_tie = {'wins': total_wins, 'losses': total_losses, 'ties': total_ties, 'win_percentage': win_percentage}
+
+	# get total proposed and total proposed won bets
+	total_proposed = get_total_proposed(current_user)
+
+	# get total bets you accepted and total bets won you accepted
+	total_accepted = get_total_accepted(current_user)
+
+	# get bet against report
+	bet_against_report = get_bet_against_report(current_user)
+
+	return render(request, 'bets/base_your_stats.html', {'nbar': 'stats', 'win_loss_tie': win_loss_tie, 'total_proposed': total_proposed, 'total_accepted': total_accepted, 'bet_against_report': bet_against_report})
 
 @login_required(login_url='/login/')
 def global_stats(request):
 	# get the current user
 	current_user = request.user
 
-	return render(request, 'bets/base_global_stats.html', {'nbar': 'stats'})
+	global_stats = get_global_stats
+	global_betting_report = get_global_betting_report
+
+	return render(request, 'bets/base_global_stats.html', {'nbar': 'stats', 'global_stats': global_stats, 'global_betting_report': global_betting_report})
 
 @login_required(login_url='/login/')
 def my_bets(request):

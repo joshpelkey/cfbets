@@ -6,6 +6,7 @@ from cfbets.forms import SignUpForm, UserProfileForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from bets.models import ProposedBet, AcceptedBet, UserProfile
+from common.utils import *
 from django.contrib.auth.models import User
 
 def welcome(request):
@@ -63,18 +64,8 @@ def profile(request):
 														'get_prop_bet_emails': current_user_profile.get_prop_bet_emails, \
 														'get_accepted_bet_emails': current_user_profile.get_accepted_bet_emails})
 
-	# get won bets
-	all_won_prop_bets = ProposedBet.objects.filter(user=current_user, won_bet__exact=1).count()
-	all_won_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__exact=-1).count()
-	# get loss bets
-	all_loss_prop_bets = ProposedBet.objects.filter(user=current_user, won_bet__exact=-1).count()
-	all_loss_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__exact=1).count()
-	# get tie bets
-	all_tie_prop_bets = ProposedBet.objects.filter(user=current_user, won_bet__exact=0).count()
-	all_tie_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__exact=0).count()
-	# add em all up
-	total_won_bets = all_won_prop_bets + all_won_accepted_bets
-	total_loss_bets = all_loss_prop_bets + all_loss_accepted_bets
-	total_tie_bets = all_tie_prop_bets + all_tie_accepted_bets
+	total_won_bets = get_total_wins (current_user)
+	total_loss_bets = get_total_losses (current_user)
+	total_tie_bets = get_total_ties (current_user)
 
 	return render(request, 'base_profile.html', {'user_profile_form': user_profile_form, 'total_won_bets': total_won_bets, 'total_tie_bets': total_tie_bets, 'total_loss_bets': total_loss_bets})
