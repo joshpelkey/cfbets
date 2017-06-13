@@ -82,21 +82,30 @@ def get_bet_against_report(current_user):
 		# how many you won
 		total_proposed_won = bets_they_accepted.filter(accepted_prop__won_bet__exact=1)
 		total_accepted_won = bets_you_accepted.filter(accepted_prop__won_bet__exact=-1)
-		all_wins = total_proposed_won + total_accepted_won
+		all_wins = total_proposed_won | total_accepted_won
 		total_won = all_wins.count()
-		amount_won = all_wins.aggregate(Sum('accepted_prop__prop_wager'))
+		if (total_won):
+			amount_won = all_wins.aggregate(Sum('accepted_prop__prop_wager'))
+			amount_won = amount_won.values()[0]
+		else:
+			amount_won = 0
 
 		# how many you lost
 		total_proposed_lost = bets_they_accepted.filter(accepted_prop__won_bet__exact=-1)
 		total_accepted_lost = bets_you_accepted.filter(accepted_prop__won_bet__exact=1)
-		all_losses = total_proposed_lost + total_accepted_lost
+		all_losses = total_proposed_lost | total_accepted_lost
 		total_lost = all_losses.count()
-		amount_lost = all_lost.aggregate(Sum('accepted_prop__prop_wager'))
+		if (total_lost):
+			amount_lost = all_losses.aggregate(Sum('accepted_prop__prop_wager'))
+			amount_lost = amount_lost.values()[0]
+		else:
+			amount_lost = 0
 
 		# how many you tied 
-		total_proposed_tie = bets_they_accepted.filter(accepted_prop__won_bet__exact=0).count()
-		total_accepted_tie = bets_you_accepted.filter(accepted_prop__won_bet__exact=0).count()
-		total_tie = total_proposed_tie + total_accepted_tie
+		total_proposed_tie = bets_they_accepted.filter(accepted_prop__won_bet__exact=0)
+		total_accepted_tie = bets_you_accepted.filter(accepted_prop__won_bet__exact=0)
+		all_ties = total_proposed_tie | total_accepted_tie
+		total_tie = all_ties.count()
 
 		# get balance
 		balance = amount_won - amount_lost
