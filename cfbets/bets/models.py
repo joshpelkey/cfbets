@@ -13,6 +13,7 @@ class ProposedBet (models.Model):
 	max_wagers = models.IntegerField()
 	remaining_wagers = models.IntegerField()
 	end_date = models.DateTimeField()
+	odds = models.DecimalField(default=1.0)
 
 	# win / loss / tie choices 
 	WIN = 1
@@ -30,7 +31,7 @@ class ProposedBet (models.Model):
         verbose_name_plural = 'Proposed Bets'
 
 	def __unicode__(self):
-		return "{id: %d, user: '%s', prop: '%s', wager: '%d'}" % (self.id, self.user.get_full_name(), self.prop_text, self.prop_wager)
+		return "{id: %d, user: '%s', prop: '%s', wager: '%d', odds: '%f'}" % (self.id, self.user.get_full_name(), self.prop_text, self.prop_wager, self.odds)
 		
 
 
