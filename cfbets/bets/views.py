@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from common.stats import *
 from bets.forms import PlaceBetsForm
-from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
+from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit, User
 
 # Create your views here.
 
@@ -49,8 +49,9 @@ def global_stats(request):
 
 	global_stats = get_global_stats
 	global_betting_report = get_global_betting_report
+	global_bettingest_couples = get_bettingest_couples
 
-	return render(request, 'bets/base_global_stats.html', {'nbar': 'stats', 'global_stats': global_stats, 'global_betting_report': global_betting_report})
+	return render(request, 'bets/base_global_stats.html', {'nbar': 'stats', 'global_stats': global_stats, 'global_betting_report': global_betting_report, 'global_bettingest_couples': global_bettingest_couples})
 
 @login_required(login_url='/login/')
 def my_bets(request):

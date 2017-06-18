@@ -2,6 +2,7 @@
 # utility helpers for cfbets to use
 ####################################
 
+from itertools import combinations
 from bets.models import ProposedBet, AcceptedBet, UserProfile, User
 from django.db.models import Sum
 
@@ -147,6 +148,35 @@ def get_global_betting_report():
 	return global_betting_report
 
 def get_bettingest_couples():
-	users = Users.objects.all()	
+	# get list of users
+	users = User.objects.values('id', 'first_name', 'last_name')
 
-	return global_bettingest_couples
+	# use itertools to get all combinations
+	global_bettingest_couples = []
+	for combo in combinations(users, 2):
+		# for each combo, check how many bets they have with eachother 
+		num_bets = get_couple_bet_number(combo[0]['id'], combo[1]['id'])
+
+		# append to list of dictionaries
+		# e.g. L = [{num_bets: 5, users: ['John Doe', 'Jane Doe']}]
+		user1_name = combo[0]['first_name'] + ' ' + combo[0]['last_name']
+		user2_name = combo[1]['first_name'] + ' ' + combo[1]['last_name']
+		users_names = [user1_name, user2_name]
+		entry = {'num_bets': num_bets, 'users': users_names}
+		global_bettingest_couples.append(entry)
+
+	# pare down to top 5
+	pared_global_bettingest_couples = sorted(global_bettingest_couples, key=lambda k: k['num_bets'], reverse=True)[:10]
+
+	return pared_global_bettingest_couples
+
+def get_couple_bet_number(user1_id, user2_id):
+	# get user objects
+	user1 = User.objects.get(id__exact=user1_id)
+	user2 = User.objects.get(id__exact=user2_id)
+
+	# find all bets where user1 and user2 bet eachother
+	num_bets_user1_accepted = AcceptedBet.objects.filter(accepted_user=user1, accepted_prop__user=user2).count()
+	num_bets_user2_accepted = AcceptedBet.objects.filter(accepted_user=user2, accepted_prop__user=user1).count()
+
+	return num_bets_user1_accepted + num_bets_user2_accepted
