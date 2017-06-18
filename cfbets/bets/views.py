@@ -198,7 +198,7 @@ def accept_prop_bet(request):
 				accepted_bet.save()
 
 				# send a message over that the bet is accepted
-				messages.success(request, 'Bet accepted succesfully.')
+				messages.success(request, 'Bet accepted successfully.')
 
 				# send an email to the propser, if they have their setting enabled
 				user_profile = UserProfile.objects.get(user=prop_bet.user)
