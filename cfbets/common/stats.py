@@ -133,7 +133,7 @@ def get_global_stats():
 def get_global_betting_report():
 	global_betting_report =[] 
 
-	users = User.objects.all().order_by('first_name')
+	users = User.objects.all()
 	for user in users:
 		name = user.first_name + ' ' + user.last_name
 		total_won = get_total_wins(user)
@@ -145,3 +145,8 @@ def get_global_betting_report():
 		global_betting_report.append({'name': name, 'total_bets': total_bets, 'total_won': total_won, 'total_lost': total_lost, 'total_tie': total_tie, 'win_percentage': win_percentage})
 
 	return global_betting_report
+
+def get_bettingest_couples():
+	users = Users.objects.all()	
+
+	return global_bettingest_couples

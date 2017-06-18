@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from common.utils import *
+from common.stats import *
 from bets.forms import PlaceBetsForm
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
 

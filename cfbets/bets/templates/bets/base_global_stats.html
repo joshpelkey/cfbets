@@ -38,7 +38,7 @@
 						<h1 class="panel-title text-center">{{ global_stats.total_proposed }}</h1>
 					</div>
 					<div class="panel-body text-center">                        
-						<strong>total bets propsed</strong>
+						<strong>total bets proposed</strong>
 					</div>
 				</div>
 
@@ -71,7 +71,7 @@
 
 		<div class="row">
 			<div class="col-md-8">
-				<div class="panel panel-default">
+				<div class="panel panel-default" style="min-width: 468px;">
 					<div class="panel-heading">
 						<h3>Total Betting Report</h3>
 					</div>
@@ -121,7 +121,7 @@
 {% block morejs %}
 
 	$('#globalBettingReport').dataTable( {
-			"order": [[0, 'asc']],
+			"order": [[1, 'desc']],
 			"pageLength": 25 
 	} );
 
