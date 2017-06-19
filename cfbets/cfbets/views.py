@@ -6,7 +6,7 @@ from cfbets.forms import SignUpForm, UserProfileForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from bets.models import ProposedBet, AcceptedBet, UserProfile
-from common.utils import *
+from common.stats import *
 from django.contrib.auth.models import User
 
 def welcome(request):
