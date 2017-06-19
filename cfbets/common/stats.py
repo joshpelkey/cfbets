@@ -2,10 +2,14 @@
 # utility helpers for cfbets to use
 ####################################
 
+import datetime
 from itertools import combinations
 from bets.models import ProposedBet, AcceptedBet, UserProfile, User
 from django.db.models import Sum
 
+##########################################
+## YOUR STATS
+##########################################
 def get_total_wins(current_user):
 	all_won_prop_bets = ProposedBet.objects.filter(user=current_user, won_bet__exact=1).count()
 	all_won_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__exact=-1).count()
@@ -115,8 +119,116 @@ def get_bet_against_report(current_user):
 
 	return bet_against_report
 
-	
+def get_week_start():
+	# get last monday. we'll use this as a reference for weeks
+	today = datetime.date.today()
+	last_monday = today - datetime.timedelta(days=today.weekday())
 
+	# get the earliest date in the series for the highcharts plot x-axis
+	first_date = last_monday - datetime.timedelta(days=7*(14))
+	week_start = {'year': first_date.year, 'month': first_date.month-1, 'day': first_date.day}
+	
+	return week_start
+
+def get_total_bets_by_week(current_user):
+	total_bets_by_week = []
+
+	# get last monday. we'll use this as a reference for weeks
+	today = datetime.date.today()
+	last_monday = today - datetime.timedelta(days=today.weekday())
+
+	total_proposed = []
+	total_accepted = []
+	for week in range(15):
+		# generate start and end dates
+		start_date = last_monday - datetime.timedelta(days=7*(week))
+		end_date = last_monday - datetime.timedelta(days=7*(week-1))
+
+		# find total number proposed and accepted in that range
+		proposed = ProposedBet.objects.filter(user=current_user, created_on__range=(start_date, end_date)).count()
+		accepted = AcceptedBet.objects.filter(accepted_user=current_user, created_on__range=(start_date, end_date)).count()
+
+		# append these counts to their lists
+		total_proposed.append(proposed)
+		total_accepted.append(accepted)
+		
+	total_bets_by_week.append({'name': 'Proposed Bets', 'data': total_proposed[::-1]})	
+	total_bets_by_week.append({'name': 'Accepted Bets', 'data': total_accepted[::-1]})	
+
+	return total_bets_by_week
+
+# slightly redundant from above, clean up later...maybe
+def get_total_money_by_week(current_user):
+	total_money_by_week = []
+
+	# get last monday. we'll use this as a reference for weeks
+	today = datetime.date.today()
+	last_monday = today - datetime.timedelta(days=today.weekday())
+
+	prop_balance = []
+	accepted_balance = []
+	total_balance = []
+	for week in range(15):
+		# generate start and end dates
+		start_date = last_monday - datetime.timedelta(days=7*(week))
+		end_date = last_monday - datetime.timedelta(days=7*(week-1))
+
+		# find total number proposed and accepted in that range
+		proposed = ProposedBet.objects.filter(user=current_user, created_on__range=(start_date, end_date))
+		accepted = AcceptedBet.objects.filter(accepted_user=current_user, created_on__range=(start_date, end_date))
+
+		# balance from prop wins
+		total_proposed_won = proposed.filter(won_bet__exact=1)
+		if (total_proposed_won.count()):
+			balance_from_prop_wins = total_proposed_won.aggregate(Sum('prop_wager'))
+			balance_from_prop_wins = balance_from_prop_wins.values()[0]
+		else:
+			balance_from_prop_wins = 0
+
+		# balance from prop losses
+		total_proposed_lost = proposed.filter(won_bet__exact=-1)
+		if (total_proposed_lost.count()):
+			balance_from_prop_losses = total_proposed_lost.aggregate(Sum('prop_wager'))
+			balance_from_prop_losses = balance_from_prop_losses.values()[0]
+		else:
+			balance_from_prop_losses = 0
+
+		# balance from accepted wins
+		total_accepted_won = accepted.filter(accepted_prop__won_bet__exact=-1)
+		if (total_accepted_won.count()):
+			balance_from_accepted_wins = total_accepted_won.aggregate(Sum('accepted_prop__prop_wager'))
+			balance_from_accepted_wins = balance_from_accepted_wins.values()[0]
+		else:
+			balance_from_accepted_wins = 0
+
+		# balance from accepted losses
+		total_accepted_lost = accepted.filter(accepted_prop__won_bet__exact=1)
+		if (total_accepted_lost.count()):
+			balance_from_accepted_losses = total_accepted_lost.aggregate(Sum('accepted_prop__prop_wager'))
+			balance_from_accepted_losses = balance_from_accepted_losses.values()[0]
+		else:
+			balance_from_accepted_losses = 0
+
+		# FINALLY, calculate balance
+		prop_balance_amount = balance_from_prop_wins - balance_from_prop_losses
+		accepted_balance_amount = balance_from_accepted_wins - balance_from_accepted_losses
+		balance_amount = (balance_from_prop_wins + balance_from_accepted_wins) - (balance_from_prop_losses + balance_from_accepted_losses)
+
+		# append these counts to their lists
+		prop_balance.append(prop_balance_amount)
+		accepted_balance.append(accepted_balance_amount)
+		total_balance.append(balance_amount)
+		
+	total_money_by_week.append({'name': 'Prop Amount', 'data': prop_balance[::-1]})	
+	total_money_by_week.append({'name': 'Accepted Amount', 'data': accepted_balance[::-1]})	
+	total_money_by_week.append({'name': 'Total Amount', 'data': total_balance[::-1]})	
+
+	return total_money_by_week
+
+	
+##########################################
+## GLOBAL STATS
+##########################################
 def get_global_stats():
 	global_total_proposed = ProposedBet.objects.count()
 	global_total_accepted = AcceptedBet.objects.values('accepted_prop').distinct().count()
@@ -180,3 +292,30 @@ def get_couple_bet_number(user1_id, user2_id):
 	num_bets_user2_accepted = AcceptedBet.objects.filter(accepted_user=user2, accepted_prop__user=user1).count()
 
 	return num_bets_user1_accepted + num_bets_user2_accepted
+
+def get_global_total_bets_by_week():
+	global_total_bets_by_week = []
+
+	# get last monday. we'll use this as a reference for weeks
+	today = datetime.date.today()
+	last_monday = today - datetime.timedelta(days=today.weekday())
+
+	total_proposed = []
+	total_accepted = []
+	for week in range(15):
+		# generate start and end dates
+		start_date = last_monday - datetime.timedelta(days=7*(week))
+		end_date = last_monday - datetime.timedelta(days=7*(week-1))
+
+		# find total number proposed and accepted in that range
+		proposed = ProposedBet.objects.filter(created_on__range=(start_date, end_date)).count()
+		accepted = AcceptedBet.objects.filter(created_on__range=(start_date, end_date)).count()
+
+		# append these counts to their lists
+		total_proposed.append(proposed)
+		total_accepted.append(accepted)
+		
+	global_total_bets_by_week.append({'name': 'Proposed Bets', 'data': total_proposed[::-1]})	
+	global_total_bets_by_week.append({'name': 'Accepted Bets', 'data': total_accepted[::-1]})	
+
+	return global_total_bets_by_week

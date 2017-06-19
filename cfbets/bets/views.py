@@ -40,7 +40,16 @@ def your_stats(request):
 	# get bet against report
 	bet_against_report = get_bet_against_report(current_user)
 
-	return render(request, 'bets/base_your_stats.html', {'nbar': 'stats', 'win_loss_tie': win_loss_tie, 'total_proposed': total_proposed, 'total_accepted': total_accepted, 'bet_against_report': bet_against_report})
+	# get total bets by week list (both proposed and accepted)
+	total_bets_by_week = get_total_bets_by_week(current_user)
+
+	# get total money by week list
+	total_money_by_week = get_total_money_by_week(current_user)
+
+	# get week start info
+	week_start = get_week_start()
+
+	return render(request, 'bets/base_your_stats.html', {'nbar': 'stats', 'win_loss_tie': win_loss_tie, 'total_proposed': total_proposed, 'total_accepted': total_accepted, 'bet_against_report': bet_against_report, 'week_start': week_start, 'total_bets_by_week': total_bets_by_week, 'total_money_by_week': total_money_by_week})
 
 @login_required(login_url='/login/')
 def global_stats(request):
@@ -50,8 +59,12 @@ def global_stats(request):
 	global_stats = get_global_stats
 	global_betting_report = get_global_betting_report
 	global_bettingest_couples = get_bettingest_couples
+	global_total_bets_by_week = get_global_total_bets_by_week
 
-	return render(request, 'bets/base_global_stats.html', {'nbar': 'stats', 'global_stats': global_stats, 'global_betting_report': global_betting_report, 'global_bettingest_couples': global_bettingest_couples})
+	# get week start info
+	week_start = get_week_start()
+
+	return render(request, 'bets/base_global_stats.html', {'nbar': 'stats', 'global_stats': global_stats, 'global_total_bets_by_week': global_total_bets_by_week, 'week_start': week_start, 'global_betting_report': global_betting_report, 'global_bettingest_couples': global_bettingest_couples})
 
 @login_required(login_url='/login/')
 def my_bets(request):

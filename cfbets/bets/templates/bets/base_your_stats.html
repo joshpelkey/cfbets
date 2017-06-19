@@ -134,6 +134,18 @@
 
 		<div class="row">
 			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3>Money Won by Week</h3>
+					</div>
+					<div class="panel-body" id="moneyWonByWeek" style="width:100%; height:300px;">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
 				<div class="panel panel-default" style="min-width: 468px;">
 					<div class="panel-heading">
 						<h3>Bet Against Report</h3>
@@ -182,72 +194,42 @@
 
 
 /////////////////////////////////
-// win loss by week chart
+// total bets by week chart
 /////////////////////////////////
 Highcharts.chart('totalBetsByWeek', {
+	chart: {
+		type: 'line'
+	},
 
     title: {
-        text: 'Solar Employment Growth by Sector, 2010-2016'
+        text: 'Total Bets by Week (last 15 weeks)'
     },
 
-    subtitle: {
-        text: 'Source: thesolarfoundation.com'
-    },
-
-    yAxis: {
-        title: {
-            text: 'Number of Employees'
-        }
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-    },
-
-    plotOptions: {
-        series: {
-            pointStart: 2010
-        }
-    },
-
-    series: [{
-        name: 'Installation',
-        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-    }, {
-        name: 'Manufacturing',
-        data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-    }, {
-        name: 'Sales & Distribution',
-        data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-    }, {
-        name: 'Project Development',
-        data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-    }, {
-        name: 'Other',
-        data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
-    }]
-
-});
-
-/////////////////////////////////
-// number of bets by week chart
-/////////////////////////////////
-Highcharts.chart('yourBetsByWeek', {
-
-    title: {
-        text: 'Total Bets; Last 16 weeks'
-    },
-
-    subtitle: {
-        text: 'more stuff here'
-    },
+	xAxis: {
+		tickInterval: 7 * 24 * 3600 * 1000,
+		type: 'datetime',
+		startOnTick: true,
+		labels: {
+			format: '{value:%m/%d}',
+			rotation: -45,
+			y: 30,
+			align: 'center'
+		}
+	},
 
     yAxis: {
         title: {
             text: 'Number of Bets'
         }
     },
+
+	plotOptions: {
+		series: {
+			pointStart: Date.UTC({{ week_start.year }}, {{ week_start.month }}, {{ week_start.day }}),
+			pointInterval: 7 * 24 * 3600 * 1000,
+		}
+	},
+
     legend: {
         layout: 'vertical',
         align: 'right',
@@ -255,23 +237,69 @@ Highcharts.chart('yourBetsByWeek', {
     },
 
     series: [{
-        name: 'Installation',
-        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+        name: "{{ total_bets_by_week.0.name }}",
+        data: {{ total_bets_by_week.0.data }}
     }, {
-        name: 'Manufacturing',
-        data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-    }, {
-        name: 'Sales & Distribution',
-        data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-    }, {
-        name: 'Project Development',
-        data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-    }, {
-        name: 'Other',
-        data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+        name: "{{ total_bets_by_week.1.name }}",
+        data: {{ total_bets_by_week.1.data }}
     }]
 
 });
 
+/////////////////////////////////
+// money won by week chart
+/////////////////////////////////
+Highcharts.chart('moneyWonByWeek', {
+	chart: {
+		type: 'column'
+	},
+
+    title: {
+        text: 'Money Won by Week (last 15 weeks)'
+    },
+
+	xAxis: {
+		tickInterval: 7 * 24 * 3600 * 1000,
+		type: 'datetime',
+		startOnTick: true,
+		labels: {
+			format: '{value:%m/%d}',
+			rotation: -45,
+			y: 30,
+			align: 'center'
+		}
+	},
+
+    yAxis: {
+        title: {
+            text: 'Amount (usd)'
+        }
+    },
+
+	plotOptions: {
+		series: {
+			pointStart: Date.UTC({{ week_start.year }}, {{ week_start.month }}, {{ week_start.day }}),
+			pointInterval: 7 * 24 * 3600 * 1000,
+		}
+	},
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    series: [{
+        name: "{{ total_money_by_week.0.name }}",
+        data: {{ total_money_by_week.0.data }}
+	}, {
+        name: "{{ total_money_by_week.1.name }}",
+        data: {{ total_money_by_week.1.data }}
+	}, {
+        name: "{{ total_money_by_week.2.name }}",
+        data: {{ total_money_by_week.2.data }}
+    }]
+
+});
 
 {% endblock %}
