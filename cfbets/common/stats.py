@@ -11,7 +11,7 @@ from django.db.models import Sum
 ## YOUR STATS
 ##########################################
 def get_total_wins(current_user):
-	all_won_prop_bets = ProposedBet.objects.filter(user=current_user, won_bet__exact=1).count()
+	all_won_prop_bets = AcceptedBet.objects.filter(accepted_prop__user=current_user, accepted_prop__won_bet__exact=1).count()
 	all_won_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__exact=-1).count()
 
 	total_won_bets = all_won_prop_bets + all_won_accepted_bets
@@ -19,14 +19,14 @@ def get_total_wins(current_user):
 
 
 def get_total_losses(current_user):
-	all_loss_prop_bets = ProposedBet.objects.filter(user=current_user, won_bet__exact=-1).count()
+	all_loss_prop_bets = AcceptedBet.objects.filter(accepted_prop__user=current_user, accepted_prop__won_bet__exact=-1).count()
 	all_loss_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__exact=1).count()
 
 	total_loss_bets = all_loss_prop_bets + all_loss_accepted_bets
 	return total_loss_bets
 
 def get_total_ties(current_user):
-	all_tie_prop_bets = ProposedBet.objects.filter(user=current_user, won_bet__exact=0).count()
+	all_tie_prop_bets = AcceptedBet.objects.filter(accepted_prop__user=current_user, accepted_prop__won_bet__exact=0).count()
 	all_tie_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__exact=0).count()
 
 	total_tie_bets = all_tie_prop_bets + all_tie_accepted_bets
@@ -174,21 +174,21 @@ def get_total_money_by_week(current_user):
 		end_date = last_monday - datetime.timedelta(days=7*(week-1))
 
 		# find total number proposed and accepted in that range
-		proposed = ProposedBet.objects.filter(user=current_user, created_on__range=(start_date, end_date))
+		proposed_accepted = AcceptedBet.objects.filter(accepted_prop__user=current_user, accepted_prop__created_on__range=(start_date, end_date))
 		accepted = AcceptedBet.objects.filter(accepted_user=current_user, created_on__range=(start_date, end_date))
 
 		# balance from prop wins
-		total_proposed_won = proposed.filter(won_bet__exact=1)
+		total_proposed_won = proposed_accepted.filter(accepted_prop__won_bet__exact=1)
 		if (total_proposed_won.count()):
-			balance_from_prop_wins = total_proposed_won.aggregate(Sum('prop_wager'))
+			balance_from_prop_wins = total_proposed_won.aggregate(Sum('accepted_prop__prop_wager'))
 			balance_from_prop_wins = balance_from_prop_wins.values()[0]
 		else:
 			balance_from_prop_wins = 0
 
 		# balance from prop losses
-		total_proposed_lost = proposed.filter(won_bet__exact=-1)
+		total_proposed_lost = proposed_accepted.filter(accepted_prop__won_bet__exact=-1)
 		if (total_proposed_lost.count()):
-			balance_from_prop_losses = total_proposed_lost.aggregate(Sum('prop_wager'))
+			balance_from_prop_losses = total_proposed_lost.aggregate(Sum('accepted_prop__prop_wager'))
 			balance_from_prop_losses = balance_from_prop_losses.values()[0]
 		else:
 			balance_from_prop_losses = 0
