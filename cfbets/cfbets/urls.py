@@ -16,10 +16,17 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
 from django.views.generic.base import TemplateView
 from cfbets.views import welcome, sign_up, profile
 
 urlpatterns = [
+    url(r'^favicon.ico$',
+        RedirectView.as_view(
+            url=staticfiles_storage.url('assets/icons/favicon.ico'),
+            permanent=False),
+        name="favicon"),
     url(r'^bets/', include('bets.urls', namespace='bets', app_name='bets')),
     url(r'^$', welcome),
     url(r'^login/$', auth_views.login, {'template_name': 'base_login.html'}, name='login'),
