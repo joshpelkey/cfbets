@@ -13,6 +13,7 @@
 					  <tr>
 						<th>Prop Bet</th>
 						<th>Wager</th>
+						<th>Odds</th>
 						<th>Max Bets</th>
 						<th>Bets Remain</th>
 						<th>End Date</th>
@@ -23,6 +24,7 @@
 						<tr>
 							<td>{{ bet.prop_text }}</td>
 							<td>${{ bet.prop_wager }}</td>
+							<td>${{ bet.odds }}</td>
 							<td>{{ bet.max_wagers }}</td>
 							<td>{{ bet.remaining_wagers }}</td>
 							<td>{{ bet.end_date|date:"M d Y H:i" }}</td>
@@ -49,6 +51,7 @@
 						<th>Proposee</th>
 						<th>Prop Bet</th>
 						<th>Wager</th>
+						<th>Odds</th>
 					  </tr>
 					</thead>
 					<tbody>
@@ -58,6 +61,7 @@
 							<td>{{ bet.accepted_user.get_full_name }}</td>
 							<td>{{ bet.accepted_prop.prop_text }}</td>
 							<td>${{ bet.accepted_prop.prop_wager }}</td>
+							<td>${{ bet.accepted_prop.odds }}</td>
 						</tr>
 					{% endfor %}
 					</tbody>
