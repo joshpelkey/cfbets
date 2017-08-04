@@ -9,8 +9,7 @@ College football betting web app, built with django/bootstrap/jquery
  - View completed prop bets across all users
  - Receive email when your prop bet accepted
  - Receive daily digest email when new prop bets are added
- - User profile settings and stats
- - View current balance (reset after settling up) and overall winnings
+ - User profile settings
  - Stats! (user and global)
 
  
