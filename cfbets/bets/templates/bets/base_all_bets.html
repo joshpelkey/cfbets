@@ -15,7 +15,6 @@
 						<th>Proposee</th>
 						<th>Prop Bet</th>
 						<th>Wager</th>
-						<th>Odds</th>
 					  </tr>
 					</thead>
 					<tbody>
@@ -25,7 +24,6 @@
 							<td>{{ bet.accepted_user.get_full_name }}</td>
 							<td>{{ bet.accepted_prop.prop_text }}</td>
 							<td>${{ bet.accepted_prop.prop_wager }}</td>
-							<td>${{ bet.accepted_prop.odds }}</td>
 						</tr>
 					{% endfor %}
 					</tbody>
@@ -45,7 +43,6 @@
 						<th>Proposee</th>
 						<th>Prop Bet</th>
 						<th>Wager</th>
-						<th>Odds</th>
 						<th>Winner</th>
 					  </tr>
 					</thead>
@@ -56,7 +53,6 @@
 							<td>{{ bet.accepted_user.get_full_name }}</td>
 							<td>{{ bet.accepted_prop.prop_text }}</td>
 							<td>${{ bet.accepted_prop.prop_wager }}</td>
-							<td>${{ bet.accepted_prop.odds }}</td>
 							{% if bet.accepted_prop.get_won_bet_display == "Win" %}
 								<td>{{ bet.accepted_prop.user.get_full_name }}</td>
 							{% elif bet.accepted_prop.get_won_bet_display == "Loss" %}
