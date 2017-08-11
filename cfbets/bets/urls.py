@@ -23,6 +23,13 @@ urlpatterns = [
     url(r'^my_bets/', views.my_bets),
     url(r'^open_bets/', views.open_bets),
     url(r'^all_bets/', views.all_bets),
+    url(r'^your_stats/', views.your_stats),
+    url(r'^global_stats/', views.global_stats),
     url(r'^process_place_bets/(?P<next_url>.*$)', views.place_bets_form_process, name='place_bets_form_process'),
+    url(r'^check_duplicate_bet/', views.check_duplicate_bet),
+    url(r'^remove_prop_bet/', views.remove_prop_bet),
+    url(r'^accept_prop_bet/', views.accept_prop_bet),
+    url(r'^set_prop_bet/', views.set_prop_bet),
+    url(r'^undo_prop_bet/', views.undo_prop_bet),
     url(r'^admin_bets/', views.admin_bets),
 ]

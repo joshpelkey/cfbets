@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     {% block base_content %}
     <div class="jumbotron">
       <div class="container">
-        <h1>cfbets</h1>
+		<img class="img-responsive" alt="cfbets logo" src="{% static 'assets/images/cfbets_logo.png' %}">
+		<br/>
+
         <p>I'll bet you $5 that this webapp is going to be super sweet. Go ahead, try it.
         <p><a class="btn btn-success btn-lg" href="/sign_up" role="button">Sign Up &raquo;</a></p>
-	<div style="border-top: 1px solid#888; padding-top:15px;" >
- 	 Already have an account? <a href="/login"><small><u>Login here.</u></small></p></a>
-	</div>
+
+		<div style="border-top: 1px solid#888; padding-top:15px;" >
+ 	 		Already have an account? <a href="/login"><small><u>Login here.</u></small></p></a>
+	  	</div>
+
       </div>
     </div>
 

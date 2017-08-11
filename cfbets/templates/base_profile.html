@@ -10,48 +10,101 @@
 	<!-- Nav tabs -->
 	<ul class="nav nav-tabs">
 	  <li class="active"><a data-toggle="tab" href="#user-profile">Profile</a></li>
-	  <li><a data-toggle="tab" href="#user-messages">Messages</a></li>
 	  <li><a data-toggle="tab" href="#user-stats">Stats</a></li>
 	</ul>
 
 	<div class="tab-content">
 		<div id="user-profile" class="tab-pane fade in active">
 			<br/>
-			<form class="form-horizontal" method="post">{% csrf_token %}
-				<div class="control-group">
-					<label class="control-label">First Name</label>
-					<div class="controls">
-						<input id="first-name" name="first_name" type="text" placeholder="{{ user.first_name }}" value="{{user.first_name}}" class="input-xlarge" disabled> 
-							<p class="help-block"></p>
+			<div "container">
+				<form class="form-horizontal" id="user-profile-form" method="post" action="">{% csrf_token %}
+						<fieldset>
+						{% for field in user_profile_form %}
+							{% if field.errors %}
+							<div class="control-group error">
+								<label class="control-label">{{ field.label }}</label> 
+								<div class="controls">{{ field }}
+								<p class="help-inline text-danger">
+									{% for error in  field.errors %}<strong>{{ error }}</strong>{% endfor %}
+								</p>
+								</div>
+							</div>
+							{% else %}
+							<div class="control-group" id="user-profile-group">
+								<label class="control-label">{{ field.label }}</label> 
+								<div class="controls">{{ field }}
+								{% if field.help_text %}
+									<p class="help-inline"><small>{{ field.help_text }}</small></p>
+								{% endif %}
+								</div>
+							</div>
+							{% endif %}
+						{% endfor %}
+						</fieldset>
+					<br/>
+					<div class="form-actions">
+						<button type="submit" class="btn btn-primary" >Save</button>
 					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Last Name</label>
-					<div class="controls">
-						<input id="first-name" name="last_name" type="text" placeholder="{{ user.last_name }}" value="{{ user.last_name }}" class="input-xlarge" disabled> 
-							<p class="help-block"></p>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label">Email</label>
-					<div class="controls">
-						<input id="first-name" name="last_name" type="text" placeholder="{{ user.email }}" value="{{ user.email }}" class="input-xlarge" disabled> 
-							<p class="help-block"></p>
-					</div>
-				</div>
-			</form>
+				</form>
+			</div>
   		</div>
-
-		<div id="user-messages" class="tab-pane fade">
-			<br/>
-			<p>Nothing to see here, yet.</p>
-		</div>
 
 		<div id="user-stats" class="tab-pane fade">
 			<br/>
-			<p>Nothing to see here, yet.</p>
+			<div class="alert alert-info">
+				<span class="glyphicon glyphicon-info-sign"></span> Check out the new <a href="/bets/your_stats" class="alert-link"><u>stats dashboards!</u></a>
+			</div>
+			<div class="container col-md-6">
+				<table class="table table-striped table-condensed">
+					<tbody>
+						<tr>
+						<td>Current Balance:</td> 
+												<td>
+												{% if user.userprofile.current_balance < 0 %}
+													<font color="red">-${{ user.userprofile.current_balance|stringformat:"+d"|slice:"1:" }}</font>
+												{% elif user.userprofile.current_balance > 0 %}
+													<font color="green">${{ user.userprofile.current_balance }}</font>
+												{% else %}
+													${{ user.userprofile.current_balance }}
+												{% endif %}	
+												</td>
+						</tr>
+						<tr>
+						<td>Overall Winnings:</td>
+												<td>
+												{% if user.userprofile.overall_winnings < 0 %}
+													<font color="red">-${{ user.userprofile.overall_winnings|stringformat:"+d"|slice:"1:" }}</font>
+												{% elif user.userprofile.overall_winnings > 0 %}
+													<font color="green">${{ user.userprofile.overall_winnings }}</font>
+												{% else %}
+													${{ user.userprofile.overall_winnings }}
+												{% endif %}	
+												</td>
+						<tr><td>Wins:</td><td>{{ total_won_bets }}</td></tr>
+						<tr><td>Losses:</td><td>{{ total_loss_bets }}</td></tr>
+						<tr><td>Ties:</td><td>{{ total_tie_bets }}</td></tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
 
 {% endblock %}
+
+{% block morejs %} 
+	$('form')
+		.each(function(){
+			$(this).data('serialized', $(this).serialize())
+		})
+		.on('change input', function(){
+			$(this)             
+				.find('input:submit, button:submit')
+					.prop('disabled', $(this).serialize() == $(this).data('serialized'))
+			;
+		 })
+		.find('input:submit, button:submit')
+			.prop('disabled', true)
+	;
+{% endblock %}
+

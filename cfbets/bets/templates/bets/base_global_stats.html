@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block base_content %}
+
+<div class="container">
+	<h3><a href="/bets/your_stats"><small><u>Your Stats</u></a><span class="glyphicon glyphicon-option-vertical"></span></small>Global Stats</h3>
+	<hr>
+	<div class="container">
+	 <div class="row">
+			<div class="col-xs-6 col-md-3">
+				
+				<div class="panel status panel-primary">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">${{ global_stats.total_money }}</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>total amount bet</strong>
+					</div>
+				</div>
+
+			</div>          
+			<div class="col-xs-6 col-md-3">
+			  
+				<div class="panel status panel-default">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">${{ global_stats.total_money_won }}</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>total amount won</strong>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xs-6 col-md-3">
+			   
+				<div class="panel status panel-success">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">{{ global_stats.total_proposed }}</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>total bets proposed</strong>
+					</div>
+				</div>
+
+			 
+			</div>
+			<div class="col-xs-6 col-md-3">
+			  
+				<div class="panel status panel-info">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">{{ global_stats.total_accepted }}</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>total bets accepted</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3>Total Bets by Week</h3>
+					</div>
+					<div class="panel-body" id="globalTotalBetsByWeek" style="width:100%; height:300px;">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-8">
+				<div class="panel panel-default" style="min-width: 468px;">
+					<div class="panel-heading">
+						<h3>Total Betting Report</h3>
+					</div>
+					<div class="panel-body" id="totalBettingReport" style="width:100%;">
+						<table class="table table-striped table-bordered table-condensed" id="globalBettingReport">
+						<thead>
+						<tr>
+							<th>Name</th>
+							<th>Total Bets</th>
+							<th>Wins</th>
+							<th>Losses</th>
+							<th>Ties</th>
+							<th>Win %</th>
+						</tr>
+						</thead>
+
+						{% for entry in global_betting_report %}
+						<tr>
+							<th>{{ entry.name }}</th>
+							<th>{{ entry.total_bets }}</th>
+							<th>{{ entry.total_won }}</th>
+							<th>{{ entry.total_lost }}</th>
+							<th>{{ entry.total_tie }}</th>
+							<th>{{ entry.win_percentage }}</th>
+						</tr>
+						{% endfor %}
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3>Bettingest Couples</h3>
+					</div>
+					<div class="panel-body" id="bettingestCouples" style="width:100%;">
+						<table class="table table-striped table-bordered table-condensed" id="globalBettingestCouples">
+
+						{% for entry in global_bettingest_couples %}
+						<tr>
+							<th>{{ entry.users.0 }}</th>
+							<th>{{ entry.users.1 }}</th>
+							<th>{{ entry.num_bets }}</th>
+						</tr>
+						{% endfor %}
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+{% endblock %}
+
+{% block morejs %}
+
+	$('#globalBettingReport').dataTable( {
+			"order": [[1, 'desc']],
+			"pageLength": 25 
+	} );
+
+///////////////////////////////////
+// global total bets by week chart
+///////////////////////////////////
+Highcharts.chart('globalTotalBetsByWeek', {
+	chart: {
+		type: 'column'
+	},
+
+    title: {
+        text: 'Total Bets by Week (last 15 weeks)'
+    },
+
+	xAxis: {
+		tickInterval: 7 * 24 * 3600 * 1000,
+		type: 'datetime',
+		startOnTick: true,
+		labels: {
+			format: '{value:%m/%d}',
+			rotation: -45,
+			y: 30,
+			align: 'center'
+		}
+	},
+
+    yAxis: {
+        title: {
+            text: 'Number of Bets'
+        }
+    },
+
+	plotOptions: {
+		series: {
+			pointStart: Date.UTC({{ week_start.year }}, {{ week_start.month }}, {{ week_start.day }}),
+			pointInterval: 7 * 24 * 3600 * 1000,
+		}
+	},
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    series: [{
+        name: "{{ global_total_bets_by_week.0.name }}",
+        data: {{ global_total_bets_by_week.0.data }}
+	}, {
+        name: "{{ global_total_bets_by_week.1.name }}",
+        data: {{ global_total_bets_by_week.1.data }}
+    }]
+
+});
+
+
+{% endblock %}

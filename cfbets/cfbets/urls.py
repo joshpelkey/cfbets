@@ -16,15 +16,27 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
 from django.views.generic.base import TemplateView
 from cfbets.views import welcome, sign_up, profile
 
 urlpatterns = [
+    url(r'^favicon.ico$',
+        RedirectView.as_view(
+            url=staticfiles_storage.url('assets/icons/favicon.ico'),
+            permanent=False),
+        name="favicon"),
     url(r'^bets/', include('bets.urls', namespace='bets', app_name='bets')),
     url(r'^$', welcome),
     url(r'^login/$', auth_views.login, {'template_name': 'base_login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     url(r'^sign_up/$', sign_up),
+	url(r'^password_reset/$', auth_views.password_reset, {'template_name': 'registration/password_reset_form.html'},  name='password_reset'),
+    url(r'^password_reset/done/$', auth_views.password_reset_done, {'template_name': 'registration/password_reset_done.html'}, name='password_reset_done'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        auth_views.password_reset_confirm, {'template_name': 'registration/password_reset_confirm.html'}, name='password_reset_confirm'),
+    url(r'^reset/done/$', auth_views.password_reset_complete, {'template_name': 'registration/password_reset_complete.html'}, name='password_reset_complete'),
     url(r'^profile/', profile),
     url(r'^admin/', admin.site.urls),
 ]

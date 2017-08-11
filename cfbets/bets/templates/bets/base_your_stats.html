@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block base_content %}
+
+<div class="container">
+	<h3>Your Stats<small><span class="glyphicon glyphicon-option-vertical"></span><a href="/bets/global_stats/"><u>Global Stats</u></small></a></h3>
+	<hr>
+	<div class="container">
+	 <div class="row">
+			<div class="col-xs-6 col-md-3">
+				
+				<div class="panel status panel-primary">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">
+							{% if user.userprofile.current_balance < 0 %}
+								-${{ user.userprofile.current_balance|stringformat:"+d"|slice:"1:" }}
+							{% else %}
+								${{ user.userprofile.current_balance }}
+							{% endif %}
+						</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>lifetime winnings</strong>
+					</div>
+				</div>
+
+			</div>          
+			<div class="col-xs-6 col-md-3">
+			  
+				<div class="panel status panel-info">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">
+							{% if user.userprofile.current_balance < 0 %}
+								-${{ user.userprofile.overall_winnings|stringformat:"+d"|slice:"1:" }}
+							{% else %}
+								${{ user.userprofile.overall_winnings }}
+							{% endif %}
+						</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>current balance</strong>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xs-6 col-md-3">
+			   
+				<div class="panel status panel-default">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center" style="font-size:25px;">{{ win_loss_tie.wins }}-{{ win_loss_tie.losses }}-{{ win_loss_tie.ties }}</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>win-loss-tie</strong>
+					</div>
+				</div>
+
+			 
+			</div>
+			<div class="col-xs-6 col-md-3">
+			  
+				<div class="panel status panel-success">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">{{ win_loss_tie.win_percentage }}%</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>win percentage</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3>Total Bets by Week</h3>
+					</div>
+					<div class="panel-body" id="totalBetsByWeek" style="width:100%; height:300px;">
+					</div>
+				</div>
+			</div>
+		</div>
+
+	 <div class="row">
+			<div class="col-xs-6 col-md-3">
+				
+				<div class="panel status panel-success">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">{{ total_proposed.total_proposed }}</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>bets where you proposed</strong>
+					</div>
+				</div>
+
+			</div>          
+			<div class="col-xs-6 col-md-3">
+			  
+				<div class="panel status panel-default">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">{{ total_proposed.win_percentage }}%</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>%won when you proposed</strong>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xs-6 col-md-3">
+			   
+				<div class="panel status panel-info">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">{{ total_accepted.total_accepted }}</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>bets where you accepted</strong>
+					</div>
+				</div>
+
+			 
+			</div>
+			<div class="col-xs-6 col-md-3">
+			  
+				<div class="panel status panel-default">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">{{ total_accepted.win_percentage }}%</h1>
+					</div>
+					<div class="panel-body text-center">                        
+						<strong>%won when you accepted</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3>Money Won by Week</h3>
+					</div>
+					<div class="panel-body" id="moneyWonByWeek" style="width:100%; height:300px;">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default" style="min-width: 468px;">
+					<div class="panel-heading">
+						<h3>Bet Against Report</h3>
+					</div>
+					<div class="panel-body" id="totalBettingReport" style="width:100%;">
+                        <table class="table table-striped table-bordered table-condensed" id="betAgainstReport">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Total Bets</th>
+                            <th>You Won</th>
+                            <th>You Lost</th>
+                            <th>You Tied</th>
+                            <th>Balance</th>
+                        </tr>
+                        </thead>
+
+                        {% for entry in bet_against_report %}
+                        <tr>
+                            <th>{{ entry.name }}</th>
+                            <th>{{ entry.total_bets }}</th>
+                            <th>{{ entry.total_won }}</th>
+                            <th>{{ entry.total_lost }}</th>
+                            <th>{{ entry.total_tie }}</th>
+                            <th>{{ entry.balance }}</th>
+                        </tr>
+                        {% endfor %}
+                        </table>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+{% endblock %}
+
+{% block morejs %}
+
+    $('#betAgainstReport').dataTable( {
+            "order": [[1, 'desc']],
+            "pageLength": 25
+    } );
+
+
+/////////////////////////////////
+// total bets by week chart
+/////////////////////////////////
+Highcharts.chart('totalBetsByWeek', {
+	chart: {
+		type: 'line'
+	},
+
+    title: {
+        text: 'Total Bets by Week (last 15 weeks)'
+    },
+
+	xAxis: {
+		tickInterval: 7 * 24 * 3600 * 1000,
+		type: 'datetime',
+		startOnTick: true,
+		labels: {
+			format: '{value:%m/%d}',
+			rotation: -45,
+			y: 30,
+			align: 'center'
+		}
+	},
+
+    yAxis: {
+        title: {
+            text: 'Number of Bets'
+        }
+    },
+
+	plotOptions: {
+		series: {
+			pointStart: Date.UTC({{ week_start.year }}, {{ week_start.month }}, {{ week_start.day }}),
+			pointInterval: 7 * 24 * 3600 * 1000,
+		}
+	},
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    series: [{
+        name: "{{ total_bets_by_week.0.name }}",
+        data: {{ total_bets_by_week.0.data }}
+    }, {
+        name: "{{ total_bets_by_week.1.name }}",
+        data: {{ total_bets_by_week.1.data }}
+    }]
+
+});
+
+/////////////////////////////////
+// money won by week chart
+/////////////////////////////////
+Highcharts.chart('moneyWonByWeek', {
+	chart: {
+		type: 'column'
+	},
+
+    title: {
+        text: 'Money Won by Week (last 15 weeks)'
+    },
+
+	xAxis: {
+		tickInterval: 7 * 24 * 3600 * 1000,
+		type: 'datetime',
+		startOnTick: true,
+		labels: {
+			format: '{value:%m/%d}',
+			rotation: -45,
+			y: 30,
+			align: 'center'
+		}
+	},
+
+    yAxis: {
+        title: {
+            text: 'Amount (usd)'
+        }
+    },
+
+	plotOptions: {
+		series: {
+			pointStart: Date.UTC({{ week_start.year }}, {{ week_start.month }}, {{ week_start.day }}),
+			pointInterval: 7 * 24 * 3600 * 1000,
+		}
+	},
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    series: [{
+        name: "{{ total_money_by_week.0.name }}",
+        data: {{ total_money_by_week.0.data }}
+	}, {
+        name: "{{ total_money_by_week.1.name }}",
+        data: {{ total_money_by_week.1.data }}
+	}, {
+        name: "{{ total_money_by_week.2.name }}",
+        data: {{ total_money_by_week.2.data }}
+    }]
+
+});
+
+{% endblock %}

@@ -1,4 +1,5 @@
 {% load staticfiles %}
+
 <html>
 	<head>
 		<meta charset="utf-8">
@@ -8,7 +9,6 @@
 		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 		<meta name="description" content="college football betting app">
 		<meta name="author" content="Josh Pelkey">
-		<link rel="icon" href="{% static 'assets/images/favicon.ico' %}">
 
 		<title>cfbets</title>
 
@@ -18,8 +18,12 @@
 		<link href="{% static 'assets/css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="{% static 'assets/css/jumbotron.css' %}" rel="stylesheet">
-		<!-- datetimepicker css -->
-		<link href="{% static 'assets/css/jquery.datetimepicker.min.css' %}" rel="stylesheet">
+		<!-- datatables css cdn -->
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-2.2.4/dt-1.10.15/fh-3.1.2/r-2.1.1/datatables.min.css"/>
+		<!-- highcharts -->
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+
+
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
@@ -34,7 +38,17 @@
 			<div class="container">
 
 				<div class="navbar-header navbar-left pull-left">
-					<a href="/" class="navbar-brand">cfbets</a>
+					<button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="pull-left navbar-toggle" style="margin-left: 10px;">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+
+					<a href="/" class="navbar-brand">
+						<img alt="cfbets small logo" src="{% static 'assets/images/cfbets_logo_sm.png' %}">
+					</a>
+
 				</div>
 
 				<div class="navbar-header navbar-right pull-right">
@@ -61,6 +75,24 @@
 												<div class="col-lg-8">
 													<p class="text-left"><strong>{{ user.get_full_name }}</strong></p>
 													<p class="text-left small">{{ user.email }}</p>
+													<p class="text-left small">Current Balance: <strong> 
+																						{% if user.userprofile.current_balance < 0 %}
+																							<font color="red">-${{ user.userprofile.current_balance|stringformat:"+d"|slice:"1:" }}</font>
+																						{% elif user.userprofile.current_balance > 0 %}
+																							<font color="green">${{ user.userprofile.current_balance }}</font>
+																						{% else %}
+																							${{ user.userprofile.current_balance }}
+																						{% endif %}	
+																						</strong></p>
+													<p class="text-left small">Overall Winnings: <strong>
+																						{% if user.userprofile.overall_winnings < 0 %}
+																							<font color="red">-${{ user.userprofile.overall_winnings|stringformat:"+d"|slice:"1:" }}</font>
+																						{% elif user.userprofile.overall_winnings > 0 %}
+																							<font color="green">${{ user.userprofile.overall_winnings }}</font>
+																						{% else %}
+																							${{ user.userprofile.overall_winnings }}
+																						{% endif %}	
+																						</strong></p>
 													<p class="text-left">
 														<a href="/profile" class="btn btn-primary btn-block btn-sm">Your Profile</a>
 													</p>
@@ -84,19 +116,13 @@
 						{% endif %}
 					</ul>
 
-					<button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-
 				</div>
 
 				<div class="visible-xs-block clearfix"></div>
 				<div class="collapse navbar-collapse">
 					{% if user.is_authenticated %}
 						<ul class="nav navbar-nav navbar-left">
+							<li class="{% if nbar == 'stats' %}active{% endif %}"><a href="/bets/your_stats">Stats</a></li>
 							<li class="{% if nbar == 'my_bets' %}active{% endif %}"><a href="/bets/my_bets">My Bets</a></li>
 							<li class="{% if nbar == 'open_bets' %}active{% endif %}"><a href="/bets/open_bets">Open Bets</a></li>
 							<li class="{% if nbar == 'all_bets' %}active{% endif %}"><a href="/bets/all_bets">All Bets</a></li>
@@ -126,7 +152,8 @@
 		{% block base_content %}
 			<div class="jumbotron">
 				<div class="container">
-					<h1>cfbets</h1>
+					<img class="img-responsive" alt="cfbets main logo" src="{% static 'assets/images/cfbets_logo.png' %}">
+					<br/>
 					<p>Base content goes here. Change it.</p>
 			  	</div>
 			</div>
@@ -157,30 +184,35 @@
 
 		<div class="container">
 			<footer>
-				<p>&copy; 2016 cfbets.</p>
+				<p>&copy; {% now "Y" %} cfbets.</p>
 		  	</footer>
 		</div>
 
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<!-- datatables javascript cdn -->
+		<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-2.2.4/dt-1.10.15/fh-3.1.2/r-2.1.1/datatables.min.js"></script>
+
 		<script>window.jQuery || document.write('<script src=" {% static 'assets/js/jquery.min.js' %}"><\/script>')</script>
 		<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 		<script src="{% static 'assets/js/ie10-viewport-bug-workaround.js' %}"></script>
-		<!-- datetime picker js -->
-		<script src="{% static 'assets/js/jquery.datetimepicker.full.min.js' %}"></script>
 
-		<!-- datetime picker for the place bets form and ajax for that form -->
 		<script type='text/javascript'>
 			$(document).ready(function() {
-				$('#id_bet_expiration_date').datetimepicker({
-					format: 'm/d/Y H:i'
-				}); 
-
 				$("#messages").fadeTo(3500, 500).slideUp(500, function(){
 						$("#messages").slideUp(500);
+				});
+
+				$('#place_bets').on('show.bs.modal', function () {
+					var d = new Date();
+					d.setDate(d.getDate() + 7)
+					var curr_date = d.getDate();
+					var curr_month = d.getMonth() + 1;
+					var curr_year = d.getFullYear();
+					$('#id_bet_expiration_date').val(curr_month + "/" + curr_date + "/" + curr_year + " 12:00");
 				});
 
 				$('#place-bets-form').on('submit', function(event) {
@@ -197,13 +229,13 @@
 
 						error: function(xhr, status, error) {
 							$("#place-bets-form").html(xhr.responseText);
-							$('#id_bet_expiration_date').datetimepicker({
-								format: 'm/d/Y H:i'
-							}); 
 						}
 					});
 					return false;
 					});
+
+				{% block morejs %}
+				{% endblock %}
 			});
 		</script>
 	

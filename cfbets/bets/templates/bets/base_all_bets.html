@@ -4,7 +4,78 @@
 
     <div class="container">
         <h1>All Bets</h1>
-	  <p> Hi, {{ user.get_full_name }}. You're logged in. </p>
+		<div class="container">
+			<h3>Active Bets</h3>
+			{% if all_active_bets %}
+				<p>Currently active bets across all users. These don't have a winner marked yet.</p>
+				<table class="table table-striped table-bordered table-condensed" id="currentActive">
+					<thead>
+					  <tr>
+						<th>Proposer</th>
+						<th>Proposee</th>
+						<th>Prop Bet</th>
+						<th>Wager</th>
+					  </tr>
+					</thead>
+					<tbody>
+					{% for bet in all_active_bets %}
+						<tr>
+							<td>{{ bet.accepted_prop.user.get_full_name }}</td>
+							<td>{{ bet.accepted_user.get_full_name }}</td>
+							<td>{{ bet.accepted_prop.prop_text }}</td>
+							<td>${{ bet.accepted_prop.prop_wager }}</td>
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+			<p>No active bets?! Probe the group for participation.</p>
+			{% endif %}
+		</div>
+		<div class="container">
+			<h3>Completed Bets</h3>
+			{% if all_accepted_bets %}
+				<p>All closed accepted bets. These are accepted bets that have a winner marked (aka closed).</p>
+				<table class="table table-striped table-bordered table-condensed" id="closedAccepted">
+					<thead>
+					  <tr>
+						<th>Proposer</th>
+						<th>Proposee</th>
+						<th>Prop Bet</th>
+						<th>Wager</th>
+						<th>Winner</th>
+					  </tr>
+					</thead>
+					<tbody>
+					{% for bet in all_accepted_bets %}
+						<tr>
+							<td>{{ bet.accepted_prop.user.get_full_name }}</td>
+							<td>{{ bet.accepted_user.get_full_name }}</td>
+							<td>{{ bet.accepted_prop.prop_text }}</td>
+							<td>${{ bet.accepted_prop.prop_wager }}</td>
+							{% if bet.accepted_prop.get_won_bet_display == "Win" %}
+								<td>{{ bet.accepted_prop.user.get_full_name }}</td>
+							{% elif bet.accepted_prop.get_won_bet_display == "Loss" %}
+								<td>{{ bet.accepted_user.get_full_name }}</td>
+							{% elif bet.accepted_prop.get_won_bet_display == "Tie" %}
+								<td>push</td>
+							{% else %}
+								<td></td>
+							{% endif %}
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			{% else %}
+			<p>No completed bets?! We must be just getting started.</p>
+			{% endif %}
+		</div>
     </div>
 
+{% endblock %}
+
+{% block morejs %}
+	$('#closedAccepted').dataTable( {
+		"order": []
+	} );
 {% endblock %}

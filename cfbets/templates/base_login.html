@@ -9,7 +9,7 @@
 		<h3>You're already logged in as {{ user.get_full_name }}.</h3>
 	{% else %}
 		<h2>Login</h2>
-			<p>Need an account? <a href="/sign_up"><small><u>Sign up here.</u></small></p></a>
+			<p>Need an account? <a href="/sign_up"><small><u>Sign up here.</u></small></a> Or, maybe you <a href="/password_reset">forgot your password?</a></p>
 			<hr>
 			<form class="form-horizontal" method="post">{% csrf_token %}
 				{% if form.non_field_errors %}
