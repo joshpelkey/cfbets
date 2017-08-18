@@ -20,27 +20,22 @@
 					<tbody>
 					{% for bet in open_bets %}
 						<tr>
-							{% if bet.created_on >= datetime.now() - timedelta(hours=24) %}
-							<!-- Bet created in past 24 hours -->
-							<td>{{ bet.prop_text }} <span class="label label-success">NEW BET</span>
+							
+							<td>{{ bet.prop_text }} 
+								<!-- Add tags if bet is new and/or expiring soon -->
+								{% if bet in new_bets %} 
+									<span class="label label-success">NEW BET</span> 
+								{% endif %}
+								{% if bet in closing_soon_bets %}
+									<span class="label label-danger">ENDING SOON</span>
+								{% endif %}
 								<div class="acceptBetButton" style="padding:10px 10px 0px 0px"> 
 									<a href="#" data-href="/bets/accept_prop_bet?id={{ bet.id }}" data-target="#acceptBet" data-toggle="modal" data-id1="{{ bet.prop_text }}" data-id2="{{ bet.user.get_full_name }}" data-id3="{{ bet.prop_wager }}" data-id4="{{ bet.id }}" title="Accept prop bet" class="btn btn-success btn-sm open-AcceptBet">Accept</a></td>
 								</div>
-							{% else %}
-							<td>{{ bet.prop_text }}
-								<div class="acceptBetButton" style="padding:10px 10px 0px 0px"> 
-									<a href="#" data-href="/bets/accept_prop_bet?id={{ bet.id }}" data-target="#acceptBet" data-toggle="modal" data-id1="{{ bet.prop_text }}" data-id2="{{ bet.user.get_full_name }}" data-id3="{{ bet.prop_wager }}" data-id4="{{ bet.id }}" title="Accept prop bet" class="btn btn-success btn-sm open-AcceptBet">Accept</a></td>
-								</div>
-							{% endif %]
 							<td>{{ bet.user.get_full_name }}</td>
 							<td>${{ bet.prop_wager }}</td>
 							<td>{{ bet.remaining_wagers }}</td>
-							{% if bet.end_date <= datetime.now() + timedelta(hours=24) %}
-							<!-- Bet expiring in 24 hours -->
-							<td>{{ bet.end_date|date:"M d Y H:i" }} <span class="label label-danger">ENDING SOON</span></td>
-							{% else %}
 							<td>{{ bet.end_date|date:"M d Y H:i" }}</td>
-							{% endif %}
 						</tr>
 					{% endfor %}
 					</tbody>
