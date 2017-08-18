@@ -89,7 +89,13 @@ def open_bets(request):
 	# get all open prop bets from other users
 	open_bets = ProposedBet.objects.filter(remaining_wagers__gt=0, end_date__gt=timezone.now(), won_bet__isnull=True).exclude(user=current_user)
 
-	return render(request, 'bets/base_open_bets.html', {'nbar': 'open_bets', 'open_bets': open_bets})
+	# get all bets created in past 24 hours
+	new_bets = ProposedBet.objects.filter(remaining_wagers__gt=0, end_date__gt=timezone.now(), created_on__gt=datetime.now()-timedelta(hours=24), won_bet__isnull=True).exclude(user=current_user)
+	
+	# get all bets expiring in next 24 hours
+	closing_soon_bets = ProposedBet.objects.filter(remaining_wagers__gt=0, end_date__gt=timezone.now(), end_date__lt=timezone.now()+timedelta(hours=24), won_bet__isnull=True).exclude(user=current_user)
+	
+	return render(request, 'bets/base_open_bets.html', {'nbar': 'open_bets', 'open_bets': open_bets, 'new_bets': new_bets, 'closing_soon_bets': closing_soon_bets})
 
 @login_required(login_url='/login/')
 def all_bets(request):

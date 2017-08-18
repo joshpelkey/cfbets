@@ -20,7 +20,15 @@
 					<tbody>
 					{% for bet in open_bets %}
 						<tr>
-							<td>{{ bet.prop_text }}
+							
+							<td>{{ bet.prop_text }} 
+								<!-- Add tags if bet is new and/or expiring soon -->
+								{% if bet in new_bets %} 
+									<span class="label label-success">NEW BET</span> 
+								{% endif %}
+								{% if bet in closing_soon_bets %}
+									<span class="label label-danger">ENDING SOON</span>
+								{% endif %}
 								<div class="acceptBetButton" style="padding:10px 10px 0px 0px"> 
 									<a href="#" data-href="/bets/accept_prop_bet?id={{ bet.id }}" data-target="#acceptBet" data-toggle="modal" data-id1="{{ bet.prop_text }}" data-id2="{{ bet.user.get_full_name }}" data-id3="{{ bet.prop_wager }}" data-id4="{{ bet.id }}" title="Accept prop bet" class="btn btn-success btn-sm open-AcceptBet">Accept</a></td>
 								</div>
