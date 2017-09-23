@@ -108,7 +108,7 @@ def all_bets(request):
 	all_active_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=True)
 
 	# get all accepted bets, ever
-	all_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False).order_by('-created_on')
+	all_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False).order_by('-accepted_prop__modified_on')
 
 	return render(request, 'bets/base_all_bets.html', {'nbar': 'all_bets', 'all_active_bets': all_active_bets, 'all_accepted_bets': all_accepted_bets})
 
