@@ -78,8 +78,9 @@ def my_bets(request):
 	your_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__isnull=True)
 	your_bets_accepted_by_others = AcceptedBet.objects.filter(accepted_prop__user=current_user, accepted_prop__won_bet__isnull=True) 
 	your_active_bets = your_accepted_bets | your_bets_accepted_by_others
+	your_active_bets_count = your_active_bets.count()
 
-	return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets', 'your_open_bets': your_open_bets, 'your_active_bets': your_active_bets})
+	return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets', 'your_open_bets': your_open_bets, 'your_active_bets': your_active_bets, 'your_active_bets_count': your_active_bets_count})
 
 @login_required(login_url='/login/')
 def open_bets(request):
