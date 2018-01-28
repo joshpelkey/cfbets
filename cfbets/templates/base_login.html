@@ -9,7 +9,12 @@
 		<h3>You're already logged in as {{ user.get_full_name }}.</h3>
 	{% else %}
 		<h2>Login</h2>
-			<p>Need an account? <a href="/sign_up"><small><u>Sign up here.</u></small></a> Or, maybe you <a href="/password_reset">forgot your password?</a></p>
+		<!--	<p>Need an account? <a href="/sign_up"><small><u>Sign up here.</u></small></a> Or, maybe you <a href="/password_reset">forgot your password?</a></p>
+                -->
+			<p>Need an account? <a href="/sign_up"><small><u>Sign up
+                                                here.</u></small></a> Or, maybe
+                        you <s>forgot your password?</s> (too bad, forgot
+                        password is broken...)</p>
 			<hr>
 			<form class="form-horizontal" method="post">{% csrf_token %}
 				{% if form.non_field_errors %}
@@ -19,7 +24,7 @@
 				{% for field in form %}
 				{% if field.errors %}
 					<div class="control-group error">
-						<label class="control-label">{{ field.label }}</label> 
+						<label class="control-label">{{ field.label }}</label>
 						<div class="controls">{{ field }}
 							<p class="help-inline text-danger">
 								{% for error in  field.errors %}<strong>{{ error }}</strong>{% endfor %}
@@ -29,7 +34,7 @@
 
 				{% else %}
 					<div class="control-group">
-						<label class="control-label">{{ field.label }}</label> 
+						<label class="control-label">{{ field.label }}</label>
 						<div class="controls">{{ field }}
 							{% if field.help_text %}
 							<p class="help-inline"><small>{{ field.help_text }}</small></p>
