@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from datetime import datetime, timedelta
-from django.core.mail import send_mail
+from google.appengine.api import mail
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
 
 class Command(BaseCommand):
@@ -30,12 +30,18 @@ class Command(BaseCommand):
 					email_message += '\nhttps://www.cfbets.us/bets/open_bets/'
 
 					# send out the email
-					send_list = []
-					send_list.append(loop_user.user.email)
-					send_mail('cfbets: New prop bets!', email_message, 'yojdork@gmail.com', send_list, fail_silently=True,)
+                                        message = mail.EmailMessage(
+                                                sender='cfbets
+                                                <joshpelkey@gmail.com>',
+                                                subject="cfbets: New prop
+                                                bets!")
+
+                                        message.to = loop_user.user.email)
+                                        message.body = email_message
+
+                                        message.send()
 
 			self.stdout.write(self.style.SUCCESS('Sent prop emails.'))
 
 		else:
 			self.stdout.write(self.style.SUCCESS('No new prop bets.'))
-
