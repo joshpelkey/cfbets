@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from datetime import datetime, timedelta
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
 
@@ -8,6 +9,10 @@ class Command(BaseCommand):
     help = 'Checks for new prop bets and emails users'
 
     def handle(self, *args, **options):
+
+                # get site domain
+                current_site = get_current_site(request)
+                domain = current_site.domain
 
 		# check for new, open prop bets (last 24 hrs)
 		yesterday = datetime.now() + timedelta(days=-1)
@@ -27,7 +32,7 @@ class Command(BaseCommand):
 										'): ' + prop_bet.prop_text + '\n'
 
 					# put the site url in there
-					email_message += '\nhttps://www.cfbets.us/bets/open_bets/'
+					email_message += '\nhttps://' + domain + '/bets/open_bets/'
 
 					# send out the email
 					send_list = []
@@ -38,4 +43,3 @@ class Command(BaseCommand):
 
 		else:
 			self.stdout.write(self.style.SUCCESS('No new prop bets.'))
-
