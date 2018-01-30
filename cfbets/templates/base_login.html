@@ -19,7 +19,7 @@
 				{% for field in form %}
 				{% if field.errors %}
 					<div class="control-group error">
-						<label class="control-label">{{ field.label }}</label> 
+						<label class="control-label">{{ field.label }}</label>
 						<div class="controls">{{ field }}
 							<p class="help-inline text-danger">
 								{% for error in  field.errors %}<strong>{{ error }}</strong>{% endfor %}
@@ -29,7 +29,7 @@
 
 				{% else %}
 					<div class="control-group">
-						<label class="control-label">{{ field.label }}</label> 
+						<label class="control-label">{{ field.label }}</label>
 						<div class="controls">{{ field }}
 							{% if field.help_text %}
 							<p class="help-inline"><small>{{ field.help_text }}</small></p>
