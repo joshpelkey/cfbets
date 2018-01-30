@@ -5,8 +5,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
+from google.appengine.api import mail
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from common.stats import *
@@ -231,15 +231,22 @@ def accept_prop_bet(request):
                                 domain = current_site.domain
 
 				user_profile = UserProfile.objects.get(user=prop_bet.user)
+
 				if user_profile.get_accepted_bet_emails:
+                                        message = mail.EmailMessage(
+                                                sender='cfbets <joshpelkey@gmail.com>',
+                                                subject="cfbets: Bet Accepted")
+
+                                        message.to = prop_bet.user.email
+
 					email_message = 'Accepted Bet:\n' \
 									+ '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text + \
 									'\n\nAccepted By:\n' \
 									+ request.user.get_full_name() + \
 									'\n\nhttps://' + domain + '/bets/my_bets/'
-					send_list = []
-					send_list.append(prop_bet.user.email)
-					send_mail('cfbets: Bet Accepted', email_message, 'yojdork@gmail.com', send_list, fail_silently=True,)
+                  
+                  message.body = email_message
+                  message.send()
 			else:
 				# send a message over that there was an error
 				messages.error(request, 'You don\'t have permission to modify this bet.')
