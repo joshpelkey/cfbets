@@ -244,9 +244,9 @@ def accept_prop_bet(request):
 									'\n\nAccepted By:\n' \
 									+ request.user.get_full_name() + \
 									'\n\nhttps://' + domain + '/bets/my_bets/'
-          
-          message.body = email_message
-          message.send()
+
+                                        message.body = email_message
+                                        message.send()
 
 			else:
 				# send a message over that there was an error
