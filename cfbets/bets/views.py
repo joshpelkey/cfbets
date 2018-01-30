@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
+from django.contrib.sites.shortcuts import get_current_site
 from google.appengine.api import mail
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -226,6 +227,9 @@ def accept_prop_bet(request):
 				messages.success(request, 'Bet accepted successfully.')
 
 				# send an email to the propser, if they have their setting enabled
+                                current_site = get_current_site(request)
+                                domain = current_site.domain
+
 				user_profile = UserProfile.objects.get(user=prop_bet.user)
 
 				if user_profile.get_accepted_bet_emails:
@@ -239,11 +243,10 @@ def accept_prop_bet(request):
 									+ '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text + \
 									'\n\nAccepted By:\n' \
 									+ request.user.get_full_name() + \
-									'\n\nhttps://www.cfbets.us/bets/my_bets/'
-
-                                        message.body = email_message
-
-                                        message.send()
+									'\n\nhttps://' + domain + '/bets/my_bets/'
+                  
+                  message.body = email_message
+                  message.send()
 			else:
 				# send a message over that there was an error
 				messages.error(request, 'You don\'t have permission to modify this bet.')
