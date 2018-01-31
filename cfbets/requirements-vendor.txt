@@ -1,4 +1,5 @@
 Django==1.11
+django-datatables-view==1.14.0
 argparse==1.2.1
 django-mailer==1.2.2
 mailer==0.8.1
