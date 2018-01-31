@@ -23,13 +23,14 @@
 		<!-- highcharts -->
 		<script src="https://code.highcharts.com/highcharts.js"></script>
 
-
-
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
+
+	{% block extra_head %}
+	{% endblock %}
 
 	</head>
 
@@ -54,12 +55,12 @@
 				<div class="navbar-header navbar-right pull-right">
 					<ul class="nav pull-left">
 						{% if user.is_authenticated %}
-							<button type="button" class="btn btn-default navbar-btn" style="margin-right: 15px;" data-toggle="modal" data-target="#place_bets">Place Bet</button>	
+							<button type="button" class="btn btn-default navbar-btn" style="margin-right: 15px;" data-toggle="modal" data-target="#place_bets">Place Bet</button>
 						{% endif %}
 
 						{% if user.is_authenticated %}
 							<li class="dropdown pull-right">
-								<a href="#" data-toggle="dropdown" class="dropdown-toggle" id="profile"> 
+								<a href="#" data-toggle="dropdown" class="dropdown-toggle" id="profile">
 									<span class="glyphicon glyphicon-user"></span>
             						<b class="caret"></b>
           						</a>
@@ -75,14 +76,14 @@
 												<div class="col-lg-8">
 													<p class="text-left"><strong>{{ user.get_full_name }}</strong></p>
 													<p class="text-left small">{{ user.email }}</p>
-													<p class="text-left small">Current Balance: <strong> 
+													<p class="text-left small">Current Balance: <strong>
 																						{% if user.userprofile.current_balance < 0 %}
 																							<font color="red">-${{ user.userprofile.current_balance|stringformat:"+d"|slice:"1:" }}</font>
 																						{% elif user.userprofile.current_balance > 0 %}
 																							<font color="green">${{ user.userprofile.current_balance }}</font>
 																						{% else %}
 																							${{ user.userprofile.current_balance }}
-																						{% endif %}	
+																						{% endif %}
 																						</strong></p>
 													<p class="text-left small">Overall Winnings: <strong>
 																						{% if user.userprofile.overall_winnings < 0 %}
@@ -91,7 +92,7 @@
 																							<font color="green">${{ user.userprofile.overall_winnings }}</font>
 																						{% else %}
 																							${{ user.userprofile.overall_winnings }}
-																						{% endif %}	
+																						{% endif %}
 																						</strong></p>
 													<p class="text-left">
 														<a href="/profile" class="btn btn-primary btn-block btn-sm">Your Profile</a>
@@ -217,9 +218,9 @@
 
 				$('#place-bets-form').on('submit', function(event) {
 					event.preventDefault();
-					$.ajax({ 
+					$.ajax({
 						type: "POST",
-						url: this.action, 
+						url: this.action,
 						data: $(this).serialize(),
 						context: this,
 
@@ -238,7 +239,7 @@
 				{% endblock %}
 			});
 		</script>
-	
+
 	</body>
 
 </html>

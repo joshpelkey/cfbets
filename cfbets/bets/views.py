@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django_datatables_view.base_datatable_view import BaseDatatableView
 from common.stats import *
 from bets.forms import PlaceBetsForm
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit, User
@@ -109,10 +110,47 @@ def all_bets(request):
 	# get all active accepted bets
 	all_active_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=True)
 
-	# get all accepted bets, ever
-	all_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False).order_by('-accepted_prop__modified_on')
+	return render(request, 'bets/base_all_bets.html', {'nbar': 'all_bets', 'all_active_bets': all_active_bets})
 
-	return render(request, 'bets/base_all_bets.html', {'nbar': 'all_bets', 'all_active_bets': all_active_bets, 'all_accepted_bets': all_accepted_bets})
+class AllBetsJson(BaseDatatableView):
+    order_columns = ['accepted_prop__user', 'accepted_user', 'accepted_prop__prop_text', 'accepted_prop__prop_wager', '']
+
+    def get_initial_queryset(self):
+        return AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False).order_by('-accepted_prop__modified_on')
+
+    def filter_queryset(self, qs):
+        sSearch = self.request.GET.get(u'search[value]', None)
+
+        if sSearch:
+            qs = qs.filter(accepted_prop__prop_text__istartswith=sSearch) | \
+                    qs.filter(accepted_user__first_name__istartswith=sSearch) | \
+                    qs.filter(accepted_user__last_name__istartswith=sSearch) | \
+                    qs.filter(accepted_prop__user__first_name__istartswith=sSearch) | \
+                    qs.filter(accepted_prop__user__last_name__istartswith=sSearch)
+
+        return qs
+
+    def prepare_results(self, qs):
+        json_data = []
+        for item in qs:
+
+            who_won = 'test'
+            if item.accepted_prop.get_won_bet_display() == "Win":
+                who_won = item.accepted_prop.user.get_full_name()
+            elif item.accepted_prop.get_won_bet_display() == "Loss":
+                who_won = item.accepted_user.get_full_name()
+            else:
+                who_won = 'push'
+
+            json_data.append([
+                item.accepted_prop.user.get_full_name(),
+                item.accepted_user.get_full_name(),
+                item.accepted_prop.prop_text,
+                item.accepted_prop.prop_wager,
+                who_won
+                ])
+
+        return json_data
 
 @login_required(login_url='/login/')
 def place_bets_form_process(request, next_url):
