@@ -1,0 +1,4 @@
+cron:
+- description: "daily betting email"
+  url: /tasks/daily_email
+  schedule: every day 21:04
