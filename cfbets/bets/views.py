@@ -6,8 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.contrib.sites.shortcuts import get_current_site
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django_datatables_view.base_datatable_view import BaseDatatableView
 from common.stats import *
 from bets.forms import PlaceBetsForm
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit, User
@@ -76,7 +78,7 @@ def my_bets(request):
 
 	# your active bets, i.e. those bets you have accepted and your bets that other users have accepted
 	your_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__isnull=True)
-	your_bets_accepted_by_others = AcceptedBet.objects.filter(accepted_prop__user=current_user, accepted_prop__won_bet__isnull=True) 
+	your_bets_accepted_by_others = AcceptedBet.objects.filter(accepted_prop__user=current_user, accepted_prop__won_bet__isnull=True)
 	your_active_bets = your_accepted_bets | your_bets_accepted_by_others
 	your_active_bets_count = your_active_bets.count()
 
@@ -97,10 +99,10 @@ def open_bets(request):
 
 	# get all bets created in past 24 hours
 	new_bets = ProposedBet.objects.filter(remaining_wagers__gt=0, end_date__gt=timezone.now(), created_on__gt=yesterday, won_bet__isnull=True).exclude(user=current_user)
-	
+
 	# get all bets expiring in next 24 hours
 	closing_soon_bets = ProposedBet.objects.filter(remaining_wagers__gt=0, end_date__gt=timezone.now(), end_date__lt=tomorrow, won_bet__isnull=True).exclude(user=current_user)
-	
+
 	return render(request, 'bets/base_open_bets.html', {'nbar': 'open_bets', 'open_bets': open_bets, 'new_bets': new_bets, 'closing_soon_bets': closing_soon_bets})
 
 @login_required(login_url='/login/')
@@ -108,10 +110,47 @@ def all_bets(request):
 	# get all active accepted bets
 	all_active_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=True)
 
-	# get all accepted bets, ever
-	all_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False).order_by('-accepted_prop__modified_on')
+	return render(request, 'bets/base_all_bets.html', {'nbar': 'all_bets', 'all_active_bets': all_active_bets})
 
-	return render(request, 'bets/base_all_bets.html', {'nbar': 'all_bets', 'all_active_bets': all_active_bets, 'all_accepted_bets': all_accepted_bets})
+class AllBetsJson(BaseDatatableView):
+    order_columns = ['accepted_prop__user', 'accepted_user', 'accepted_prop__prop_text', 'accepted_prop__prop_wager', '']
+
+    def get_initial_queryset(self):
+        return AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False).order_by('-accepted_prop__modified_on')
+
+    def filter_queryset(self, qs):
+        sSearch = self.request.GET.get(u'search[value]', None)
+
+        if sSearch:
+            qs = qs.filter(accepted_prop__prop_text__istartswith=sSearch) | \
+                    qs.filter(accepted_user__first_name__istartswith=sSearch) | \
+                    qs.filter(accepted_user__last_name__istartswith=sSearch) | \
+                    qs.filter(accepted_prop__user__first_name__istartswith=sSearch) | \
+                    qs.filter(accepted_prop__user__last_name__istartswith=sSearch)
+
+        return qs
+
+    def prepare_results(self, qs):
+        json_data = []
+        for item in qs:
+
+            who_won = 'test'
+            if item.accepted_prop.get_won_bet_display() == "Win":
+                who_won = item.accepted_prop.user.get_full_name()
+            elif item.accepted_prop.get_won_bet_display() == "Loss":
+                who_won = item.accepted_user.get_full_name()
+            else:
+                who_won = 'push'
+
+            json_data.append([
+                item.accepted_prop.user.get_full_name(),
+                item.accepted_user.get_full_name(),
+                item.accepted_prop.prop_text,
+                item.accepted_prop.prop_wager,
+                who_won
+                ])
+
+        return json_data
 
 @login_required(login_url='/login/')
 def place_bets_form_process(request, next_url):
@@ -130,7 +169,7 @@ def place_bets_form_process(request, next_url):
 									modified_on = timezone.now())
 			# save to the db
 			new_bet.save()
-			
+
 			# save the url to know where to redirect
 			response = {'url': next_url}
 
@@ -143,7 +182,6 @@ def place_bets_form_process(request, next_url):
 			return render(request, 'bets/place_bets.html', {'place_bets_form': form}, status=400)
 
 	return HttpResponseRedirect('/bets/my_bets')
-	
 
 @login_required(login_url='/login/')
 def remove_prop_bet(request):
@@ -163,7 +201,7 @@ def remove_prop_bet(request):
 
 			# figure out if this user can modify this bet id
 			try:
-				prop_bet = ProposedBet.objects.get(id=bet_id)	
+				prop_bet = ProposedBet.objects.get(id=bet_id)
 			except ProposedBet.DoesNotExist:
 				prop_bet = None
 
@@ -171,7 +209,7 @@ def remove_prop_bet(request):
 				# ok this user owns this prop, let them 'delete' it by setting remaining bets to zero
 				prop_bet.remaining_wagers = 0
 				prop_bet.save(update_fields=['remaining_wagers', 'modified_on'])
-				
+
 				# send a message over that the bet is removed
 				messages.success(request, 'Bet removed succesfully.')
 
@@ -182,7 +220,7 @@ def remove_prop_bet(request):
 		else:
 			# send a message over that there was an error
 			messages.error(request, 'Bet ID must be an integer.')
-	else:	
+	else:
 		# send a message over that there was an error
 		messages.error(request, 'Something went wrong. Try again.')
 
@@ -205,20 +243,20 @@ def accept_prop_bet(request):
 		if is_int:
 			# make sure bet exists
 			try:
-				prop_bet = ProposedBet.objects.get(id=bet_id)	
+				prop_bet = ProposedBet.objects.get(id=bet_id)
 			except ProposedBet.DoesNotExist:
 				prop_bet = None
 
-			# make sure bet is someone elses and it has bets left and it isn't expired	
+			# make sure bet is someone elses and it has bets left and it isn't expired
 			if prop_bet \
 				and request.user != prop_bet.user \
 				and prop_bet.remaining_wagers > 0 \
 				and prop_bet.end_date > timezone.now():
-				
+
 				# decrement remaining wagers
 				prop_bet.remaining_wagers = prop_bet.remaining_wagers - 1
 				prop_bet.save(update_fields=['remaining_wagers', 'modified_on'])
-				
+
 				# create an accepted bet
 				accepted_bet = AcceptedBet (accepted_prop=prop_bet, accepted_user=request.user)
 				accepted_bet.save()
@@ -227,13 +265,16 @@ def accept_prop_bet(request):
 				messages.success(request, 'Bet accepted successfully.')
 
 				# send an email to the propser, if they have their setting enabled
+                                current_site = get_current_site(request)
+                                domain = current_site.domain
+
 				user_profile = UserProfile.objects.get(user=prop_bet.user)
 				if user_profile.get_accepted_bet_emails:
 					email_message = 'Accepted Bet:\n' \
 									+ '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text + \
 									'\n\nAccepted By:\n' \
 									+ request.user.get_full_name() + \
-									'\n\nhttps://www.cfbets.us/bets/my_bets/'
+									'\n\nhttps://' + domain + '/bets/my_bets/'
 					send_list = []
 					send_list.append(prop_bet.user.email)
 					send_mail('cfbets: Bet Accepted', email_message, 'yojdork@gmail.com', send_list, fail_silently=True,)
@@ -244,7 +285,7 @@ def accept_prop_bet(request):
 		else:
 			# send a message over that there was an error
 			messages.error(request, 'Bet ID must be an integer.')
-	else:	
+	else:
 		# send a message over that there was an error
 		messages.error(request, 'Something went wrong. Try again.')
 
@@ -258,7 +299,7 @@ def check_duplicate_bet(request):
 		prop_id = request.POST.get('id')
 		response_data = {}
 		# check and see if this user has already accepted this bet at least once
-		prop_bet = ProposedBet.objects.get(id=prop_id) 
+		prop_bet = ProposedBet.objects.get(id=prop_id)
 		accepted_bets = AcceptedBet.objects.filter(accepted_prop=prop_bet, accepted_user=request.user)
 		if accepted_bets:
 			response_data['is_duplicate'] = 'True'
@@ -269,7 +310,7 @@ def check_duplicate_bet(request):
 			json.dumps(response_data),
 			content_type="application/json"
 		)
-			
+
 	else:
 		return HttpResponse (
 			json.dumps({"nothing to see": "this should not happen"}),
@@ -290,7 +331,6 @@ def admin_bets(request):
 	closed_accepted_bets = AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False)
 	closed_prop_bets = ProposedBet.objects.filter(acceptedbet__in=closed_accepted_bets).distinct().order_by('-modified_on')
 
-
 	return render(request, 'bets/base_admin_bets.html', {'nbar': 'admin_bets', 'expired_prop_bets': expired_prop_bets, 'open_prop_bets': open_prop_bets, 'closed_prop_bets': closed_prop_bets})
 
 @staff_member_required(login_url='/')
@@ -308,13 +348,13 @@ def set_prop_bet(request):
 		except ValueError:
 			is_int = False
 
-		if is_int and status in ('Win', 'Loss', 'Tie'): 
+		if is_int and status in ('Win', 'Loss', 'Tie'):
 			win_loss_choices = {'Win': 1, 'Loss': -1, 'Tie': 0}
 
 			# get the prop bet
 			# make sure bet exists
 			try:
-				prop_bet = ProposedBet.objects.get(id=bet_id)	
+				prop_bet = ProposedBet.objects.get(id=bet_id)
 			except ProposedBet.DoesNotExist:
 				prop_bet = None
 
@@ -366,7 +406,7 @@ def set_prop_bet(request):
 																	new_overall_winnings=proposee_profile.overall_winnings)
 						proposee_profile_audit.save()
 
-					# if proposer lost, proposee won	
+					# if proposer lost, proposee won
 					elif status == 'Loss':
 						# update proposer
 						proposer_orig_balance = proposer_profile.current_balance
@@ -398,9 +438,8 @@ def set_prop_bet(request):
 																	new_overall_winnings=proposee_profile.overall_winnings)
 						proposee_profile_audit.save()
 
-
 					# if push
-					elif status == 'Tie':	
+					elif status == 'Tie':
 						# Add Audit entries
 						proposer_orig_balance = proposer_profile.current_balance
 						proposer_orig_winnings = proposer_profile.overall_winnings
@@ -432,12 +471,12 @@ def set_prop_bet(request):
 		else:
 			# send a message over that there was an error
 			messages.error(request, 'Something went wrong with the GET request URL.')
-			
+
 	return HttpResponseRedirect('/bets/admin_bets')
 
 @staff_member_required(login_url='/')
 def undo_prop_bet(request):
-	if request.method == 'GET' and 'id' in request.GET: 
+	if request.method == 'GET' and 'id' in request.GET:
 		# get the prop id and status from the get request
 		bet_id = request.GET['id']
 
@@ -453,10 +492,9 @@ def undo_prop_bet(request):
 			# get the prop bet
 			# make sure bet exists
 			try:
-				prop_bet = ProposedBet.objects.get(id=bet_id)	
+				prop_bet = ProposedBet.objects.get(id=bet_id)
 			except ProposedBet.DoesNotExist:
 				prop_bet = None
-
 
 			# make sure bet exists and won_bet is null
 			if prop_bet and prop_bet.won_bet is not None:
@@ -476,7 +514,6 @@ def undo_prop_bet(request):
 				for bet in accepted_bets:
 					# get the proposee's user profile
 					proposee_profile = UserProfile.objects.get(user=bet.accepted_user)
-
 
 					# update winnings for original winner and loser and the audit table
 					# if the proposer won
@@ -566,7 +603,7 @@ def undo_prop_bet(request):
 																	original_overall_winnings=proposee_orig_winnings, \
 																	new_overall_winnings=proposee_orig_winnings)
 						proposee_profile_audit.save()
-				
+
 				# send a message over that the bet is undone
 				messages.success(request, 'Bet undone succesfully.')
 			else:
