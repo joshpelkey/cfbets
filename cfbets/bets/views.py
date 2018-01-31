@@ -278,13 +278,13 @@ def accept_prop_bet(request):
                                         message.to = prop_bet.user.email
 
 					email_message = 'Accepted Bet:\n' \
-									+ '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text + \
-									'\n\nAccepted By:\n' \
-									+ request.user.get_full_name() + \
-									'\n\nhttps://' + domain + '/bets/my_bets/'
-          
-          message.body = email_message
-          message.send()
+                                                        + '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text \
+                                                        + '\n\nAccepted By:\n' \
+                                                        + request.user.get_full_name() \
+                                                        + '\n\nhttps://' + domain + '/bets/my_bets/'
+
+                                        message.body = email_message
+                                        message.send()
 
 			else:
 				# send a message over that there was an error
