@@ -6,6 +6,11 @@ threadsafe: yes
 handlers:
 - url: /static
   static_dir: static/
+
+- url: /tasks/daily_email
+  script: tasks.daily_email.app
+  login: admin
+
 - url: .*
   script: cfbets.wsgi.application
 
