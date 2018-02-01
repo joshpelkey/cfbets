@@ -265,9 +265,6 @@ def accept_prop_bet(request):
 				messages.success(request, 'Bet accepted successfully.')
 
 				# send an email to the propser, if they have their setting enabled
-                                current_site = get_current_site(request)
-                                domain = current_site.domain
-
 				user_profile = UserProfile.objects.get(user=prop_bet.user)
 
 				if user_profile.get_accepted_bet_emails:
@@ -281,7 +278,7 @@ def accept_prop_bet(request):
                                                         + '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text \
                                                         + '\n\nAccepted By:\n' \
                                                         + request.user.get_full_name() \
-                                                        + '\n\nhttps://' + domain + '/bets/my_bets/'
+                                                        + '\n\nhttps://cfbets.us/bets/my_bets/'
 
                                         message.body = email_message
                                         message.send()

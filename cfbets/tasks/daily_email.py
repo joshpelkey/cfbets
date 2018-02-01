@@ -4,14 +4,9 @@ from django.contrib.sites.shortcuts import get_current_site
 from google.appengine.api import mail
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
 import webapp2 as webapp
-import os
 
 class DailyEmail(webapp.RequestHandler):
     def get(self):
-
-        # get site domain
-        domain = os.environ['HTTP_HOST']
-        domain += '/bets/open_bets/'
 
         # check for new, open prop bets (last 24 hrs)
         yesterday = datetime.now() + timedelta(days=-1)
@@ -31,8 +26,7 @@ class DailyEmail(webapp.RequestHandler):
 						'): ' + prop_bet.prop_text + '\n'
 
 				# put the site url in there
-				#email_message += '\nhttps://' + domain + '/bets/open_bets/'
-				email_message += '\nhttps://' + domain
+				email_message += '\nhttps://cfbets.us/bets/open_bets/'
 
 				# send out the email
                                 message = mail.EmailMessage(
