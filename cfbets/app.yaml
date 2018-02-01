@@ -13,6 +13,7 @@ handlers:
 
 - url: .*
   script: cfbets.wsgi.application
+  secure: always
 
 # Only pure Python libraries can be vendored
 # Python libraries that use C extensions can
