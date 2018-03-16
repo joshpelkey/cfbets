@@ -20,15 +20,15 @@
 					<tbody>
 					{% for bet in open_bets %}
 						<tr>
-							
-							<td>{{ bet.prop_text }} 
-								{% if bet in new_bets %} 
-									<span class="badge">new</span> 
+
+							<td>{{ bet.prop_text }}
+								{% if bet in new_bets %}
+									<span class="badge">new</span>
 								{% endif %}
 								{% if bet in closing_soon_bets %}
 									<span class="badge">expiring</span>
 								{% endif %}
-								<div class="acceptBetButton" style="padding:10px 10px 0px 0px"> 
+								<div class="acceptBetButton" style="padding:10px 10px 0px 0px">
 									<a href="#" data-href="/bets/accept_prop_bet?id={{ bet.id }}" data-target="#acceptBet" data-toggle="modal" data-id1="{{ bet.prop_text }}" data-id2="{{ bet.user.get_full_name }}" data-id3="{{ bet.prop_wager }}" data-id4="{{ bet.id }}" title="Accept prop bet" class="btn btn-success btn-sm open-AcceptBet">Accept</a>
 								</div>
 							</td>
@@ -57,13 +57,13 @@
 				<div class="modal-body">
 					<span id="duplicateBet"></span>
 					<p>Accept <strong>$<span id="betAmount"></span></strong> bet
-					"<strong><span id="betId"></span>"</strong> 
+					"<strong><span id="betId"></span>"</strong>
 					proposed by <span id="betUser"></span>?</p>
 					<p><small><i>Note: You are betting <strong>against</strong> this prop bet. This action can't be undone.</i></small></p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<a class="btn btn-success" onclick="this.disabled=true">Accept Bet</a>
+					<a class="btn btn-success" id="accept-prop-btn">Accept Bet</a>
 				</div>
 			</div>
 		</div>
@@ -72,10 +72,14 @@
 {% endblock %}
 
 {% block morejs %}
+        $('#accept-prop-btn').click(function(){
+            $(this).prop('disabled', true);
+            });
+
 	$('#acceptBet').on('show.bs.modal', function (e) {
 		// remove any previous duplicate bet info
 		$("#duplicateBet").html('');
-		
+
 		// get the bet text and place it in the modal
 		var betText = $(e.relatedTarget).attr('data-id1');
 		var betUser = $(e.relatedTarget).attr('data-id2');
