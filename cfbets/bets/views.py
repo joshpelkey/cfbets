@@ -134,7 +134,7 @@ class AllBetsJson(BaseDatatableView):
         json_data = []
         for item in qs:
 
-            who_won = 'test'
+            who_won = ''
             if item.accepted_prop.get_won_bet_display() == "Win":
                 who_won = item.accepted_prop.user.get_full_name()
             elif item.accepted_prop.get_won_bet_display() == "Loss":
@@ -146,7 +146,7 @@ class AllBetsJson(BaseDatatableView):
                 item.accepted_prop.user.get_full_name(),
                 item.accepted_user.get_full_name(),
                 item.accepted_prop.prop_text,
-                item.accepted_prop.prop_wager,
+                '$' + str(item.accepted_prop.prop_wager),
                 who_won
                 ])
 
