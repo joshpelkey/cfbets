@@ -8,8 +8,26 @@
 	<div class="container">
 	 <div class="row">
 			<div class="col-xs-6 col-md-3">
-				
+
 				<div class="panel status panel-primary">
+					<div class="panel-heading">
+						<h1 class="panel-title text-center">
+							{% if user.userprofile.overall_winnings < 0 %}
+								-${{ user.userprofile.overall_winnings|stringformat:"+d"|slice:"1:" }}
+							{% else %}
+								${{ user.userprofile.overall_winnings }}
+							{% endif %}
+						</h1>
+					</div>
+					<div class="panel-body text-center">
+						<strong>overall winnings</strong>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xs-6 col-md-3">
+
+				<div class="panel status panel-info">
 					<div class="panel-heading">
 						<h1 class="panel-title text-center">
 							{% if user.userprofile.current_balance < 0 %}
@@ -19,50 +37,31 @@
 							{% endif %}
 						</h1>
 					</div>
-					<div class="panel-body text-center">                        
-						<strong>lifetime winnings</strong>
-					</div>
-				</div>
-
-			</div>          
-			<div class="col-xs-6 col-md-3">
-			  
-				<div class="panel status panel-info">
-					<div class="panel-heading">
-						<h1 class="panel-title text-center">
-							{% if user.userprofile.current_balance < 0 %}
-								-${{ user.userprofile.overall_winnings|stringformat:"+d"|slice:"1:" }}
-							{% else %}
-								${{ user.userprofile.overall_winnings }}
-							{% endif %}
-						</h1>
-					</div>
-					<div class="panel-body text-center">                        
+					<div class="panel-body text-center">
 						<strong>current balance</strong>
 					</div>
 				</div>
 
 			</div>
 			<div class="col-xs-6 col-md-3">
-			   
+
 				<div class="panel status panel-default">
 					<div class="panel-heading">
 						<h1 class="panel-title text-center" style="font-size:25px;">{{ win_loss_tie.wins }}-{{ win_loss_tie.losses }}-{{ win_loss_tie.ties }}</h1>
 					</div>
-					<div class="panel-body text-center">                        
+					<div class="panel-body text-center">
 						<strong>win-loss-tie</strong>
 					</div>
 				</div>
 
-			 
 			</div>
 			<div class="col-xs-6 col-md-3">
-			  
+
 				<div class="panel status panel-success">
 					<div class="panel-heading">
 						<h1 class="panel-title text-center">{{ win_loss_tie.win_percentage }}%</h1>
 					</div>
-					<div class="panel-body text-center">                        
+					<div class="panel-body text-center">
 						<strong>win percentage</strong>
 					</div>
 				</div>
@@ -83,49 +82,48 @@
 
 	 <div class="row">
 			<div class="col-xs-6 col-md-3">
-				
+
 				<div class="panel status panel-success">
 					<div class="panel-heading">
 						<h1 class="panel-title text-center">{{ total_proposed.total_proposed }}</h1>
 					</div>
-					<div class="panel-body text-center">                        
+					<div class="panel-body text-center">
 						<strong>bets where you proposed</strong>
 					</div>
 				</div>
 
-			</div>          
+			</div>
 			<div class="col-xs-6 col-md-3">
-			  
+
 				<div class="panel status panel-default">
 					<div class="panel-heading">
 						<h1 class="panel-title text-center">{{ total_proposed.win_percentage }}%</h1>
 					</div>
-					<div class="panel-body text-center">                        
+					<div class="panel-body text-center">
 						<strong>%won when you proposed</strong>
 					</div>
 				</div>
 
 			</div>
 			<div class="col-xs-6 col-md-3">
-			   
+
 				<div class="panel status panel-info">
 					<div class="panel-heading">
 						<h1 class="panel-title text-center">{{ total_accepted.total_accepted }}</h1>
 					</div>
-					<div class="panel-body text-center">                        
+					<div class="panel-body text-center">
 						<strong>bets where you accepted</strong>
 					</div>
 				</div>
 
-			 
 			</div>
 			<div class="col-xs-6 col-md-3">
-			  
+
 				<div class="panel status panel-default">
 					<div class="panel-heading">
 						<h1 class="panel-title text-center">{{ total_accepted.win_percentage }}%</h1>
 					</div>
-					<div class="panel-body text-center">                        
+					<div class="panel-body text-center">
 						<strong>%won when you accepted</strong>
 					</div>
 				</div>
@@ -191,7 +189,6 @@
             "order": [[1, 'desc']],
             "pageLength": 25
     } );
-
 
 /////////////////////////////////
 // total bets by week chart
