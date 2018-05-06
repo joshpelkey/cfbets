@@ -95,8 +95,10 @@
 {% endblock %}
 
 {% block morejs %}
-        $('#remove-bet-btn').click(function(){
+
+        $('#remove-bet-btn').on('click', function(e) {
                 $(this).attr('disabled', true);
+                $(this).off(e)
         });
 
 	$('#removeBet').on('show.bs.modal', function (e) {

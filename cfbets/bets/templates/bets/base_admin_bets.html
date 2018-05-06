@@ -130,9 +130,10 @@
 {% endblock %}
 
 {% block morejs %}
-        $('#undo-bet-btn, #win-bet-btn, #loss-bet-btn, #tie-bet-btn').click(function(){
+        $('#undo-bet-btn, #win-bet-btn, #loss-bet-btn, #tie-bet-btn').on('click', function(e) {
                 $(this).attr('disabled',true);
                 $(this).prop('disabled',true);
+                $(this).off(e)
         });
 
 	$('#undoPropBet').on('show.bs.modal', function (e) {
