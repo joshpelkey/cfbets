@@ -55,9 +55,9 @@
 								<td>{{ bet.prop_text }}</td>
 								<td>{{ bet.end_date|date:"M d Y H:i" }}</td>
 								<td style="text-align: center; vertical-align: middle">
-									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=Win" class="btn btn-primary btn-xs grid-button open-SetPropBet">Win</a>
-									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=Loss" class="btn btn-danger btn-xs grid-button open-SetPropBet">Loss</a>
-									<a href="/bets/set_prop_bet?id={{ bet.id }}&status=Tie" class="btn btn-default btn-xs grid-button open-SetPropBet">Push</a>
+									<a id="win-prop-btn" href="/bets/set_prop_bet?id={{ bet.id }}&status=Win" class="btn btn-primary btn-xs grid-button open-SetPropBet">Win</a>
+									<a id="loss-prop-btn" href="/bets/set_prop_bet?id={{ bet.id }}&status=Loss" class="btn btn-danger btn-xs grid-button open-SetPropBet">Loss</a>
+									<a id="tie-prop-btn" href="/bets/set_prop_bet?id={{ bet.id }}&status=Tie" class="btn btn-default btn-xs grid-button open-SetPropBet">Push</a>
 								</td>
 							</tr>
 						{% endfor %}
@@ -121,7 +121,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<a class="btn btn-warning">Undo</a>
+					<a id="undo-bet-btn" class="btn btn-warning">Undo</a>
 				</div>
 			</div>
 		</div>
@@ -130,6 +130,19 @@
 {% endblock %}
 
 {% block morejs %}
+        $("#undo-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
+        $("#win-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
+        $("#loss-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
+        $("#tie-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
+
 	$('#undoPropBet').on('show.bs.modal', function (e) {
 		// get the bet text and place it in the modal
 		var betText = $(e.relatedTarget).attr('data-id1');

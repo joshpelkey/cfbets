@@ -27,7 +27,11 @@
 							<td>{{ bet.remaining_wagers }}</td>
 							<td>{{ bet.end_date|date:"M d Y H:i" }}</td>
 							<td style="text-align: center; vertical-align: middle">
-								<a href="#" data-href="/bets/remove_prop_bet?id={{ bet.id }}" data-target="#removeBet" data-toggle="modal" data-id="{{ bet.prop_text }}" title="Remove prop bet" class="btn btn-danger btn-sm open-RemoveBet">
+								<a href="#" data-href="/bets/remove_prop_bet?id={{ bet.id }}"
+                                                                            data-target="#removeBet"
+                                                                            data-toggle="modal"
+                                                                            data-id="{{ bet.prop_text }}"
+                                                                            title="Remove prop bet" class="btn btn-danger btn-sm open-RemoveBet">
 									<span class="glyphicon glyphicon-remove"></span>
 								</a>
 							</td>
@@ -68,7 +72,6 @@
 		</div>
     </div>
 
-
 	<!-- Remove bet modal -->
 	<div class="modal fade" id="removeBet" tabindex="-1" role="dialog" aria-labelledby="RemoveBet">
 		<div class="modal-dialog" role="document">
@@ -83,7 +86,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<a class="btn btn-danger">Remove Bet</a>
+					<a id="remove-bet-btn" class="btn btn-danger">Remove Bet</a>
 				</div>
 			</div>
 		</div>
@@ -92,6 +95,11 @@
 {% endblock %}
 
 {% block morejs %}
+
+        $("#remove-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
+
 	$('#removeBet').on('show.bs.modal', function (e) {
 		// get the bet text and place it in the modal
 		var betText = $(e.relatedTarget).attr('data-id');

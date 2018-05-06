@@ -72,9 +72,10 @@
 {% endblock %}
 
 {% block morejs %}
-        $('#accept-prop-btn').click(function(){
-            $(this).prop('disabled', true);
-            });
+
+        $("#accept-prop-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
 
 	$('#acceptBet').on('show.bs.modal', function (e) {
 		// remove any previous duplicate bet info
