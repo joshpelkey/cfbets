@@ -96,10 +96,9 @@
 
 {% block morejs %}
 
-        $('#remove-bet-btn').on('click', function(e) {
-                $(this).attr('disabled', true);
-                $(this).off(e)
-        });
+        $("#remove-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
 
 	$('#removeBet').on('show.bs.modal', function (e) {
 		// get the bet text and place it in the modal

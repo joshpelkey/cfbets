@@ -130,11 +130,18 @@
 {% endblock %}
 
 {% block morejs %}
-        $('#undo-bet-btn, #win-bet-btn, #loss-bet-btn, #tie-bet-btn').on('click', function(e) {
-                $(this).attr('disabled',true);
-                $(this).prop('disabled',true);
-                $(this).off(e)
-        });
+        $("#undo-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
+        $("#win-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
+        $("#loss-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
+        $("#tie-bet-btn").one("click", function() {
+                $(this).click(function () { return false; });
+                });
 
 	$('#undoPropBet').on('show.bs.modal', function (e) {
 		// get the bet text and place it in the modal
