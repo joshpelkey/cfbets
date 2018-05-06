@@ -175,7 +175,7 @@
 			  		</div>
 			  		<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary" form="place-bets-form">Submit Bet</button>
+						<button type="submit" id="place-bet-btn" class="btn btn-primary" form="place-bets-form">Submit Bet</button>
 			  		</div>
 				</div>
 		  	</div>
@@ -216,8 +216,8 @@
 					$('#id_bet_expiration_date').val(curr_month + "/" + curr_date + "/" + curr_year + " 12:00");
 				});
 
-                                $('#place-bets-form').one('submit', function() {
-                                            $(this).find('input[type="submit"]').prop('disabled', true);
+                                $('#place-bet-btn').click(function(){
+                                        $(this).prop('disabled', true);
                                 });
 
 				$('#place-bets-form').on('submit', function(event) {
