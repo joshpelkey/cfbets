@@ -13,6 +13,7 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 from common.stats import *
 from bets.forms import PlaceBetsForm
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit, User
+from django.db.models import Sum
 
 # Create your views here.
 
@@ -82,7 +83,13 @@ def my_bets(request):
 	your_active_bets = your_accepted_bets | your_bets_accepted_by_others
 	your_active_bets_count = your_active_bets.count()
 
-	return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets', 'your_open_bets': your_open_bets, 'your_active_bets': your_active_bets, 'your_active_bets_count': your_active_bets_count})
+        # your active bets, total money bet
+        your_active_bets_total_amount = your_active_bets.aggregate(Sum('accepted_prop__prop_wager'))
+        your_active_bets_total_amount = your_active_bets_total_amount.values()[0]
+
+        return render(request, 'bets/base_my_bets.html', {'nbar': 'my_bets', 'your_open_bets': your_open_bets,
+            'your_active_bets': your_active_bets, 'your_active_bets_count': your_active_bets_count,
+            'your_active_bets_total_amount': your_active_bets_total_amount})
 
 @login_required(login_url='/login/')
 def open_bets(request):
