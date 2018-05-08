@@ -119,8 +119,58 @@ def all_bets(request):
 
 	return render(request, 'bets/base_all_bets.html', {'nbar': 'all_bets', 'all_active_bets': all_active_bets})
 
+class MyCompletedBetsJson(BaseDatatableView):
+
+    def get_initial_queryset(self):
+        current_user = self.request.user
+	your_accepted_bets = AcceptedBet.objects.filter(accepted_user=current_user, accepted_prop__won_bet__isnull=False)
+	your_bets_accepted_by_others = AcceptedBet.objects.filter(accepted_prop__user=current_user, accepted_prop__won_bet__isnull=False)
+	your_closed_bets = your_accepted_bets | your_bets_accepted_by_others
+        return your_closed_bets.order_by('-accepted_prop__modified_on')
+
+    def filter_queryset(self, qs):
+        sSearch = self.request.GET.get(u'search[value]', None)
+
+        if sSearch:
+            qs = qs.filter(accepted_prop__prop_text__istartswith=sSearch) | \
+                    qs.filter(accepted_user__first_name__istartswith=sSearch) | \
+                    qs.filter(accepted_user__last_name__istartswith=sSearch) | \
+                    qs.filter(accepted_prop__user__first_name__istartswith=sSearch) | \
+                    qs.filter(accepted_prop__user__last_name__istartswith=sSearch)
+
+        return qs
+
+    def prepare_results(self, qs):
+        json_data = []
+        current_user = self.request.user
+
+        for item in qs:
+
+            # figure out who the bet was against
+            bet_against_user = ''
+            if item.accepted_prop.user == current_user:
+                bet_against_user = item.accepted_user.get_full_name()
+            else:
+                bet_against_user = item.accepted_prop.user.get_full_name()
+
+            who_won = ''
+            if item.accepted_prop.get_won_bet_display() == "Win":
+                who_won = item.accepted_prop.user.get_full_name()
+            elif item.accepted_prop.get_won_bet_display() == "Loss":
+                who_won = item.accepted_user.get_full_name()
+            else:
+                who_won = 'push'
+
+            json_data.append([
+                item.accepted_prop.prop_text,
+                '$' + str(item.accepted_prop.prop_wager),
+                bet_against_user,
+                who_won
+                ])
+
+        return json_data
+
 class AllBetsJson(BaseDatatableView):
-    order_columns = ['accepted_prop__user', 'accepted_user', 'accepted_prop__prop_text', 'accepted_prop__prop_wager', '']
 
     def get_initial_queryset(self):
         return AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False).order_by('-accepted_prop__modified_on')
