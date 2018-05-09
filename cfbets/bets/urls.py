@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from bets import views
-from bets.views import AllBetsJson, MyCompletedBetsJson
+from bets.views import AllBetsJson, MyCompletedBetsJson, AdminBetsJson
 
 app_name = 'bets'
 urlpatterns = [
@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^all_bets/', views.all_bets),
     url(r'^all_bets_json/', AllBetsJson.as_view(), name='all_bets_json'),
     url(r'^my_completed_bets_json/', MyCompletedBetsJson.as_view(), name='my_completed_bets_json'),
+    url(r'^admin_bets_json/', AdminBetsJson.as_view(), name='admin_bets_json'),
     url(r'^your_stats/', views.your_stats),
     url(r'^global_stats/', views.global_stats),
     url(r'^process_place_bets/(?P<next_url>.*$)', views.place_bets_form_process, name='place_bets_form_process'),
