@@ -211,6 +211,44 @@ class AllBetsJson(BaseDatatableView):
 
         return json_data
 
+class AdminBetsJson(BaseDatatableView):
+    order_columns = ['accepted_prop__user', 'accepted_prop__prop_text', '', '']
+
+    def get_initial_queryset(self):
+        return AcceptedBet.objects.filter(accepted_prop__won_bet__isnull=False).order_by('-accepted_prop__modified_on')
+
+    def filter_queryset(self, qs):
+        sSearch = self.request.GET.get(u'search[value]', None)
+
+        if sSearch:
+            qs = qs.filter(accepted_prop__prop_text__istartswith=sSearch) | \
+                    qs.filter(accepted_prop__user__first_name__istartswith=sSearch) | \
+                    qs.filter(accepted_prop__user__last_name__istartswith=sSearch)
+
+        return qs
+
+    def prepare_results(self, qs):
+        json_data = []
+        for item in qs:
+
+            who_won = ''
+            if item.accepted_prop.get_won_bet_display() == "Win":
+                who_won = item.accepted_prop.user.get_full_name()
+            elif item.accepted_prop.get_won_bet_display() == "Loss":
+                who_won = item.accepted_user.get_full_name()
+            else:
+                who_won = 'push'
+
+            completed_bet_info = [item.accepted_prop.user.get_full_name(), item.accepted_prop.prop_text, item.accepted_prop.id]
+            json_data.append([
+                item.accepted_prop.user.get_full_name(),
+                item.accepted_prop.prop_text,
+                who_won,
+                completed_bet_info
+                ])
+
+        return json_data
+
 @login_required(login_url='/login/')
 def place_bets_form_process(request, next_url):
 	if request.method == 'POST':
