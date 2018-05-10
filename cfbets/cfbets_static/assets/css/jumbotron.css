@@ -6,7 +6,7 @@ body {
 
 a#profile {
 	color: #9d9d9d;
-	margin-top: 5px; 
+	margin-top: 5px;
 	background-color: transparent;
 }
 
@@ -21,7 +21,6 @@ form input {
 	border: 2px solid #d3d3d3;
     border-radius: 4px;
 }
-
 
 form#place-bets-form input#id_bet {
     width: 90%;
@@ -84,4 +83,11 @@ form#place-bets-form input#id_bet_amount {
     padding-top: 10px;
     padding-bottom: 10px;
     letter-spacing: -0.8px;
+}
+
+tfoot th {
+        border: none            !important;
+        font-weight: normal      !important;
+        font-style: oblique      !important;
+        font-size: 14px         !important;
 }
