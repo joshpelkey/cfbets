@@ -17,10 +17,8 @@ from django.db.models import Sum
 
 # Create your views here.
 
-
 def bets(request):
     return HttpResponseRedirect('/bets/my_bets')
-
 
 @login_required(login_url='/login/')
 def your_stats(request):
@@ -70,7 +68,6 @@ def your_stats(request):
                    'total_bets_by_week': total_bets_by_week,
                    'total_money_by_week': total_money_by_week})
 
-
 @login_required(login_url='/login/')
 def global_stats(request):
 
@@ -93,7 +90,6 @@ def global_stats(request):
                    'week_start': week_start,
                    'global_betting_report': global_betting_report,
                    'global_bettingest_couples': global_bettingest_couples})
-
 
 @login_required(login_url='/login/')
 def my_bets(request):
@@ -135,7 +131,6 @@ def my_bets(request):
                    'your_active_bets_count': your_active_bets_count,
                    'your_active_bets_total_amount': your_active_bets_total_amount})
 
-
 @login_required(login_url='/login/')
 def open_bets(request):
 
@@ -176,7 +171,6 @@ def open_bets(request):
                    'new_bets': new_bets,
                    'closing_soon_bets': closing_soon_bets})
 
-
 @login_required(login_url='/login/')
 def all_bets(request):
 
@@ -186,7 +180,6 @@ def all_bets(request):
 
     return render(request, 'bets/base_all_bets.html',
                   {'nbar': 'all_bets', 'all_active_bets': all_active_bets})
-
 
 class MyCompletedBetsJson(BaseDatatableView):
     order_columns = ['accepted_prop__prop_text',
@@ -246,7 +239,6 @@ class MyCompletedBetsJson(BaseDatatableView):
 
         return json_data
 
-
 class AllBetsJson(BaseDatatableView):
     order_columns = [
         'accepted_prop__user',
@@ -294,7 +286,6 @@ class AllBetsJson(BaseDatatableView):
 
         return json_data
 
-
 class AdminBetsJson(BaseDatatableView):
     order_columns = ['accepted_prop__user', 'accepted_prop__prop_text', '', '']
 
@@ -338,7 +329,6 @@ class AdminBetsJson(BaseDatatableView):
 
         return json_data
 
-
 @login_required(login_url='/login/')
 def place_bets_form_process(request, next_url):
 
@@ -375,7 +365,6 @@ def place_bets_form_process(request, next_url):
                           {'place_bets_form': form}, status=400)
 
     return HttpResponseRedirect('/bets/my_bets')
-
 
 @login_required(login_url='/login/')
 def remove_prop_bet(request):
@@ -425,7 +414,6 @@ def remove_prop_bet(request):
         messages.error(request, 'Something went wrong. Try again.')
 
     return HttpResponseRedirect('/bets/my_bets')
-
 
 @login_required(login_url='/login/')
 def accept_prop_bet(request):
@@ -504,7 +492,6 @@ def accept_prop_bet(request):
 
     return HttpResponseRedirect('/bets/open_bets')
 
-
 @csrf_exempt
 @login_required(login_url='/login/')
 def check_duplicate_bet(request):
@@ -533,7 +520,6 @@ def check_duplicate_bet(request):
             json.dumps({"nothing to see": "this should not happen"}),
             content_type="application/json"
         )
-
 
 @staff_member_required(login_url='/')
 def admin_bets(request):
@@ -564,7 +550,6 @@ def admin_bets(request):
                    'expired_prop_bets': expired_prop_bets,
                    'open_prop_bets': open_prop_bets,
                    'closed_prop_bets': closed_prop_bets})
-
 
 @staff_member_required(login_url='/')
 def set_prop_bet(request):
@@ -730,7 +715,6 @@ def set_prop_bet(request):
                 request, 'Something went wrong with the GET request URL.')
 
     return HttpResponseRedirect('/bets/admin_bets')
-
 
 @staff_member_required(login_url='/')
 def undo_prop_bet(request):
