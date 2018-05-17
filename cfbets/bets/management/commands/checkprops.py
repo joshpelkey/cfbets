@@ -16,7 +16,11 @@ class Command(BaseCommand):
 
 		# check for new, open prop bets (last 24 hrs)
 		yesterday = datetime.now() + timedelta(days=-1)
-		new_prop_bets = ProposedBet.objects.filter(remaining_wagers__gt=0, end_date__gt=timezone.now(), won_bet__isnull=True, created_on__gt=yesterday)
+		new_prop_bets = ProposedBet.objects.filter(
+                    remaining_wagers__gt=0,
+                    end_date__gt=timezone.now(),
+                    won_bet__isnull=True,
+                    created_on__gt=yesterday)
 
 		# if there are new props, send to those users that want to see them
 		if new_prop_bets:
@@ -37,12 +41,12 @@ class Command(BaseCommand):
 					# send out the email
                                         message = mail.EmailMessage(
                                                 sender='cfbets
-                                                <joshpelkey@gmail.com>',
+                                                < joshpelkey@gmail.com >',
                                                 subject="cfbets: New prop
                                                 bets!")
 
                                         message.to = loop_user.user.email)
-                                        message.body = email_message
+                                        message.body=email_message
 
                                         message.send()
 

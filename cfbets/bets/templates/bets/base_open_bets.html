@@ -1,118 +1,135 @@
 {% extends "base.html" %}
 
 {% block base_content %}
+<div class="container">
+<h1>Open Bets</h1>
 
     <div class="container">
-        <h1>Open Bets</h1>
-		<div class="container">
-			{% if open_bets %}
-				<p>These are all the open bets from other users. Accept these bets with reckless abandon.<p>
-				<table class="table table-striped table-bordered table-condensed table-responsive" id=openBets>
-					<thead>
-					  <tr>
-						<th>Prop Bet</th>
-						<th>User</th>
-						<th>Wager</th>
-						<th>Bets Remain</th>
-						<th>End Date</th>
-					  </tr>
-					</thead>
-					<tbody>
-					{% for bet in open_bets %}
-						<tr>
+    {% if open_bets %}
+        <p>These are all the open bets from other users. Accept these bets with reckless abandon.
+        <p>
+        <table class="table table-striped table-bordered table-condensed table-responsive" id=openBets>
+            <thead>
+                <tr>
+                    <th>Prop Bet</th>
+                    <th>User</th>
+                    <th>Wager</th>
+                    <th>Bets Remain</th>
+                    <th>End Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bet in open_bets %}
+                    <tr>
+                        <td>
+                            {{ bet.prop_text }}
+                            {% if bet in new_bets %}
+                                <span class="badge">new</span>
+                            {% endif %}
 
-							<td>{{ bet.prop_text }}
-								{% if bet in new_bets %}
-									<span class="badge">new</span>
-								{% endif %}
-								{% if bet in closing_soon_bets %}
-									<span class="badge">expiring</span>
-								{% endif %}
-								<div class="acceptBetButton" style="padding:10px 10px 0px 0px">
-									<a href="#" data-href="/bets/accept_prop_bet?id={{ bet.id }}" data-target="#acceptBet" data-toggle="modal" data-id1="{{ bet.prop_text }}" data-id2="{{ bet.user.get_full_name }}" data-id3="{{ bet.prop_wager }}" data-id4="{{ bet.id }}" title="Accept prop bet" class="btn btn-success btn-sm open-AcceptBet">Accept</a>
-								</div>
-							</td>
-							<td>{{ bet.user.get_full_name }}</td>
-							<td>${{ bet.prop_wager }}</td>
-							<td>{{ bet.remaining_wagers }}</td>
-							<td>{{ bet.end_date|date:"M d Y H:i" }}</td>
-						</tr>
-					{% endfor %}
-					</tbody>
-				</table>
-			{% else %}
-			<p>There aren't any open bets to accept. This makes me sad. Email the group to get to work.</p>
-			{% endif %}
-		</div>
+                            {% if bet in closing_soon_bets %}
+                                <span class="badge">expiring</span>
+                            {% endif %}
+
+                            <div class="acceptBetButton" style="padding:10px 10px 0px 0px">
+                                <a href="#" data-href="/bets/accept_prop_bet?id={{ bet.id }}"
+                                    data-target="#acceptBet" data-toggle="modal"
+                                    data-id1="{{ bet.prop_text }}"
+                                    data-id2="{{ bet.user.get_full_name }}"
+                                    data-id3="{{ bet.prop_wager }}"
+                                    data-id4="{{ bet.id }}"
+                                    title="Accept prop bet"
+                                    class="btn btn-success btn-sm open-AcceptBet">Accept</a>
+                            </div>
+                        </td>
+                        <td>{{ bet.user.get_full_name }}</td>
+                        <td>${{ bet.prop_wager }}</td>
+                        <td>{{ bet.remaining_wagers }}</td>
+                        <td>{{ bet.end_date|date:"M d Y H:i" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>There aren't any open bets to accept. This makes me sad. Email the group to get to work.</p>
+        {% endif %}
     </div>
 
-	<!-- Accept bet modal -->
-	<div class="modal fade" id="acceptBet" tabindex="-1" role="dialog" aria-labelledby="AcceptBet">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="AcceptBet">Accept Bet</h4>
-				</div>
-				<div class="modal-body">
-					<span id="duplicateBet"></span>
-					<p>Accept <strong>$<span id="betAmount"></span></strong> bet
-					"<strong><span id="betId"></span>"</strong>
-					proposed by <span id="betUser"></span>?</p>
-					<p><small><i>Note: You are betting <strong>against</strong> this prop bet. This action can't be undone.</i></small></p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<a class="btn btn-success" id="accept-prop-btn">Accept Bet</a>
-				</div>
-			</div>
-		</div>
-	</div>
+</div>
+
+<!-- Accept bet modal -->
+<div class="modal fade" id="acceptBet" tabindex="-1" role="dialog" aria-labelledby="AcceptBet">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="AcceptBet">Accept Bet</h4>
+            </div>
+            <div class="modal-body">
+                <span id="duplicateBet"></span>
+                <p>Accept <strong>$<span id="betAmount"></span></strong> bet
+                    "<strong><span id="betId"></span>"</strong>
+                    proposed by <span id="betUser"></span>?
+                </p>
+                <p><small><i>Note: You are betting <strong>against</strong> this prop bet. This action can't be undone.</i></small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-success" id="accept-prop-btn">Accept Bet</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
 {% block morejs %}
+$("#accept-prop-btn").one("click", function() {
+    $(this).click(function () { return false; });
+});
 
-        $("#accept-prop-btn").one("click", function() {
-                $(this).click(function () { return false; });
-                });
+$('#acceptBet').on('show.bs.modal', function (e) {
+    // remove any previous duplicate bet info
+    $("#duplicateBet").html('');
 
-	$('#acceptBet').on('show.bs.modal', function (e) {
-		// remove any previous duplicate bet info
-		$("#duplicateBet").html('');
+    // get the bet text and place it in the modal
+    var betText = $(e.relatedTarget).attr('data-id1');
+    var betUser = $(e.relatedTarget).attr('data-id2');
+    var betAmount = $(e.relatedTarget).attr('data-id3');
 
-		// get the bet text and place it in the modal
-		var betText = $(e.relatedTarget).attr('data-id1');
-		var betUser = $(e.relatedTarget).attr('data-id2');
-		var betAmount = $(e.relatedTarget).attr('data-id3');
-		$("#betId").html(betText);
-		$("#betUser").html(betUser);
-		$("#betAmount").html(betAmount);
+    $("#betId").html(betText);
+    $("#betUser").html(betUser);
+    $("#betAmount").html(betAmount);
 
-		// get the href link with bet id and place it in the href
-		$(this).find('.btn-success').attr('href', $(e.relatedTarget).data('href'));
+    // get the href link with bet id and place it in the href
+    $(this).find('.btn-success').attr('href', $(e.relatedTarget).data('href'));
 
-		// check to see if you've already accepted this bet
-		var id = $(e.relatedTarget).attr('data-id4');
-		$.ajax({
-			url: '/bets/check_duplicate_bet/',
-			type: 'POST',
-			data: {id: id},
-			success: function(json){
-				console.log(json);
-				if (json.is_duplicate == "True")
-				{
-					$("#duplicateBet").html('<div class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> You have accepted this bet at least once before. Are you that confident?</div>');
-				}
-			},
-			error: function(){
-				alert("issue with duplicate bet checking. id: " + id);
-			}
-		});
-	});
+    // check to see if you've already accepted this bet
+    var id = $(e.relatedTarget).attr('data-id4');
 
-    $('#openBets').dataTable( {
-        "order": [],
-		"paging": false
-    } );
+    $.ajax({
+        url: '/bets/check_duplicate_bet/',
+        type: 'POST',
+        data: {id: id},
+        success: function(json){
+            console.log(json);
+            if (json.is_duplicate == "True")
+            {
+                $("#duplicateBet").html('<div class="alert alert-info">' +
+                    '<span class="glyphicon glyphicon-info-sign"></span>' +
+                    'You have accepted this bet at least once before. ' +
+                    'Are you that confident?</div>');
+            }
+        },
+        error: function(){
+            alert("issue with duplicate bet checking. id: " + id);
+        }
+    });
+});
+
+$('#openBets').dataTable( {
+    "order": [],
+    "paging": false
+});
+
 {% endblock %}
