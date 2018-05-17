@@ -417,8 +417,9 @@ def remove_prop_bet(request):
 
 @login_required(login_url='/login/')
 def accept_prop_bet(request):
+
     if request.method == 'GET' and 'id' in request.GET:
-                # get the prop id from the get request
+        # get the prop id from the get request
         bet_id = request.GET['id']
 
         # make sure it's an int

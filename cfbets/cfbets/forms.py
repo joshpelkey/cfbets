@@ -33,7 +33,14 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "group_id", "password1", "password2", )
+        fields = (
+            "first_name",
+            "last_name",
+            "username",
+            "group_id",
+            "password1",
+            "password2",
+        )
 
     # this redefines the save function to include the fields you added
     def save(self, commit=True):
@@ -43,7 +50,7 @@ class SignUpForm(UserCreationForm):
         user.last_name = self.cleaned_data["last_name"]
 
     	if commit:
-        	user.save()
+       	    user.save()
 	return user
 
 class UserProfileForm(forms.Form):
