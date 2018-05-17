@@ -17,8 +17,10 @@ from django.db.models import Sum
 
 # Create your views here.
 
+
 def bets(request):
     return HttpResponseRedirect('/bets/my_bets')
+
 
 @login_required(login_url='/login/')
 def your_stats(request):
@@ -68,6 +70,7 @@ def your_stats(request):
                    'total_bets_by_week': total_bets_by_week,
                    'total_money_by_week': total_money_by_week})
 
+
 @login_required(login_url='/login/')
 def global_stats(request):
 
@@ -90,6 +93,7 @@ def global_stats(request):
                    'week_start': week_start,
                    'global_betting_report': global_betting_report,
                    'global_bettingest_couples': global_bettingest_couples})
+
 
 @login_required(login_url='/login/')
 def my_bets(request):
@@ -131,6 +135,7 @@ def my_bets(request):
                    'your_active_bets_count': your_active_bets_count,
                    'your_active_bets_total_amount': your_active_bets_total_amount})
 
+
 @login_required(login_url='/login/')
 def open_bets(request):
 
@@ -171,6 +176,7 @@ def open_bets(request):
                    'new_bets': new_bets,
                    'closing_soon_bets': closing_soon_bets})
 
+
 @login_required(login_url='/login/')
 def all_bets(request):
 
@@ -180,6 +186,7 @@ def all_bets(request):
 
     return render(request, 'bets/base_all_bets.html',
                   {'nbar': 'all_bets', 'all_active_bets': all_active_bets})
+
 
 class MyCompletedBetsJson(BaseDatatableView):
     order_columns = ['accepted_prop__prop_text',
@@ -239,6 +246,7 @@ class MyCompletedBetsJson(BaseDatatableView):
 
         return json_data
 
+
 class AllBetsJson(BaseDatatableView):
     order_columns = [
         'accepted_prop__user',
@@ -286,6 +294,7 @@ class AllBetsJson(BaseDatatableView):
 
         return json_data
 
+
 class AdminBetsJson(BaseDatatableView):
     order_columns = ['accepted_prop__user', 'accepted_prop__prop_text', '', '']
 
@@ -329,6 +338,7 @@ class AdminBetsJson(BaseDatatableView):
 
         return json_data
 
+
 @login_required(login_url='/login/')
 def place_bets_form_process(request, next_url):
 
@@ -365,6 +375,7 @@ def place_bets_form_process(request, next_url):
                           {'place_bets_form': form}, status=400)
 
     return HttpResponseRedirect('/bets/my_bets')
+
 
 @login_required(login_url='/login/')
 def remove_prop_bet(request):
@@ -415,75 +426,84 @@ def remove_prop_bet(request):
 
     return HttpResponseRedirect('/bets/my_bets')
 
+
 @login_required(login_url='/login/')
 def accept_prop_bet(request):
-	if request.method == 'GET' and 'id' in request.GET:
-		# get the prop id from the get request
-		bet_id = request.GET['id']
+    if request.method == 'GET' and 'id' in request.GET:
+                # get the prop id from the get request
+        bet_id = request.GET['id']
 
-		# make sure it's an int
-		try:
-			int(bet_id)
-			is_int = True
+        # make sure it's an int
+        try:
+            int(bet_id)
+            is_int = True
 
-		except ValueError:
-			is_int = False
+        except ValueError:
+            is_int = False
 
-		if is_int:
-			# make sure bet exists
-			try:
-				prop_bet = ProposedBet.objects.get(id=bet_id)
-			except ProposedBet.DoesNotExist:
-				prop_bet = None
+        if is_int:
+            # make sure bet exists
+            try:
+                prop_bet = ProposedBet.objects.get(id=bet_id)
+            except ProposedBet.DoesNotExist:
+                prop_bet = None
 
-			# make sure bet is someone elses and it has bets left and it isn't expired
-			if prop_bet \
-				and request.user != prop_bet.user \
-				and prop_bet.remaining_wagers > 0 \
-				and prop_bet.end_date > timezone.now():
+            # make sure bet is someone elses and it has bets left and it isn't
+            # expired
+            if prop_bet \
+                    and request.user != prop_bet.user \
+                    and prop_bet.remaining_wagers > 0 \
+                    and prop_bet.end_date > timezone.now():
 
-				# decrement remaining wagers
-				prop_bet.remaining_wagers = prop_bet.remaining_wagers - 1
-				prop_bet.save(update_fields=['remaining_wagers', 'modified_on'])
+                # decrement remaining wagers
+                prop_bet.remaining_wagers = prop_bet.remaining_wagers - 1
+                prop_bet.save(
+                    update_fields=[
+                        'remaining_wagers',
+                        'modified_on'])
 
-				# create an accepted bet
-				accepted_bet = AcceptedBet (accepted_prop=prop_bet, accepted_user=request.user)
-				accepted_bet.save()
+                # create an accepted bet
+                accepted_bet = AcceptedBet(
+                    accepted_prop=prop_bet, accepted_user=request.user)
+                accepted_bet.save()
 
-				# send a message over that the bet is accepted
-				messages.success(request, 'Bet accepted successfully.')
+                # send a message over that the bet is accepted
+                messages.success(request, 'Bet accepted successfully.')
 
-				# send an email to the propser, if they have their setting enabled
-				user_profile = UserProfile.objects.get(user=prop_bet.user)
+                # send an email to the propser, if they have their setting
+                # enabled
+                user_profile = UserProfile.objects.get(user=prop_bet.user)
 
-				if user_profile.get_accepted_bet_emails:
-                                        message = mail.EmailMessage(
-                                                sender='cfbets <joshpelkey@gmail.com>',
-                                                subject="cfbets: Bet Accepted")
+                if user_profile.get_accepted_bet_emails:
+                    message = mail.EmailMessage(
+                        sender='cfbets <joshpelkey@gmail.com>',
+                        subject="cfbets: Bet Accepted")
 
-                                        message.to = prop_bet.user.email
+                    message.to = prop_bet.user.email
 
-					email_message = 'Accepted Bet:\n' \
-                                                        + '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text \
-                                                        + '\n\nAccepted By:\n' \
-                                                        + request.user.get_full_name() \
-                                                        + '\n\nhttps://cfbets.us/bets/my_bets/'
+                    email_message = 'Accepted Bet:\n' \
+                                    + '($' + str(prop_bet.prop_wager) + ') ' + prop_bet.prop_text \
+                                    + '\n\nAccepted By:\n' \
+                                    + request.user.get_full_name() \
+                                    + '\n\nhttps://cfbets.us/bets/my_bets/'
 
-                                        message.body = email_message
-                                        message.send()
+                    message.body = email_message
+                    message.send()
 
-			else:
-				# send a message over that there was an error
-				messages.error(request, 'You don\'t have permission to modify this bet.')
+            else:
+                # send a message over that there was an error
+                messages.error(
+                    request, 'You don\'t have permission to modify this bet.')
 
-		else:
-			# send a message over that there was an error
-			messages.error(request, 'Bet ID must be an integer.')
-	else:
-		# send a message over that there was an error
-		messages.error(request, 'Something went wrong. Try again.')
+        else:
+            # send a message over that there was an error
+            messages.error(request, 'Bet ID must be an integer.')
+    else:
+        # send a message over that there was an error
+        messages.error(request, 'Something went wrong. Try again.')
 
-	return HttpResponseRedirect('/bets/open_bets')
+    return HttpResponseRedirect('/bets/open_bets')
+
 
 @csrf_exempt
 @login_required(login_url='/login/')
@@ -514,6 +534,7 @@ def check_duplicate_bet(request):
             content_type="application/json"
         )
 
+
 @staff_member_required(login_url='/')
 def admin_bets(request):
 
@@ -543,6 +564,7 @@ def admin_bets(request):
                    'expired_prop_bets': expired_prop_bets,
                    'open_prop_bets': open_prop_bets,
                    'closed_prop_bets': closed_prop_bets})
+
 
 @staff_member_required(login_url='/')
 def set_prop_bet(request):
@@ -708,6 +730,7 @@ def set_prop_bet(request):
                 request, 'Something went wrong with the GET request URL.')
 
     return HttpResponseRedirect('/bets/admin_bets')
+
 
 @staff_member_required(login_url='/')
 def undo_prop_bet(request):
