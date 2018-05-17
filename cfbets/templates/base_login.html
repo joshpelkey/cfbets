@@ -3,51 +3,50 @@
 {% block title %}Login{% endblock %}
 
 {% block base_content %}
-
 <div class="container" style="max-width: 750px;">
-	{% if user.is_authenticated %}
-		<h3>You're already logged in as {{ user.get_full_name }}.</h3>
-	{% else %}
-		<h2>Login</h2>
-			<p>Need an account? <a href="/sign_up"><small><u>Sign up here.</u></small></a> Or, maybe you <a href="/password_reset">forgot your password?</a></p>
-			<hr>
-			<form class="form-horizontal" method="post">{% csrf_token %}
-				{% if form.non_field_errors %}
-					<div class="alert alert-danger">{{ form.non_field_errors|join:"<br \>" }}</div>
-				{% endif %}
+    {% if user.is_authenticated %}
+        <h3>You're already logged in as {{ user.get_full_name }}.</h3>
+    {% else %}
+        <h2>Login</h2>
+        <p>Need an account? <a href="/sign_up"><small><u>Sign up here.</u></small></a> Or, maybe you <a href="/password_reset">forgot your password?</a></p>
+        <hr>
+        <form class="form-horizontal" method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors|join:"<br \>" }}</div>
+            {% endif %}
 
-				{% for field in form %}
-				{% if field.errors %}
-					<div class="control-group error">
-						<label class="control-label">{{ field.label }}</label> 
-						<div class="controls">{{ field }}
-							<p class="help-inline text-danger">
-								{% for error in  field.errors %}<strong>{{ error }}</strong>{% endfor %}
-							</p>
-						</div>
-					</div>
+            {% for field in form %}
+                {% if field.errors %}
+                    <div class="control-group error">
+                        <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                            <p class="help-inline text-danger">
+                                {% for error in  field.errors %}<strong>{{ error }}</strong>{% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="control-group">
+                        <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">
+                            {{ field }}
+                            {% if field.help_text %}
+                            <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
 
-				{% else %}
-					<div class="control-group">
-						<label class="control-label">{{ field.label }}</label> 
-						<div class="controls">{{ field }}
-							{% if field.help_text %}
-							<p class="help-inline"><small>{{ field.help_text }}</small></p>
-							{% endif %}
-						</div>
-					</div>
+            <br/>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" >Log in</button>
+            </div>
+        </form>
 
-					{% endif %}
-					{% endfor %}
+    {% endif %}
 
-					<br/>
-					<div class="form-actions">
-					<button type="submit" class="btn btn-primary" >Log in</button>
-					</div>
-
-				</form>
-
-			{% endif %}
 </div>
-
 {% endblock %}
