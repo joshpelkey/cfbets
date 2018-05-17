@@ -49,9 +49,9 @@ class SignUpForm(UserCreationForm):
         user.first_name = self.cleaned_data["first_name"]
         user.last_name = self.cleaned_data["last_name"]
 
-    	if commit:
-       	    user.save()
-	return user
+        if commit:
+            user.save()
+        return user
 
 class UserProfileForm(forms.Form):
 	first_name = forms.CharField(label = "First Name", max_length=255)

@@ -5,7 +5,6 @@ from django.contrib.sites.shortcuts import get_current_site
 from google.appengine.api import mail
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit
 
-
 class Command(BaseCommand):
     help = 'Checks for new prop bets and emails users'
 
