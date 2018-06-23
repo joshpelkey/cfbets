@@ -14,6 +14,7 @@
                     <th>Prop Bet</th>
                     <th>User</th>
                     <th>Wager</th>
+                    <th>Odds</th>
                     <th>Bets Remain</th>
                     <th>End Date</th>
                 </tr>
@@ -38,12 +39,14 @@
                                     data-id2="{{ bet.user.get_full_name }}"
                                     data-id3="{{ bet.prop_wager }}"
                                     data-id4="{{ bet.id }}"
+                                    data-id5="{{ bet.odds }}"
                                     title="Accept prop bet"
                                     class="btn btn-success btn-sm open-AcceptBet">Accept</a>
                             </div>
                         </td>
                         <td>{{ bet.user.get_full_name }}</td>
                         <td>${{ bet.prop_wager }}</td>
+                        <td>{{ bet.odds }}</td>
                         <td>{{ bet.remaining_wagers }}</td>
                         <td>{{ bet.end_date|date:"M d Y H:i" }}</td>
                     </tr>
@@ -69,6 +72,7 @@
                 <span id="duplicateBet"></span>
                 <p>Accept <strong>$<span id="betAmount"></span></strong> bet
                     "<strong><span id="betId"></span>"</strong>
+                    with <span id="betOdds"></span> odds
                     proposed by <span id="betUser"></span>?
                 </p>
                 <p><small><i>Note: You are betting <strong>against</strong> this prop bet. This action can't be undone.</i></small></p>
@@ -96,10 +100,13 @@ $('#acceptBet').on('show.bs.modal', function (e) {
     var betText = $(e.relatedTarget).attr('data-id1');
     var betUser = $(e.relatedTarget).attr('data-id2');
     var betAmount = $(e.relatedTarget).attr('data-id3');
+    var betOdds = $(e.relatedTarget).attr('data-id5');
 
     $("#betId").html(betText);
     $("#betUser").html(betUser);
     $("#betAmount").html(betAmount);
+    $("#betOdds").html(betOdds);
+
 
     // get the href link with bet id and place it in the href
     $(this).find('.btn-success').attr('href', $(e.relatedTarget).data('href'));
