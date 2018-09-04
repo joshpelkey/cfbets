@@ -174,12 +174,7 @@ def open_bets(request):
 @login_required(login_url='/login/')
 def all_bets(request):
 
-    # get all active accepted bets
-    all_active_bets = AcceptedBet.objects.filter(
-        accepted_prop__won_bet__isnull=True)
-
-    return render(request, 'bets/base_all_bets.html',
-                  {'nbar': 'all_bets', 'all_active_bets': all_active_bets})
+    return render(request, 'bets/base_all_bets.html')
 
 class MyCompletedBetsJson(BaseDatatableView):
     order_columns = ['accepted_prop__prop_text',
@@ -287,20 +282,24 @@ class AllBetsJson(BaseDatatableView):
         return json_data
 
 class AdminBetsJson(BaseDatatableView):
-    order_columns = ['accepted_prop__user', 'accepted_prop__prop_text', '', '']
+    order_columns = ['user', 'prop_text', '', '']
 
     def get_initial_queryset(self):
-        return AcceptedBet.objects.filter(
-            accepted_prop__won_bet__isnull=False).order_by('-accepted_prop__modified_on')
+        closed_accepted_bets = AcceptedBet.objects.filter(
+            accepted_prop__won_bet__isnull=False)
+        closed_prop_bets = ProposedBet.objects.filter(
+            acceptedbet__in=closed_accepted_bets).distinct().order_by('-modified_on')
+
+        return closed_prop_bets
 
     def filter_queryset(self, qs):
         sSearch = self.request.GET.get(u'search[value]', None)
 
         if sSearch:
             qs = qs.filter(
-                accepted_prop__prop_text__istartswith=sSearch) | qs.filter(
-                accepted_prop__user__first_name__istartswith=sSearch) | qs.filter(
-                accepted_prop__user__last_name__istartswith=sSearch)
+                prop_text__istartswith=sSearch) | qs.filter(
+                user__first_name__istartswith=sSearch) | qs.filter(
+                user__last_name__istartswith=sSearch)
 
         return qs
 
@@ -308,22 +307,14 @@ class AdminBetsJson(BaseDatatableView):
         json_data = []
         for item in qs:
 
-            who_won = ''
-            if item.accepted_prop.get_won_bet_display() == "Win":
-                who_won = item.accepted_prop.user.get_full_name()
-            elif item.accepted_prop.get_won_bet_display() == "Loss":
-                who_won = item.accepted_user.get_full_name()
-            else:
-                who_won = 'push'
-
             completed_bet_info = [
-                item.accepted_prop.user.get_full_name(),
-                item.accepted_prop.prop_text,
-                item.accepted_prop.id]
+                item.user.get_full_name(),
+                item.prop_text,
+                item.id]
             json_data.append([
-                item.accepted_prop.user.get_full_name(),
-                item.accepted_prop.prop_text,
-                who_won,
+                item.user.get_full_name(),
+                item.prop_text,
+                item.get_won_bet_display(),
                 completed_bet_info
             ])
 
@@ -540,18 +531,11 @@ def admin_bets(request):
     open_prop_bets = ProposedBet.objects.filter(
         acceptedbet__in=open_accepted_bets).distinct()
 
-    # get all closed prop bets, those with a winner
-    closed_accepted_bets = AcceptedBet.objects.filter(
-        accepted_prop__won_bet__isnull=False)
-    closed_prop_bets = ProposedBet.objects.filter(
-        acceptedbet__in=closed_accepted_bets).distinct().order_by('-modified_on')
-
     return render(request,
                   'bets/base_admin_bets.html',
                   {'nbar': 'admin_bets',
                    'expired_prop_bets': expired_prop_bets,
-                   'open_prop_bets': open_prop_bets,
-                   'closed_prop_bets': closed_prop_bets})
+                   'open_prop_bets': open_prop_bets})
 
 @staff_member_required(login_url='/')
 def set_prop_bet(request):
