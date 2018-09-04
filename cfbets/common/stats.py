@@ -224,11 +224,11 @@ def get_total_money_by_week(current_user):
         # find total number proposed and accepted in that range
         proposed_accepted = AcceptedBet.objects.filter(
             accepted_prop__user=current_user,
-            accepted_prop__created_on__range=(
+            accepted_prop__modified_on__range=(
                 start_date,
                 end_date))
         accepted = AcceptedBet.objects.filter(
-            accepted_user=current_user, created_on__range=(
+            accepted_user=current_user, modified_on__range=(
                 start_date, end_date))
 
         # balance from prop wins
