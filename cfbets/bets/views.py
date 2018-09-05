@@ -174,7 +174,12 @@ def open_bets(request):
 @login_required(login_url='/login/')
 def all_bets(request):
 
-    return render(request, 'bets/base_all_bets.html')
+    # get all active accepted bets
+    all_active_bets = AcceptedBet.objects.filter(
+        accepted_prop__won_bet__isnull=True)
+
+    return render(request, 'bets/base_all_bets.html',
+                  {'nbar': 'all_bets', 'all_active_bets': all_active_bets})
 
 class MyCompletedBetsJson(BaseDatatableView):
     order_columns = ['accepted_prop__prop_text',
