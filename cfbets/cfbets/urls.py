@@ -28,6 +28,7 @@ urlpatterns = [
             permanent=False),
         name="favicon"),
     url(r'^bets/', include('bets.urls', namespace='bets', app_name='bets')),
+    url(r'^squares/', include('squares.urls', namespace='squares', app_name='squares')),
     url(r'^$', welcome),
     url(r'^login/$', auth_views.login, {'template_name': 'base_login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),

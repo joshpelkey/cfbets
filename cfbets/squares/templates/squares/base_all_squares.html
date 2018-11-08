@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block base_content %}
+<div class="container">
+    <h1>All Squares!</h1>
+
+    <div class="container">
+        <h3>Open Squares</h3>
+        <p> {{ user.get_full_name }} is sexy </p>
+
+<!-- Remove bet modal -->
+<div class="modal fade" id="removeBet" tabindex="-1" role="dialog" aria-labelledby="RemoveBet">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="RemoveBet">Remove Bet</h4>
+            </div>
+            <div class="modal-body">
+                <p>Remove your prop bet "<strong><span id="betId"></span></strong>"?</p>
+                <p><small><i>Note: Any accepted bets against this prop <strong>will remain</strong> accepted.</i></small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a id="remove-bet-btn" class="btn btn-danger">Remove Bet</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block morejs %}
+{% endblock %}
