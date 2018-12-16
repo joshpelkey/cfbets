@@ -91,3 +91,7 @@ tfoot th {
         font-style: oblique      !important;
         font-size: 14px         !important;
 }
+
+.table > tbody > tr > td {
+     vertical-align: middle;
+}

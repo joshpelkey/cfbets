@@ -1,0 +1,148 @@
+{% extends "squares_base.html" %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block base_content %}
+<div class="container">
+    <h1>My Squares!</h1>
+
+    {% if open_squares %}
+    {% else %}
+    <div class="container">
+		<div class="alert alert-danger alert-dismissible" role="alert">
+  			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span></button>
+  			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			<strong>Warning!</strong> There are no open squares games. Blame Brandon.
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="panel panel-default panel-success">
+			<!-- Default panel contents -->
+			<div class="panel-heading"><h4>Available Squares</h4></div>
+			<div class="panel-body">
+				<p>These are open games you should participate in. Go ahead, do it.</p>
+			</div>
+
+			<!-- Table -->
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th></th>
+					<th>Team A</th>
+					<th>Team B</th>
+					<th>PPS</th>
+					<th>Squares Rem.</th>
+					<th>Expiration</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr class="v-center-square">
+					<th scope="row"><button class="btn btn-success">Buy</button></th>
+						<td>Clemson</td>
+						<td>Uscjr</td>
+						<td>$1</td>
+						<td>100</td>
+						<td>11/27/2018 19:00</td>
+				</tr>
+				<tr>
+					<th scope="row"><button class="btn btn-success">Buy</button></th>
+						<td>Clemson</td>
+						<td>Uscjr</td>
+						<td>$1</td>
+						<td>100</td>
+						<td>11/27/2018 19:00</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+    {% endif %}
+
+    <div class="container">
+        <h3>Active Squares</h3>
+        {% if your_open_squares %}
+        {% else %}
+            <p>You are not in any squares games. Blame yourself (and then, blame Brandon).</p>
+                <!-- Table -->
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Team A</th>
+                        <th>Team B</th>
+                        <th>PPS</th>
+                        <th>Your Total Squares</th>
+                        <th>Expiration</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="v-center-square">
+                        <th scope="row"><button class="btn btn-primary">View</button></th>
+                            <td>Clemson</td>
+                            <td>Uscjr</td>
+                            <td>$1</td>
+                            <td>10</td>
+                            <td>11/27/2018 19:00</td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><button class="btn btn-primary">View</button></th>
+                            <td>Clemson</td>
+                            <td>Uscjr</td>
+                            <td>$1</td>
+                            <td>10</td>
+                            <td>11/27/2018 19:00</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <h3>Closed Squares</h3>
+        {% if your_open_squares %}
+        {% else %}
+            <p>You haven't played in any completed squares games, like, at all.</p>
+                <!-- Table -->
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Team A</th>
+                        <th>Team B</th>
+                        <th>PPS</th>
+                        <th>Your Total Squares</th>
+                        <th>Win?</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="v-center-square">
+                        <th scope="row"><button class="btn btn-primary">View</button></th>
+                            <td>Clemson</td>
+                            <td>Uscjr</td>
+                            <td>$1</td>
+                            <td>10</td>
+                            <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><button class="btn btn-primary">View</button></th>
+                            <td>Clemson</td>
+                            <td>Uscjr</td>
+                            <td>$1</td>
+                            <td>10</td>
+                            <td>No</td>
+                    </tr>
+                    </tbody>
+                </table>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block morejs %}
+{% endblock %}

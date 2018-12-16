@@ -44,9 +44,6 @@
                 <div class="navbar-header navbar-right pull-right">
                     <ul class="nav pull-left">
                         {% if user.is_authenticated %}
-                        <button type="button" class="btn btn-default navbar-btn" style="margin-right: 15px;" data-toggle="modal" data-target="#place_bets">Place Bet</button>
-                        {% endif %}
-                        {% if user.is_authenticated %}
                         <li class="dropdown pull-right">
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle" id="profile">
                             <span class="glyphicon glyphicon-user"></span>
@@ -94,7 +91,7 @@
 
                                 <li class="divider navbar-login-session-bg"></li>
                                 {% if user.is_staff %}
-                                    <li><a href="/bets/admin_bets">Admin Bets <span class="glyphicon glyphicon-thumbs-up pull-right"></span></a></li>
+                                    <li><a href="/squares/admin_squares">Admin Squares <span class="glyphicon glyphicon-thumbs-up pull-right"></span></a></li>
                                     <li class="divider"></li>
                                     <li><a href="/admin">Admin Site <span class="glyphicon glyphicon-wrench pull-right"></span></a></li>
                                     <li class="divider"></li>
@@ -104,8 +101,8 @@
                                     <li><a href="#">Messages <span class="badge pull-right"> 42 </span></a></li>
                                     -->
 
-                                 <li><a href="/squares">Squares! <span class="glyphicon glyphicon-unchecked pull-right"></span></a></li>
-                                 <li class="divider"></li>
+                                <li><a href="/bets">Back to bets <span class="glyphicon glyphicon-usd pull-right"></span></a></li>
+                                <li class="divider"></li>
                                 <li><a href="/logout">Sign Out <span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
                             </ul>
                         </li>
@@ -116,10 +113,8 @@
                 <div class="collapse navbar-collapse">
                     {% if user.is_authenticated %}
                         <ul class="nav navbar-nav navbar-left">
-                            <li class="{% if nbar == 'stats' %}active{% endif %}"><a href="/bets/your_stats">Stats</a></li>
-                            <li class="{% if nbar == 'my_bets' %}active{% endif %}"><a href="/bets/my_bets">My Bets</a></li>
-                            <li class="{% if nbar == 'open_bets' %}active{% endif %}"><a href="/bets/open_bets">Open Bets</a></li>
-                            <li class="{% if nbar == 'all_bets' %}active{% endif %}"><a href="/bets/all_bets">All Bets</a></li>
+                            <li class="{% if nbar == 'my_squares' %}active{% endif %}"><a href="/squares/my_squares">My Squares</a></li>
+                            <li class="{% if nbar == 'all_squares' %}active{% endif %}"><a href="/squares/all_squares">All Squares</a></li>
                         </ul>
                     {% else %}
                         <ul class="nav navbar-nav navbar-right">
@@ -153,25 +148,6 @@
         <!-- End base_content block -->
         {% endblock %}
 
-        <!-- Place Bets form modal -->
-        <div class="modal fade" id="place_bets" tabindex="-1" role="dialog" aria-labelledby="PlaceBets">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="PlaceBets">Place Bet</h4>
-                    </div>
-                    <div class="modal-body">
-                        {% include "bets/place_bets.html" %}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" id="place-bet-btn" class="btn btn-primary" form="place-bets-form">Submit Bet</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <hr>
         <div class="container">
             <footer>
@@ -195,37 +171,6 @@
             			$("#messages").slideUp(500);
             	});
 
-            	$('#place_bets').on('show.bs.modal', function () {
-            		var d = new Date();
-            		d.setDate(d.getDate() + 7)
-            		var curr_date = d.getDate();
-            		var curr_month = d.getMonth() + 1;
-            		var curr_year = d.getFullYear();
-            		$('#id_bet_expiration_date').val(curr_month + "/" + curr_date + "/" + curr_year + " 12:00");
-            	});
-
-            	$('#place-bets-form').on('submit', function(event) {
-            		event.preventDefault();
-            		});
-
-            	$('#place-bets-form').one('submit', function(event) {
-            		event.preventDefault();
-            		$.ajax({
-            			type: "POST",
-            			url: this.action,
-            			data: $(this).serialize(),
-            			context: this,
-
-            			success: function(data, status) {
-            			window.location.href = data.url;
-            			},
-
-            			error: function(xhr, status, error) {
-            				$("#place-bets-form").html(xhr.responseText);
-            			}
-            		});
-            		return false;
-            		});
             	{% block morejs %}
             	{% endblock %}
             });

@@ -13,9 +13,22 @@ from django.contrib.auth.models import User
 # Create your views here.
 
 def squares(request):
-    return HttpResponseRedirect('/squares/all_squares')
+    return HttpResponseRedirect('/squares/my_squares')
+
+@login_required(login_url='/login/')
+def my_squares(request):
+
+    return render(request,
+            'squares/squares_base_my_squares.html',
+            {'nbar': 'my_squares'})
 
 @login_required(login_url='/login/')
 def all_squares(request):
 
-    return render(request, 'squares/base_all_squares.html')
+    return render(request,
+            'squares/squares_base_all_squares.html',
+            {'nbar': 'all_squares'})
+
+@staff_member_required(login_url='/')
+def admin_squares(request):
+    return render(request, 'squares/squares_base_admin_squares.html')

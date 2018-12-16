@@ -20,5 +20,7 @@ from squares import views
 app_name = 'squares'
 urlpatterns = [
     url(r'^$', views.squares),
+    url(r'^my_squares/', views.my_squares),
     url(r'^all_squares/', views.all_squares),
+    url(r'^admin_squares/', views.admin_squares),
 ]
