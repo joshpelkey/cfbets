@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from squares.models import SquaresProposed
 
 # Proposed Bet holds all user's prop bets, which may or may not get accepted.
 
@@ -31,7 +32,7 @@ class ProposedBet (models.Model):
     class Meta:
         ordering = ['end_date']
         verbose_name = 'Proposed Bet'
-    verbose_name_plural = 'Proposed Bets'
+        verbose_name_plural = 'Proposed Bets'
 
     def __unicode__(self):
         return "{id: %d, user: '%s', prop: '%s', wager: '%d'}" % (
@@ -47,7 +48,7 @@ class AcceptedBet (models.Model):
     class Meta:
         ordering = ['accepted_prop__end_date']
         verbose_name = 'Accepted Bet'
-    verbose_name_plural = 'Accpeted Bets'
+        verbose_name_plural = 'Accpeted Bets'
 
     def __unicode__(self):
         return "{id: %d, proposer: '%s', proposee: '%s', prop_bet: '%s', wager: '%d'}" % (self.id, self.accepted_prop.user.get_full_name(
@@ -57,20 +58,35 @@ class AcceptedBet (models.Model):
 
 class UserProfile (models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    current_balance = models.IntegerField(
+
+    current_bets_balance = models.IntegerField(
         default=0,
-        help_text='The user\'s current balance. Every time the user settles up, the current balance is reset to zero.')
-    overall_winnings = models.IntegerField(
-        default=0, help_text='The user\'s overall winnings since joining.')
+        help_text='The user\'s current balance. Every time the user settles up,\
+        the current prop bets balance is reset to zero.')
+    overall_bets_winnings = models.IntegerField(
+        default=0,
+        help_text='The user\'s overall prop bets winnings since joining.')
+    current_squares_balance = models.IntegerField(
+        default=0,
+        help_text='The user\'s current squares balance. Every time the users settles up,\
+        the current squares balance is reset.')
+    overall_squares_winnings = models.IntegerField(
+        default=0,
+        help_text='The user\'s overall squares winnings since joining.')
+
     get_prop_bet_emails = models.BooleanField(default=True)
     get_accepted_bet_emails = models.BooleanField(default=True)
+    get_new_squares_emails = models.BooleanField(default=True)
+    get_assigned_squares_emails = models.BooleanField(default=True)
+
     last_payment = models.DateTimeField(null=True, blank=True)
+
     created_on = models.DateTimeField(auto_now_add=True)
     modified_on = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'User Profile'
-    verbose_name_plural = 'User Profiles'
+        verbose_name_plural = 'User Profiles'
 
     def __str__(self):
         return "%s Profile" % (self.user.get_full_name())
@@ -90,23 +106,60 @@ def save_user_profile(sender, instance, **kwargs):
 #
 # end user profile hooks
 
-# User Profile Audit creates an audit trail each time a user's winnings
+# User Profile Bets Audit creates an audit trail each time a user's winnings
 # are updated due to an accepted bet being closed.
 
-class UserProfileAudit (models.Model):
-    user = models.ForeignKey(User, related_name='user_profile_user')
-    admin_user = models.ForeignKey(User, related_name='user_profile_admin')
+class UserProfileBetsAudit (models.Model):
+    user = models.ForeignKey(User, related_name='user_profile_bets_user')
+    admin_user = models.ForeignKey(User, related_name='user_profile_bets_admin')
+
     accepted_bet = models.ForeignKey(AcceptedBet)
+
     original_current_balance = models.IntegerField()
     new_current_balance = models.IntegerField()
     original_overall_winnings = models.IntegerField()
     new_overall_winnings = models.IntegerField()
+
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'User Profile Audit'
-    verbose_name_plural = 'User Profile Audits'
+        verbose_name = 'User Profile Bets Audit'
+        verbose_name_plural = 'User Profile Bets Audits'
 
     def __str__(self):
-        return "{id: %d, user: '%s', bet: '%s', orig_winnings: '%d', new_winnings: '%d'}" % (
-            self.id, self.user.get_full_name(), self.accepted_bet, self.original_overall_winnings, self.new_overall_winnings)
+        return "{id: %d, user: '%s', bet: '%s',\
+                orig_winnings: '%d',\
+                new_winnings: '%d'}" % (
+                    self.id, self.user.get_full_name(),
+                    self.accepted_bet,
+                    self.original_overall_winnings,
+                    self.new_overall_winnings)
+
+# User Profile Squares Audit creates an audit trail each time a user's winnings
+# are updated due to an accepted bet being closed.
+
+class UserProfileSquaresAudit (models.Model):
+    user = models.ForeignKey(User, related_name='user_profile_squares_user')
+    admin_user = models.ForeignKey(User, related_name='user_profile_squares_admin')
+
+    accepted_square = models.ForeignKey(SquaresProposed)
+
+    original_current_balance = models.IntegerField()
+    new_current_balance = models.IntegerField()
+    original_overall_winnings = models.IntegerField()
+    new_overall_winnings = models.IntegerField()
+
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'User Profile Squares Audit'
+        verbose_name_plural = 'User Profile Squares Audits'
+
+    def __str__(self):
+        return "{id: %d, user: '%s', square: '%s',\
+                orig__winnings: '%d',\
+                new__winnings: '%d'}" % (
+                    self.id, self.user.get_full_name(),
+                    self.accepted_square,
+                    self.original_overall_winnings,
+                    self.new_overall_winnings)

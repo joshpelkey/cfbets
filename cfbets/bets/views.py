@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from common.stats import *
 from bets.forms import PlaceBetsForm
-from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit, User
+from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileBetsAudit, User
 from django.db.models import Sum
 
 # Create your views here.
