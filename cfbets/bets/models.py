@@ -48,7 +48,7 @@ class AcceptedBet (models.Model):
     class Meta:
         ordering = ['accepted_prop__end_date']
         verbose_name = 'Accepted Bet'
-        verbose_name_plural = 'Accpeted Bets'
+        verbose_name_plural = 'Accepted Bets'
 
     def __unicode__(self):
         return "{id: %d, proposer: '%s', proposee: '%s', prop_bet: '%s', wager: '%d'}" % (self.id, self.accepted_prop.user.get_full_name(
