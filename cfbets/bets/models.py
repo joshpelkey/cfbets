@@ -74,6 +74,14 @@ class UserProfile (models.Model):
         default=0,
         help_text='The user\'s overall squares winnings since joining.')
 
+    @property
+    def current_balance(self):
+        return self.current_bets_balance + self.current_squares_balance
+
+    @property
+    def overall_winnings(self):
+        return self.overall_bets_winnings + self.overall_squares_winnings
+
     get_prop_bet_emails = models.BooleanField(default=True)
     get_accepted_bet_emails = models.BooleanField(default=True)
     get_new_squares_emails = models.BooleanField(default=True)

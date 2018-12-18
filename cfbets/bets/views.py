@@ -590,89 +590,89 @@ def set_prop_bet(request):
                     # if proposer won, proposee lost
                     if status == 'Win':
                         # update proposer
-                        proposer_orig_balance = proposer_profile.current_balance
-                        proposer_orig_winnings = proposer_profile.overall_winnings
-                        proposer_profile.current_balance += wager
-                        proposer_profile.overall_winnings += wager
+                        proposer_orig_balance = proposer_profile.current_bets_balance
+                        proposer_orig_winnings = proposer_profile.overall_bets_winnings
+                        proposer_profile.current_bets_balance += wager
+                        proposer_profile.overall_bets_winnings += wager
                         proposer_profile.save()
 
                         # update audit for propser
-                        proposer_profile_audit = UserProfileAudit(
+                        proposer_profile_audit = UserProfileBetsAudit(
                             user=prop_bet.user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
                             original_current_balance=proposer_orig_balance,
-                            new_current_balance=proposer_profile.current_balance,
+                            new_current_balance=proposer_profile.current_bets_balance,
                             original_overall_winnings=proposer_orig_winnings,
-                            new_overall_winnings=proposer_profile.overall_winnings)
+                            new_overall_winnings=proposer_profile.overall_bets_winnings)
                         proposer_profile_audit.save()
 
                         # update proposee
-                        proposee_orig_balance = proposee_profile.current_balance
-                        proposee_orig_winnings = proposee_profile.overall_winnings
-                        proposee_profile.current_balance -= wager
-                        proposee_profile.overall_winnings -= wager
+                        proposee_orig_balance = proposee_profile.current_bets_balance
+                        proposee_orig_winnings = proposee_profile.overall_bets_winnings
+                        proposee_profile.current_bets_balance -= wager
+                        proposee_profile.overall_bets_winnings -= wager
                         proposee_profile.save()
 
                         # update audit for propsee
-                        proposee_profile_audit = UserProfileAudit(
+                        proposee_profile_audit = UserProfileBetsAudit(
                             user=bet.accepted_user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
                             original_current_balance=proposee_orig_balance,
-                            new_current_balance=proposee_profile.current_balance,
+                            new_current_balance=proposee_profile.current_bets_balance,
                             original_overall_winnings=proposee_orig_winnings,
-                            new_overall_winnings=proposee_profile.overall_winnings)
+                            new_overall_winnings=proposee_profile.overall_bets_winnings)
                         proposee_profile_audit.save()
 
                     # if proposer lost, proposee won
                     elif status == 'Loss':
                         # update proposer
-                        proposer_orig_balance = proposer_profile.current_balance
-                        proposer_orig_winnings = proposer_profile.overall_winnings
-                        proposer_profile.current_balance -= wager
-                        proposer_profile.overall_winnings -= wager
+                        proposer_orig_balance = proposer_profile.current_bets_balance
+                        proposer_orig_winnings = proposer_profile.overall_bets_winnings
+                        proposer_profile.current_bets_balance -= wager
+                        proposer_profile.overall_bets_winnings -= wager
                         proposer_profile.save()
 
                         # update audit for propser
-                        proposer_profile_audit = UserProfileAudit(
+                        proposer_profile_audit = UserProfileBetsAudit(
                             user=prop_bet.user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
                             original_current_balance=proposer_orig_balance,
-                            new_current_balance=proposer_profile.current_balance,
+                            new_current_balance=proposer_profile.current_bets_balance,
                             original_overall_winnings=proposer_orig_winnings,
-                            new_overall_winnings=proposer_profile.overall_winnings)
+                            new_overall_winnings=proposer_profile.overall_bets_winnings)
                         proposer_profile_audit.save()
 
                         # update proposee
-                        proposee_orig_balance = proposee_profile.current_balance
-                        proposee_orig_winnings = proposee_profile.overall_winnings
-                        proposee_profile.current_balance += wager
-                        proposee_profile.overall_winnings += wager
+                        proposee_orig_balance = proposee_profile.current_bets_balance
+                        proposee_orig_winnings = proposee_profile.overall_bets_winnings
+                        proposee_profile.current_bets_balance += wager
+                        proposee_profile.overall_bets_winnings += wager
                         proposee_profile.save()
 
                         # update audit for propsee
-                        proposee_profile_audit = UserProfileAudit(
+                        proposee_profile_audit = UserProfileBetsAudit(
                             user=bet.accepted_user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
                             original_current_balance=proposee_orig_balance,
-                            new_current_balance=proposee_profile.current_balance,
+                            new_current_balance=proposee_profile.current_bets_balance,
                             original_overall_winnings=proposee_orig_winnings,
-                            new_overall_winnings=proposee_profile.overall_winnings)
+                            new_overall_winnings=proposee_profile.overall_bets_winnings)
                         proposee_profile_audit.save()
 
                     # if push
                     elif status == 'Tie':
                         # Add Audit entries
-                        proposer_orig_balance = proposer_profile.current_balance
-                        proposer_orig_winnings = proposer_profile.overall_winnings
-                        proposee_orig_balance = proposee_profile.current_balance
-                        proposee_orig_winnings = proposee_profile.overall_winnings
+                        proposer_orig_balance = proposer_profile.current_bets_balance
+                        proposer_orig_winnings = proposer_profile.overall_bets_winnings
+                        proposee_orig_balance = proposee_profile.current_bets_balance
+                        proposee_orig_winnings = proposee_profile.overall_bets_winnings
 
                         # update audit for propser
-                        proposer_profile_audit = UserProfileAudit(
+                        proposer_profile_audit = UserProfileBetsAudit(
                             user=prop_bet.user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
@@ -683,7 +683,7 @@ def set_prop_bet(request):
                         proposer_profile_audit.save()
 
                         # update audit for propsee
-                        proposee_profile_audit = UserProfileAudit(
+                        proposee_profile_audit = UserProfileBetsAudit(
                             user=bet.accepted_user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
@@ -755,89 +755,89 @@ def undo_prop_bet(request):
                     # if the proposer won
                     if original_win_loss == 1:
                         # update proposer
-                        proposer_orig_balance = proposer_profile.current_balance
-                        proposer_orig_winnings = proposer_profile.overall_winnings
-                        proposer_profile.current_balance -= wager
-                        proposer_profile.overall_winnings -= wager
+                        proposer_orig_balance = proposer_profile.current_bets_balance
+                        proposer_orig_winnings = proposer_profile.overall_bets_winnings
+                        proposer_profile.current_bets_balance -= wager
+                        proposer_profile.overall_bets_winnings -= wager
                         proposer_profile.save()
 
                         # update audit for propser
-                        proposer_profile_audit = UserProfileAudit(
+                        proposer_profile_audit = UserProfileBetsAudit(
                             user=prop_bet.user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
                             original_current_balance=proposer_orig_balance,
-                            new_current_balance=proposer_profile.current_balance,
+                            new_current_balance=proposer_profile.current_bets_balance,
                             original_overall_winnings=proposer_orig_winnings,
-                            new_overall_winnings=proposer_profile.overall_winnings)
+                            new_overall_winnings=proposer_profile.overall_bets_winnings)
                         proposer_profile_audit.save()
 
                         # update proposee
-                        proposee_orig_balance = proposee_profile.current_balance
-                        proposee_orig_winnings = proposee_profile.overall_winnings
-                        proposee_profile.current_balance += wager
-                        proposee_profile.overall_winnings += wager
+                        proposee_orig_balance = proposee_profile.current_bets_balance
+                        proposee_orig_winnings = proposee_profile.overall_bets_winnings
+                        proposee_profile.current_bets_balance += wager
+                        proposee_profile.overall_bets_winnings += wager
                         proposee_profile.save()
 
                         # update audit for propsee
-                        proposee_profile_audit = UserProfileAudit(
+                        proposee_profile_audit = UserProfileBetsAudit(
                             user=bet.accepted_user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
                             original_current_balance=proposee_orig_balance,
-                            new_current_balance=proposee_profile.current_balance,
+                            new_current_balance=proposee_profile.current_bets_balance,
                             original_overall_winnings=proposee_orig_winnings,
-                            new_overall_winnings=proposee_profile.overall_winnings)
+                            new_overall_winnings=proposee_profile.overall_bets_winnings)
                         proposee_profile_audit.save()
 
                     # if the proposee won
                     elif original_win_loss == -1:
                         # update proposer
-                        proposer_orig_balance = proposer_profile.current_balance
-                        proposer_orig_winnings = proposer_profile.overall_winnings
-                        proposer_profile.current_balance += wager
-                        proposer_profile.overall_winnings += wager
+                        proposer_orig_balance = proposer_profile.current_bets_balance
+                        proposer_orig_winnings = proposer_profile.overall_bets_winnings
+                        proposer_profile.current_bets_balance += wager
+                        proposer_profile.overall_bets_winnings += wager
                         proposer_profile.save()
 
                         # update audit for propser
-                        proposer_profile_audit = UserProfileAudit(
+                        proposer_profile_audit = UserProfileBetsAudit(
                             user=prop_bet.user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
                             original_current_balance=proposer_orig_balance,
-                            new_current_balance=proposer_profile.current_balance,
+                            new_current_balance=proposer_profile.current_bets_balance,
                             original_overall_winnings=proposer_orig_winnings,
-                            new_overall_winnings=proposer_profile.overall_winnings)
+                            new_overall_winnings=proposer_profile.overall_bets_winnings)
                         proposer_profile_audit.save()
 
                         # update proposee
-                        proposee_orig_balance = proposee_profile.current_balance
-                        proposee_orig_winnings = proposee_profile.overall_winnings
-                        proposee_profile.current_balance -= wager
-                        proposee_profile.overall_winnings -= wager
+                        proposee_orig_balance = proposee_profile.current_bets_balance
+                        proposee_orig_winnings = proposee_profile.overall_bets_winnings
+                        proposee_profile.current_bets_balance -= wager
+                        proposee_profile.overall_bets_winnings -= wager
                         proposee_profile.save()
 
                         # update audit for propsee
-                        proposee_profile_audit = UserProfileAudit(
+                        proposee_profile_audit = UserProfileBetsAudit(
                             user=bet.accepted_user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
                             original_current_balance=proposee_orig_balance,
-                            new_current_balance=proposee_profile.current_balance,
+                            new_current_balance=proposee_profile.current_bets_balance,
                             original_overall_winnings=proposee_orig_winnings,
-                            new_overall_winnings=proposee_profile.overall_winnings)
+                            new_overall_winnings=proposee_profile.overall_bets_winnings)
                         proposee_profile_audit.save()
 
                     # if it was a tie
                     elif original_win_loss == 0:
                         # Add Audit entries
-                        proposer_orig_balance = proposer_profile.current_balance
-                        proposer_orig_winnings = proposer_profile.overall_winnings
-                        proposee_orig_balance = proposee_profile.current_balance
-                        proposee_orig_winnings = proposee_profile.overall_winnings
+                        proposer_orig_balance = proposer_profile.current_bets_balance
+                        proposer_orig_winnings = proposer_profile.overall_bets_winnings
+                        proposee_orig_balance = proposee_profile.current_bets_balance
+                        proposee_orig_winnings = proposee_profile.overall_bets_winnings
 
                         # update audit for propser
-                        proposer_profile_audit = UserProfileAudit(
+                        proposer_profile_audit = UserProfileBetsAudit(
                             user=prop_bet.user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,
@@ -848,7 +848,7 @@ def undo_prop_bet(request):
                         proposer_profile_audit.save()
 
                         # update audit for propsee
-                        proposee_profile_audit = UserProfileAudit(
+                        proposee_profile_audit = UserProfileBetsAudit(
                             user=bet.accepted_user,
                             admin_user=current_admin_user,
                             accepted_bet=bet,

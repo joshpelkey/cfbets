@@ -304,8 +304,8 @@ def get_global_stats():
 
     # get total monies won
     global_total_money_won = UserProfile.objects.filter(
-        overall_winnings__gt=0).aggregate(
-        Sum('overall_winnings'))
+        overall_bets_winnings__gt=0).aggregate(
+        Sum('overall_bets_winnings'))
 
     # put in dictionary
     global_stats = {
