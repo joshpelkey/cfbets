@@ -66,11 +66,17 @@ def profile(request):
                 'get_prop_bet_emails']
             current_user_profile.get_accepted_bet_emails = user_profile_form.cleaned_data[
                 'get_accepted_bet_emails']
+            current_user_profile.get_new_squares_emails = user_profile_form.cleaned_data[
+                'get_new_squares_emails']
+            current_user_profile.get_assigned_squares_emails = user_profile_form.cleaned_data[
+                'get_assigned_squares_emails']
             current_user.save(update_fields=['first_name', 'last_name'])
             current_user_profile.save(
                 update_fields=[
                     'get_prop_bet_emails',
-                    'get_accepted_bet_emails'])
+                    'get_accepted_bet_emails',
+                    'get_new_squares_emails',
+                    'get_assigned_squares_emails'])
 
             messages.success(request, 'Profile saved successfully.')
             return HttpResponseRedirect("/profile")
@@ -81,7 +87,9 @@ def profile(request):
                 'last_name': current_user.last_name,
                 'email': current_user.email,
                 'get_prop_bet_emails': current_user_profile.get_prop_bet_emails,
-                'get_accepted_bet_emails': current_user_profile.get_accepted_bet_emails})
+                'get_accepted_bet_emails': current_user_profile.get_accepted_bet_emails,
+                'get_new_squares_emails': current_user_profile.get_new_squares_emails,
+                'get_assigned_squares_emails': current_user_profile.get_assigned_squares_emails})
 
     total_won_bets = get_total_wins(current_user)
     total_loss_bets = get_total_losses(current_user)

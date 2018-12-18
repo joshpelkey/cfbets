@@ -3,7 +3,6 @@ from django import forms
 from django.contrib.auth.models import User
 from bets.models import UserProfile
 
-
 class SignUpForm(UserCreationForm):
     # declare the fields you will show
     username = forms.EmailField(
@@ -43,10 +42,11 @@ class SignUpForm(UserCreationForm):
             user.save()
         return user
 
-
 class UserProfileForm(forms.Form):
     first_name = forms.CharField(label="First Name", max_length=255)
     last_name = forms.CharField(label="Last Name", max_length=255)
     email = forms.EmailField(label="Email", disabled=True, required=False)
     get_prop_bet_emails = forms.BooleanField(required=False)
     get_accepted_bet_emails = forms.BooleanField(required=False)
+    get_new_squares_emails = forms.BooleanField(required=False)
+    get_assigned_squares_emails = forms.BooleanField(required=False)
