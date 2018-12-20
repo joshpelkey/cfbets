@@ -13,7 +13,7 @@ class NewGameForm(forms.Form):
             min_value=1, max_value=20,
             widget=forms.TextInput(attrs={'autocomplete': 'off'}))
 
-    use_shit_payout = forms.BooleanField(initial=True)
+    use_shit_payout = forms.BooleanField(initial=True, required=False)
 
     squares_expiration_date = forms.DateTimeField(
         label='Expiration (mm/dd/yyyy 24hr eastern time)',
