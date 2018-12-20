@@ -6,7 +6,9 @@
 {% block base_content %}
 <div class="container">
     <h1>Admin Squares!</h1>
-    <button class='btn btn-success'>New Game</button>
+
+    <button class='btn btn-success' data-toggle="modal" data-target="#newGameModal">
+        New Game</button>
 
     <div class="container">
         <h3>Active Squares</h3>
@@ -87,7 +89,58 @@
 
 </div>
 
+<!-- New Squares Game form modal -->
+<div class="modal fade" id="newGameModal" tabindex="-1" role="dialog" aria-labelledby="newGameModalLabel">
+    <div class="modal-dialog" role="document">
+    	<div class="modal-content">
+    		<div class="modal-header">
+    			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    			<h4 class="modal-title" id="NewGame">New Game</h4>
+			</div>
+
+			<div class="modal-body">
+				{% include "squares/new_game.html" %}
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="submit" id="new-game-btn" class="btn btn-primary" form="new-game-form">Add Game</button>
+			</div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block morejs %}
+	$('#newGameModal').on('show.bs.modal', function () {
+		var d = new Date();
+		d.setDate(d.getDate() + 7)
+		var curr_date = d.getDate();
+		var curr_month = d.getMonth() + 1;
+		var curr_year = d.getFullYear();
+		$('#id_squares_expiration_date').val(curr_month + "/" + curr_date + "/" + curr_year + " 12:00");
+	});
+
+	$('#new-game-form').on('submit', function(event) {
+		event.preventDefault();
+		});
+
+	$('#new-game-form').one('submit', function(event) {
+		event.preventDefault();
+		$.ajax({
+			type: "POST",
+			url: this.action,
+			data: $(this).serialize(),
+			context: this,
+			success: function(data, status) {
+            window.location.href = data.url;
+			},
+			error: function(xhr, status, error) {
+				$("#new-game-form").html(xhr.responseText);
+			}
+		});
+		return false;
+		});
+
 {% endblock %}

@@ -1,0 +1,29 @@
+<!-- New Squares Game Form -->
+<form class="form-horizontal" id="new-game-form" method="post" action="">
+    {% csrf_token %}
+    <fieldset>
+        {% for field in new_game_form %}
+            {% if field.errors %}
+                <div class="control-group error">
+                    <label class="control-label">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field }}
+                        <p class="help-inline text-danger">
+                            {% for error in  field.errors %}<strong>{{ error }}</strong>{% endfor %}
+                        </p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="control-group" id="place-bet-group">
+                    <label class="control-label">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field }}
+                        {% if field.help_text %}
+                        <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </fieldset>
+</form>
