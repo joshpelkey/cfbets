@@ -15,8 +15,8 @@ class SquaresProposed(models.Model):
     end_date = models.DateTimeField()
     closed = models.BooleanField(default=False)
     assigned_squares = models.TextField(null=True, blank=True)
-
     use_shit_payout = models.BooleanField()
+
     shit_22_user = models.ForeignKey(User, related_name='shit_22_user',
             null=True, blank=True)
     shit_55_user = models.ForeignKey(User, related_name='shit_55_user',
@@ -55,7 +55,9 @@ class SquaresAccepted(models.Model):
     assigned_squares = ListCharField(
             base_field=models.CharField(max_length=2),
             size=100,
-            max_length=(100*3) # 100 2-digit numbers+comma max
+            max_length=(100*3), # 100 2-digit numbers+comma max
+            null=True,
+            blank=True
             )
 
     created_on = models.DateTimeField(auto_now_add=True)
@@ -67,4 +69,4 @@ class SquaresAccepted(models.Model):
 
     def __unicode__(self):
         return "{id: '%d', user: '%s', game: '%s', num_squares: '%d'}" % (
-                self.id, self.user.get_full_name(), self.squares_game, self.num_squares)
+                self.id, self.accepted_user.get_full_name(), self.squares_game, self.num_squares)
