@@ -45,8 +45,9 @@ class SquaresProposed(models.Model):
          verbose_name_plural = 'Squares Proposed'
 
     def __unicode__(self):
-        return "{id: '%d', user: '%s', team_a: '%s', team_b: '%s', pps: '%d'}" % (
-                self.id, self.user.get_full_name(), self.team_a, self.team_b, self.price_per_square)
+        return "{id: '%d', user: '%s', team_a: '%s', team_b: '%s', pps: '%d', exp: '%s'}" % (
+                self.id, self.user.get_full_name(), self.team_a, self.team_b,
+                self.price_per_square, self.end_date)
 
 class SquaresAccepted(models.Model):
     squares_game = models.ForeignKey(SquaresProposed)
@@ -68,5 +69,6 @@ class SquaresAccepted(models.Model):
          verbose_name_plural = 'Squares Accepted'
 
     def __unicode__(self):
-        return "{id: '%d', user: '%s', game: '%s', num_squares: '%d'}" % (
-                self.id, self.accepted_user.get_full_name(), self.squares_game, self.num_squares)
+        return "{id: '%d', user: '%s', game: '%s', num_squares: '%d', assigned_squares: '%s'}" % (
+                self.id, self.accepted_user.get_full_name(), self.squares_game,
+                self.num_squares, self.assigned_squares)
