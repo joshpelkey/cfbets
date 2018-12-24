@@ -70,9 +70,25 @@ def my_squares(request):
 @login_required(login_url='/login/')
 def all_squares(request):
 
+    # get available squares, i.e. those games that are not expired yet and have
+    # squares remaining
+    available_squares = SquaresProposed.objects.filter(remaining_squares__gt=0,
+            end_date__gt=timezone.now())
+
+    # get active games (and make sure we've assigned some squares already)
+    active_squares = SquaresProposed.objects.filter(remaining_squares__exact=0,
+            assigned_squares__isnull=False, closed=False)
+
+    # get closed games
+    closed_squares = SquaresProposed.objects.filter(remaining_squares__exact=0,
+            closed=True)
+
     return render(request,
             'squares/squares_base_all_squares.html',
-            {'nbar': 'all_squares'})
+            {'nbar': 'all_squares',
+                'available_squares': available_squares,
+                'active_squares': active_squares,
+                'closed_squares': closed_squares})
 
 @staff_member_required(login_url='/')
 def admin_squares(request):

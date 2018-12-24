@@ -7,7 +7,42 @@
 <div class="container">
     <h1>All Squares!</h1>
 
-    {% if open_squares %}
+    {% if available_squares %}
+        <div class="container">
+            <div class="panel panel-default panel-success">
+                <!-- Default panel contents -->
+                <div class="panel-heading"><h4>Available Squares</h4></div>
+                <div class="panel-body">
+                    <p>These are open games you should participate in. Go ahead, do it.</p>
+                </div>
+
+                <!-- Table -->
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Team A</th>
+                        <th>Team B</th>
+                        <th>PPS</th>
+                        <th>Squares Rem.</th>
+                        <th>Expiration</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for active_game in available_squares %}
+                            <tr class="v-center-square">
+                                <th scope="row"><button class="btn btn-success">Buy</button></th>
+                                <td>{{ active_game.team_a }}</td>
+                                <td>{{ active_game.team_b }}</td>
+                                <td>${{ active_game.price_per_square }}</td>
+                                <td>{{ active_game.remaining_squares }}</td>
+                                <td>{{ active_game.end_date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% else %}
     <div class="container">
 		<div class="alert alert-danger alert-dismissible" role="alert">
@@ -17,126 +52,84 @@
 			<strong>Warning!</strong> There are no open squares games. Blame Brandon.
 		</div>
 	</div>
-
-	<div class="container">
-		<div class="panel panel-default panel-success">
-			<!-- Default panel contents -->
-			<div class="panel-heading"><h4>Available Squares</h4></div>
-			<div class="panel-body">
-				<p>These are open games you should participate in. Go ahead, do it.</p>
-			</div>
-
-			<!-- Table -->
-			<table class="table table-hover">
-				<thead>
-				<tr>
-					<th></th>
-					<th>Team A</th>
-					<th>Team B</th>
-					<th>PPS</th>
-					<th>Squares Rem.</th>
-					<th>Expiration</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr class="v-center-square">
-					<th scope="row"><button class="btn btn-success">Buy</button></th>
-						<td>Clemson</td>
-						<td>Uscjr</td>
-						<td>$1</td>
-						<td>100</td>
-						<td>11/27/2018 19:00</td>
-				</tr>
-				<tr>
-					<th scope="row"><button class="btn btn-success">Buy</button></th>
-						<td>Clemson</td>
-						<td>Uscjr</td>
-						<td>$1</td>
-						<td>100</td>
-						<td>11/27/2018 19:00</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
     {% endif %}
 
     <div class="container">
         <h3>Active Squares</h3>
-        {% if all_active_squares %}
-        <p>These are all the games that are currently in progress.</p>
-        {% else %}
-        <p>These are all the games that are currently in progress.</p>
-                <!-- Table -->
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>Team A</th>
-                        <th>Team B</th>
-                        <th>PPS</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="v-center-square">
-                        <th scope="row"><button class="btn btn-primary">View</button></th>
-                            <td>Clemson</td>
-                            <td>Uscjr</td>
-                            <td>$1</td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><button class="btn btn-primary">View</button></th>
-                            <td>Clemson</td>
-                            <td>Uscjr</td>
-                            <td>$1</td>
-                    </tr>
-                    </tbody>
-                </table>
+            {% if active_squares %}
+            <p>These are all the games that are currently in progress.</p>
+                    <!-- Table -->
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Team A</th>
+                            <th>Team B</th>
+                            <th>PPS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for active_square in active_squares %}
+                                <tr class="v-center-square">
+                                    <th scope="row"><button class="btn btn-primary">View</button></th>
+                                    <td>{{ active_square.team_a }}</td>
+                                    <td>{{ active_square.team_b }}</td>
+                                    <td>${{ active_square.price_per_square }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
 
+        {% else %}
+            <p>No games currently in progress. You know who to blame.</p>
         {% endif %}
     </div>
 
     <div class="container">
         <h3>Closed Squares</h3>
-        {% if all_closed_squares %}
+        {% if closed_squares %}
             <p>These are all the games that have already completed and have
             winners marked.</p>
+            <!-- Table -->
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Team A</th>
+                    <th>Team B</th>
+                    <th>PPS</th>
+                    <th>Shits (22, 55, 99)</th>
+                    <th>Q1,Q2,Q3,Q4</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for closed_square in closed_squares %}
+                    <tr class="v-center-square">
+                        <th scope="row"><button class="btn btn-primary">View</button></th>
+                        <td>{{ closed_square.team_a }}</td>
+                        <td>{{ closed_square.team_b }}</td>
+                        <td>${{ closed_square.price_per_square }}</td>
+
+                        {% if closed_square.use_shit_payout %}
+                            <td>{{ closed_square.shit_22_user.get_full_name }},
+                                {{ closed_square.shit_55_user.get_full_name }},
+                                {{ closed_square.shit_99_user.get_full_name }}</td>
+                        {% else %}
+                            <td>n/a</td>
+                        {% endif %}
+
+                        <td>{{ closed_square.q1_winning_user.get_full_name }},
+                            {{ closed_square.q2_winning_user.get_full_name }},
+                            {{ closed_square.q3_winning_user.get_full_name }},
+                            {{ closed_square.q4_winning_user.get_full_name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% else %}
             <p>Exactly zero closed squares games. We must just be getting started.</p>
             <p>Let's try to create a sample squares view, because I don't feel
             like doing anything hard while drinking woodford on a plane.</p>
-
-                <!-- Table -->
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>Team A</th>
-                        <th>Team B</th>
-                        <th>PPS</th>
-                        <th>Shits</th>
-                        <th>Q1,Q2,Q3,Q4</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="v-center-square">
-                        <th scope="row"><button class="btn btn-primary">View</button></th>
-                            <td>Clemson</td>
-                            <td>Uscjr</td>
-                            <td>$1</td>
-                            <td>Josh P, Kris J, John T</td>
-                            <td>Matt S, Bobby C, Brandon B, Grey P</td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><button class="btn btn-primary">View</button></th>
-                            <td>Clemson</td>
-                            <td>Uscjr</td>
-                            <td>$1</td>
-                            <td>Josh P, Kris J, John T</td>
-                            <td>Matt S, Bobby C, Brandon B, Grey P</td>
-                    </tr>
-                    </tbody>
-                </table>
 
 			<table class="table table-hover">
 			  <thead>
