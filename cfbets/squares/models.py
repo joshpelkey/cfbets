@@ -40,6 +40,24 @@ class SquaresProposed(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     modified_on = models.DateTimeField(auto_now=True)
 
+    @property
+    def shit_payout(self):
+        if self.use_shit_payout:
+            return int((100 * self.price_per_square * 0.02))
+        else:
+            return int(0)
+
+    @property
+    def quarter_payout(self):
+        if self.use_shit_payout:
+            return int((100 * self.price_per_square * 0.18))
+        else:
+            return int((100 * self.price_per_square * 0.2))
+
+    @property
+    def final_payout(self):
+            return int((100 * self.price_per_square * 0.4))
+
     class Meta:
          verbose_name = 'Squares Proposed'
          verbose_name_plural = 'Squares Proposed'
