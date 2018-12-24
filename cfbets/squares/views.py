@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Sum
 from squares.models import SquaresProposed, SquaresAccepted
 from squares.forms import NewGameForm
 from django.contrib.auth.models import User
@@ -20,9 +21,51 @@ def squares(request):
 @login_required(login_url='/login/')
 def my_squares(request):
 
+    current_user = request.user
+
+    # get available squares, i.e. those games that are not expired yet and have
+    # squares remaining
+    available_squares = SquaresProposed.objects.filter(remaining_squares__gt=0,
+            end_date__gt=timezone.now())
+
+    # get all your squares that are not yet expired
+    my_open_squares = SquaresAccepted.objects.filter(accepted_user=current_user,
+            squares_game__end_date__gt=timezone.now())
+
+    # create a nice dictionary that sums up your total squares for each game
+    # proposed
+    my_open_squares_sum = my_open_squares.values('squares_game__team_a',
+    'squares_game__team_b', 'squares_game__price_per_square',
+    'squares_game__end_date').annotate(Sum('num_squares'))
+
+    # sqaures games you are participating in that are either in progress or
+    # awaiting an admin to set winners
+    my_active_squares = SquaresAccepted.objects.filter(accepted_user=current_user,
+            squares_game__remaining_squares__exact=0, squares_game__closed=False)
+
+    # create a nice dictionary that sums up your total squares for each game
+    # proposed that are in progress or awaiting winners
+    my_active_squares_sum = my_active_squares.values('squares_game__team_a',
+    'squares_game__team_b', 'squares_game__price_per_square',
+    'squares_game__end_date').annotate(Sum('num_squares'))
+
+    # get closed squares that you particpated in
+    my_closed_squares = SquaresAccepted.objects.filter(accepted_user=current_user,
+            squares_game__closed=True)
+
+    # create a nice dictionary that sums up total squares for each closed game
+    # that you particpated in
+    my_closed_squares_sum = my_closed_squares.values('squares_game__team_a',
+    'squares_game__team_b', 'squares_game__price_per_square',
+    'squares_game__end_date').annotate(Sum('num_squares'))
+
     return render(request,
             'squares/squares_base_my_squares.html',
-            {'nbar': 'my_squares'})
+            {'nbar': 'my_squares',
+                'available_squares': available_squares,
+                'my_open_squares': my_open_squares_sum,
+                'my_active_squares': my_active_squares_sum,
+                'my_closed_squares': my_closed_squares_sum})
 
 @login_required(login_url='/login/')
 def all_squares(request):
