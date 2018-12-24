@@ -133,5 +133,17 @@ def admin_squares(request):
         # not a POST, display the form instead
         new_game_form = NewGameForm()
 
+    # get all active squares games; i.e. those that have squares assigned but
+    # not closed
+    all_active = SquaresProposed.objects.filter(assigned_squares__isnull=False,
+            closed=False)
+
+    # get all closed/complete squares games; i.e. those that are closed and have
+    # assigned squares
+    all_closed = SquaresProposed.objects.filter(assigned_squares__isnull=False,
+            closed=True)
+
     return render(request, 'squares/squares_base_admin_squares.html',
-            {'new_game_form': new_game_form})
+            {'new_game_form': new_game_form,
+                'all_active': all_active,
+                'all_closed': all_closed})

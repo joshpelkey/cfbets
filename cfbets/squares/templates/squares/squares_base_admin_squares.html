@@ -12,45 +12,41 @@
 
     <div class="container">
         <h3>Active Squares</h3>
-        <p>These are all the open squares games that have not been marked as
-        "complete" by the admin".
+        {% if active_squares %}
+            <p>These are all the active squares games (i.e. they have assigned
+            squares, but have not been marked as "complete" by the admin).</p>
 
-                <!-- Table -->
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>Team A</th>
-                        <th>Team B</th>
-                        <th>PPS</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="v-center-square">
-                        <th scope="row"><button class="btn btn-primary">View</button></th>
-                            <td>Clemson</td>
-                            <td>Uscjr</td>
-                            <td>$1</td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><button class="btn btn-primary">View</button></th>
-                            <td>Clemson</td>
-                            <td>Uscjr</td>
-                            <td>$1</td>
-                    </tr>
-                    </tbody>
-                </table>
+                    <!-- Table -->
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Team A</th>
+                            <th>Team B</th>
+                            <th>PPS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for active_square in active_squares %}
+                            <tr class="v-center-square">
+                                <th scope="row"><button class="btn btn-primary">Mark</button></th>
+                                <td>{{ active_square.team_a }}</td>
+                                <td>{{ active_square.team_b }}</td>
+                                <td>${{ active_square.price_per_square }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+        {% else %}
+            <p>No squares games in progress.</p>
+        {% endif %}
     </div>
 
     <div class="container">
         <h3>Closed Squares</h3>
-        {% if all_closed_squares %}
+        {% if closed_squares %}
             <p>These are all the games that have already completed and have
             winners marked.</p>
-        {% else %}
-            <p>Exactly zero closed squares games. We must just be getting started.</p>
-            <p>Let's try to create a sample squares view, because I don't feel
-            like doing anything hard while drinking woodford on a plane.</p>
 
                 <!-- Table -->
                 <table class="table table-hover">
@@ -65,26 +61,187 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="v-center-square">
-                        <th scope="row"><button class="btn btn-warning">Undo</button></th>
-                            <td>Clemson</td>
-                            <td>Uscjr</td>
-                            <td>$1</td>
-                            <td>Josh P, Kris J, John T</td>
-                            <td>Matt S, Bobby C, Brandon B, Grey P</td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><button class="btn btn-warning">Undo</button></th>
-                            <td>Clemson</td>
-                            <td>Uscjr</td>
-                            <td>$1</td>
-                            <td>Josh P, Kris J, John T</td>
-                            <td>Matt S, Bobby C, Brandon B, Grey P</td>
-                    </tr>
+                    {% for closed_square in closed_squares %}
+                        <tr class="v-center-square">
+                            <th scope="row"><button class="btn btn-warning">Undo</button></th>
+                            <td>{{ closed_sqaure.team_a }}</td>
+                            <td>{{ closed_square.team_b }}</td>
+                            <td>${{ closed_square.price_per_square }}</td>
+
+                            {% if closed_square.use_shit_payout %}
+                            <td>{{ closed_square.shit_22_user.get_full_name }},
+                                {{ closed_square.shit_55_user.get_full_name }},
+                                {{ closed_square.shit_99_user.get_full_name }}</td>
+                            {% else %}
+                            <td>n/a</td>
+                            {% endif %}
+
+                            <td>{{ closed_square.q1_winning_user.get_full_name }},
+                                {{ closed_square.q2_winning_user.get_full_name }},
+                                {{ closed_square.q3_winning_user.get_full_name }},
+                                {{ closed_square.q4_winning_user.get_full_name }}</td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
 
+        {% else %}
+            <p>Exactly zero closed squares games. We must just be getting started.</p>
         {% endif %}
+
+    	<p>Let's try to create a sample squares view, because I don't feel like
+    	doing anything hard while drinking woodford on a plane.</p>
+
+        <table class="table table-hover">
+			  <thead>
+				<tr>
+				  <th scope="col"></th>
+				  <th class="text-center" scope="col">0</th>
+				  <th class="text-center" scope="col">1</th>
+				  <th class="text-center" scope="col">2</th>
+				  <th class="text-center" scope="col">3</th>
+				  <th class="text-center" scope="col">4</th>
+				  <th class="text-center" scope="col">5</th>
+				  <th class="text-center" scope="col">6</th>
+				  <th class="text-center" scope="col">7</th>
+				  <th class="text-center" scope="col">8</th>
+				  <th class="text-center" scope="col">9</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<tr>
+				  <th scope="row">0</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				</tr>
+				<tr>
+				  <th scope="row">1</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				</tr>
+				<tr>
+				  <th scope="row">2</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td class="warning">Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				</tr>
+				<tr>
+				  <th scope="row">3</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td class="success"><strong>Josh Pelkey</strong></td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				</tr>
+				<tr>
+				  <th scope="row">4</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				</tr>
+				<tr>
+				  <th scope="row">5</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td class="warning">Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				</tr>
+				<tr>
+				  <th scope="row">6</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				</tr>
+				<tr>
+				  <th scope="row">7</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				</tr>
+				<tr>
+				  <th scope="row">8</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				</tr>
+				<tr>
+				  <th scope="row">9</th>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td>Josh Pelkey</td>
+				  <td class="warning">Josh Pelkey</td>
+				</tr>
+			  </tbody>
+			</table>
+
     </div>
 
 </div>
