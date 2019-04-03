@@ -3,3 +3,5 @@ django-datatables-view==1.14.0
 argparse==1.2.1
 django-mailer==1.2.2
 mailer==0.8.1
+requests==2.21.0
+requests-toolbelt==0.9.1
