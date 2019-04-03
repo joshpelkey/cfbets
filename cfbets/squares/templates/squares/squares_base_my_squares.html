@@ -117,7 +117,6 @@
                         <th>Team B</th>
                         <th>PPS</th>
                         <th>Your Total Squares</th>
-                        <th>Win?</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -128,7 +127,6 @@
                                 <td>{{ closed_game.squares_game__team_b }}</td>
                                 <td>${{ closed_game.squares_game__price_per_square }}</td>
                                 <td>{{ closed_game.num_squares__sum }}</td>
-                                <td></td>
                         </tr>
                         {% endfor %}
                     </tbody>
