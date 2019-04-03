@@ -1,4 +1,5 @@
 import json
+import requests
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -11,6 +12,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from common.stats import *
+from django.conf import settings
 from bets.forms import PlaceBetsForm
 from bets.models import ProposedBet, AcceptedBet, UserProfile, UserProfileAudit, User
 from django.db.models import Sum
@@ -344,6 +346,13 @@ def place_bets_form_process(request, next_url):
                 modified_on=timezone.now())
             # save to the db
             new_bet.save()
+
+            # post to slack
+            slack_webhook_url = settings.SLACK_WEBHOOK_URL
+            slack_data = {'text': request.user.get_full_name() + ' posted a bet: '
+                    + '*($' + str(form.cleaned_data['bet_amount']) + ') ' +
+                    form.cleaned_data['bet'] + '*'}
+            slack_response = requests.post(slack_webhook_url, json=slack_data)
 
             # save the url to know where to redirect
             response = {'url': next_url}
