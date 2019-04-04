@@ -355,9 +355,13 @@ def place_bets_form_process(request, next_url):
 
             # post to slack
             slack_webhook_url = settings.SLACK_WEBHOOK_URL
-            slack_data = {'text': request.user.get_full_name() + ' posted a bet: '
-                    + '*($' + str(form.cleaned_data['bet_amount']) + ') ' +
-                    form.cleaned_data['bet'] + '*'}
+            slack_data = {"attachments":[{"fallback":"A new bet was posted.", \
+                "color":"#36a64f", \
+                "pretext":"A new bet was posted, <!here>:", \
+                "author_name":request.user.get_full_name(), \
+                "title":"($" + str(form.cleaned_data['bet_amount']) + ") " \
+                + form.cleaned_data['bet'],"title_link":"https://cfbets.us/bets/open_bets/"}]}
+
             slack_response = requests.post(slack_webhook_url, json=slack_data)
 
             # save the url to know where to redirect
