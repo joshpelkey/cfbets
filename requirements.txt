@@ -1,4 +1,4 @@
-Django==1.11.28
+Django==2.2.24
 django-datatables-view==1.14.0
 MySQL-python==1.2.5
 argparse==1.2.1
